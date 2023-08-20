@@ -1,2 +1,3 @@
-# achaea.js
-An Achaea.com MUD client
+# Achaea.js
+
+An Achaea.com MUD client.
