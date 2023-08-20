@@ -55,6 +55,25 @@ export const STATE = {
   },
 };
 
+function remFromStateList(key, list, value) {
+  if (!STATE[key]) {
+    console.error('Wrong STATE key!', key);
+    return;
+  }
+  if (!STATE[key][list]) {
+    console.error('Wrong STATE list key!', key);
+    return;
+  }
+  let index = 0;
+  for (const x of STATE[key][list]) {
+    if (x.id === value.id) {
+      STATE[key][list].splice(index, 1);
+      return;
+    }
+    index += 1;
+  }
+}
+
 export function updateMyself(meta) {
   for (const k of Object.keys(meta)) {
     // Ignore inexistent fields
@@ -66,21 +85,6 @@ export function updateMyself(meta) {
   // console.debug('MYSELF updated:', STATE.Myself);
 }
 
-function myselfAddInv(item) {
-  STATE.Myself.items.push(item);
-}
-
-function myselfRemInv(item) {
-  let index = 0;
-  for (const x of STATE.Myself.items) {
-    if (x.id === item.id) {
-      STATE.Myself.items.splice(index, 1);
-      return;
-    }
-    index += 1;
-  }
-}
-
 export function updateLocation(meta) {
   for (const k of Object.keys(meta)) {
     // Ignore inexistent fields so the Location object doesn't explode
@@ -90,21 +94,6 @@ export function updateLocation(meta) {
     STATE.Location[k] = meta[k];
   }
   // console.debug('LOCATION updated:', STATE.Location);
-}
-
-function locationAddInv(item) {
-  STATE.Location.items.push(item);
-}
-
-function locationRemInv(item) {
-  let index = 0;
-  for (const x of STATE.Location.items) {
-    if (x.id === item.id) {
-      STATE.Location.items.splice(index, 1);
-      return;
-    }
-    index += 1;
-  }
 }
 
 function processStates(text) {
@@ -129,10 +118,32 @@ function processStates(text) {
       ee.emit('new:round');
     }
     return updateMyself(data);
-  } else if (type === 'Char.Defences.List') {
+  }
+
+  // defences
+  if (type === 'Char.Defences.List') {
     return updateMyself({ defences: data });
-  } else if (type === 'Char.Afflictions.List') {
+  } else if (type === 'Char.Defences.Add') {
+    STATE.Myself.defences.push(data);
+    return;
+  } else if (type === 'Char.Defences.Remove') {
+    for (const item of data) {
+      remFromStateList('Myself', 'defences', item);
+    }
+    return;
+  }
+
+  // afflictions
+  if (type === 'Char.Afflictions.List') {
     return updateMyself({ afflictions: data });
+  } else if (type === 'Char.Afflictions.Add') {
+    STATE.Myself.afflictions.push(data);
+    return;
+  } else if (type === 'Char.Afflictions.Remove') {
+    for (const item of data) {
+      remFromStateList('Myself', 'afflictions', item);
+    }
+    return;
   }
 
   if (type === 'Char.Items.List') {
@@ -147,9 +158,9 @@ function processStates(text) {
   }
   if (type === 'Char.Items.Add') {
     if (data.location === 'inv') {
-      myselfAddInv(data.item);
+      STATE.Myself.items.push(data.item);
     } else if (data.location === 'room') {
-      locationAddInv(data.item);
+      STATE.Location.items.push(data.item);
     } else {
       console.log('DONT KNOW WHAT DO DO WITH STATE', type, data.location);
     }
@@ -157,9 +168,9 @@ function processStates(text) {
   }
   if (type === 'Char.Items.Remove') {
     if (data.location === 'inv') {
-      myselfRemInv(data.item);
+      remFromStateList('Myself', 'items', data.item);
     } else if (data.location === 'room') {
-      locationRemInv(data.item);
+      remFromStateList('Location', 'items', data.item);
     } else {
       console.log('DONT KNOW WHAT DO DO WITH STATE', type, data.location);
     }

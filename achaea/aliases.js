@@ -20,11 +20,18 @@ export function processAliases(text) {
     STATE.MUD.battle = true;
     ee.emit('user:text', `kill ${tgt}`);
     return true;
+  } else if (text === 'qq' && STATE.MUD.target) {
+    STATE.MUD.battle = true;
+    ee.emit('user:text', `kill ${STATE.MUD.target}`);
+    return true;
+  } else if (text === 'qq') {
+    ee.emit('user:text', 'ql');
+    return true;
   }
 
   // Special commands
   if (text.startsWith('//')) {
-    const cmd = text.replace(/^[\/]+/, '');
+    const cmd = text.replace(/^[/]+/, '');
 
     // debug commands
     if (cmd === 'me') {
