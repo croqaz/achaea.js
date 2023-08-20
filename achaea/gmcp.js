@@ -1,6 +1,6 @@
-//
-// Ref: https://nexus.ironrealms.com/GMCP
-//
+/*
+ * Ref: https://nexus.ironrealms.com/GMCP
+ */
 
 import process from 'node:process';
 

@@ -1,9 +1,10 @@
-// Telnet options ref:
-// https://iana.org/assignments/telnet-options/telnet-options.xhtml
-// ATCP / GMCP protocols:
-// https://www.gammon.com.au/gmcp
-// https://tintin.mudhalla.net/protocols/gmcp
-//
+/*
+ * Telnet options ref:
+ * https://iana.org/assignments/telnet-options/telnet-options.xhtml
+ * ATCP / GMCP protocols:
+ * https://www.gammon.com.au/gmcp
+ * https://tintin.mudhalla.net/protocols/gmcp
+ */
 const OPTS = {
   TELNET_BIN: 0, // x00 ; Binary transmission
   TELNET_ECHO: 1, // x01
