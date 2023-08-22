@@ -10,7 +10,6 @@ export const STATE = {
     class: 'Class',
     city: 'City',
     gold: 'Gold',
-    target: 'Target',
 
     hp: '',
     maxhp: '',
@@ -22,6 +21,11 @@ export const STATE = {
     maxwp: '',
     bal: '1',
     eq: '1',
+
+    // rage_balance
+    // elixir_balance
+    // pipe_balance
+    target: '',
 
     items: [],
     charstats: [],
@@ -94,6 +98,17 @@ export function updateLocation(meta) {
     STATE.Location[k] = meta[k];
   }
   // console.debug('LOCATION updated:', STATE.Location);
+}
+
+export function listDenizens() {
+  // list NPCs in the room
+  const isDenizen = (x) => x.attrib && x.attrib.includes('m');
+  return STATE.Location.items.filter(isDenizen).map((x) => x.id);
+}
+
+export function listPlayers() {
+  // list players in the room
+  return STATE.Location.players.map((x) => x.name);
 }
 
 function processStates(text) {

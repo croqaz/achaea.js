@@ -10,6 +10,7 @@ import ee from './events.js';
 
 import { STATE } from './states.js';
 import { processAliases } from './aliases.js';
+import { preProcessText } from './processor.js';
 import { TelnetSocket, telOpts } from '../telnet/index.js';
 
 let telnet;
@@ -38,7 +39,7 @@ export function connect() {
   // on any data/ text, display on STDOUT
   telnet.on('data', (buffer) => {
     const rawText = buffer.toString('utf8');
-    process.stdout.write(rawText);
+    process.stdout.write(preProcessText(rawText));
     const cleanText = stripAnsi(rawText);
     ee.emit('game:text', cleanText);
     log.write(cleanText + '\n\n');

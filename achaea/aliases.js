@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 
 import ee from './events.js';
-import { STATE } from './states.js';
+import { STATE, listDenizens } from './states.js';
 
 export function processAliases(text) {
   /*
@@ -10,9 +10,19 @@ export function processAliases(text) {
   text = text.trim();
   const parts = text.split(' ').filter((x) => !!x);
 
-  // Auto target & attack
+  // Auto attack a specific target
   if (text.startsWith('qq ')) {
     const tgt = parts.slice(1).join(' ');
+    if (tgt !== STATE.MUD.target) {
+      STATE.MUD.target = tgt;
+      ee.emit('user:text', `st ${tgt}`);
+    }
+    STATE.MUD.battle = true;
+    ee.emit('user:text', `kill ${tgt}`);
+    return true;
+  } else if (text === 'qqa') {
+    // Attack first denizen in the room
+    const tgt = listDenizens()[0];
     if (tgt !== STATE.MUD.target) {
       STATE.MUD.target = tgt;
       ee.emit('user:text', `st ${tgt}`);
