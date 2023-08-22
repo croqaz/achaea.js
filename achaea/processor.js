@@ -12,5 +12,8 @@ export function preProcessText(text) {
   //
   text = text.replace('You must be standing first.', 'You must be standing first 🪑.');
 
+  //
+  text = text.replace(', retrieving the corpse.', ', retrieving the corpse 💀.');
+
   return text;
 }

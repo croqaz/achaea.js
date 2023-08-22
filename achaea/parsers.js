@@ -23,3 +23,18 @@ export function parseSurvey(text) {
     .replace(/[ .]*$/, '');
   return { area, environment, plane };
 }
+
+export function isWaresHeader(text) {
+  if (
+    text.includes('Proprietor:') &&
+    text.includes('(Item)------(Description)------------------------------(Stock)--(Price)')
+  ) {
+    return true;
+  }
+}
+
+export function getWaresProprietor(text) {
+  const parts = text.split('\n');
+  const owner = parts[0].slice(12, -1).replace(/[ .]*$/, '');
+  return { owner };
+}
