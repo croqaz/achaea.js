@@ -1,17 +1,16 @@
 import fs from 'node:fs';
 import readline from 'node:readline';
-
 import stripAnsi from 'strip-ansi';
 
-import './auto.js';
-import './triggers.js';
-
 import ee from './events.js';
+import { STATE } from './core/state.js';
+import { processUserInput } from './core/input.js';
+import { processDisplayText } from './core/output.js';
+import { TelnetSocket, telOpts } from './telnet/index.js';
 
-import { STATE } from './states.js';
-import { processAliases } from './aliases.js';
-import { preProcessText } from './processor.js';
-import { TelnetSocket, telOpts } from '../telnet/index.js';
+import './core/auto.js';
+import './core/triggers.js';
+import './extra/index.js';
 
 let telnet;
 
@@ -28,21 +27,26 @@ export function connect() {
   // negociate connection options
   telnet.on('will', (option) => {
     if (option === telOpts.TELNET_GMCP) {
+      // console.log(chalk.green('IAC WILL do:', teloptFmt(option)));
       telnet.writeDo(option);
     } else {
+      // tell remote we DONT do whatever they WILL offer
+      // console.log(chalk.green('IAC WILL dont:', teloptFmt(option)));
       telnet.writeDont(option);
     }
   });
   telnet.on('do', (option) => {
+    // tell remote we WONT do anything we're asked to DO
+    // console.log(chalk.green('IAC DO:', teloptFmt(option)));
     telnet.writeWont(option);
   });
   // on any data/ text, display on STDOUT
   telnet.on('data', (buffer) => {
     const rawText = buffer.toString('utf8');
-    process.stdout.write(preProcessText(rawText));
+    processDisplayText(rawText);
     const cleanText = stripAnsi(rawText);
     ee.emit('game:text', cleanText);
-    log.write(cleanText + '\n\n');
+    log.write(cleanText + '\n\n'); // TODO: logging from events!
     // Await user interaction
     rline.prompt(true);
   });
@@ -51,7 +55,7 @@ export function connect() {
     if (buffer.length) {
       const subText = buffer.toString('utf8');
       ee.emit('game:gmcp', subText);
-      log.write('GMCP: ' + subText + '\n\n');
+      log.write('GMCP: ' + subText + '\n\n'); // TODO: logging from events!
     }
   });
 
@@ -70,15 +74,14 @@ export function connect() {
       line = line.trim() + '\n';
       STATE.MUD.input = line;
     }
-    if (processAliases(line)) {
-      log.write('$ ' + line);
-      // Await user interaction
-      return rline.prompt(true);
-    }
-    telnet.write(line);
     log.write('$ ' + line + '\n');
-    // will await for another user interaction
-    // after game text response
+    // If process input is True, don't send the text to the game
+    if (processUserInput(line)) {
+      // Await user interaction
+      rline.prompt(true);
+    } else {
+      telnet.write(line);
+    }
   });
 
   // activate !!
