@@ -5,8 +5,9 @@ function procesRound() {
   /*
    * Run automation on a new round
    */
-  if (STATE.MUD.battle) {
-    ee.emit('user:text', 'kill');
+  if (STATE.MUD.battle && STATE.MUD.target) {
+    // Alias set kk <...>
+    ee.emit('user:text', 'kk');
   }
 }
 

@@ -13,7 +13,8 @@ export function gmcpPing() {
 }
 
 export function gmcpSupports() {
-  const value = '"Char 1", "Char.Vitals 1", "Char.Items 1", "IRE.Rift 1", "Room 1"';
+  const value = `"Char 1", "Char.Vitals 1", "Char.Items 1", "IRE.Rift 1", "IRE.Target 1",
+    "Room 1", "Comm.Channel 1"`;
   return Buffer.from(`Core.Supports.Set [ ${value} ]`);
 }
 
@@ -24,3 +25,8 @@ export function gmcpPlayers() {
 export function gmcpRiftItems() {
   return Buffer.from('IRE.Rift.Request');
 }
+
+// function gmcpTime() {
+//   // sub IRE.Time
+//   return Buffer.from('IRE.Time.Request');
+// }
