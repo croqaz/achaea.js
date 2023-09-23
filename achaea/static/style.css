@@ -1,0 +1,342 @@
+/* latin-ext */
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("fonts/IBM Plex Mono latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("fonts/IBM Plex Mono latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("fonts/IBM Plex Sans latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("fonts/IBM Plex Sans latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+:root {
+  --background: #2E3440;
+  --background1: #3B4252;
+  --background2: #434C5E;
+  --background3: #4C566A;
+  --foreground: #E5E9F0;
+  --dark-foreground: #D8DEE9;
+  --bright-foreground: #ECEFF4;
+  --blue1: #88C0D0;
+  --blue2: #81A1C1;
+  --blue3: #5E81AC;
+  font-weight: 500;
+  font-size: 14px;
+  font-family: "IBM Plex Mono", monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #E5E9F0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+html, body, canvas, main, aside, div, pre {
+  margin: 0;
+  padding: 0;
+}
+
+p, b, span, pre, h5 {
+  line-height: 1.66rem;
+  font-size: 14px;
+  margin: 0;
+}
+
+b, h5 {
+  color: #E5E9F0;
+}
+
+body {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  background-color: var(--background);
+  max-height: 99.9vh;
+}
+
+input {
+  border: 0;
+  margin: 0;
+  outline: 0;
+  font-weight: 500;
+  font-size: 14px;
+  font-family: "IBM Plex Mono", monospace;
+}
+
+#leftSide {
+  display: grid;
+  grid-column: 1/3;
+  grid-template-rows: repeat(3, 1fr);
+  max-height: 99.9vh;
+}
+
+#rightSide {
+  grid-column: 8/10;
+  max-height: 99.9vh;
+  margin: 1px;
+  border-right: 1px solid #3B4252;
+  padding: 0.5rem;
+  background: #4C566A;
+  overflow-y: scroll;
+}
+
+#main {
+  display: flex;
+  grid-column: 3/8;
+  flex-direction: column;
+  border-left: 1px solid #3B4252;
+  border-right: 1px solid #3B4252;
+  min-height: 99.5vh;
+  max-height: 99.9vh;
+}
+
+#rightSide.big {
+  position: fixed;
+  right: 0;
+  width: 50vw;
+  height: calc(99vh - 4rem);
+  border: 2px solid #E5E9F0;
+}
+
+/* Left side: map, room, player */
+#map {
+  margin: 1px;
+  background: #616e88;
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+}
+
+#map.big {
+  position: fixed;
+  left: 4rem;
+  top: 2rem;
+  width: calc(100% - 8rem);
+  height: calc(99vh - 8rem);
+  border: 2px solid #E5E9F0;
+}
+
+#room {
+  border-bottom: 1px solid #3B4252;
+  border-top: 1px solid #3B4252;
+  border-right: 1px solid #3B4252;
+  overflow-y: scroll;
+  padding: 0.5rem;
+  background: #454e61;
+}
+
+#player {
+  margin: 1px;
+  background: #4C566A;
+  padding: 0.5rem;
+}
+
+.roomPlayer:hover, .roomItem:hover {
+  cursor: pointer;
+  font-style: italic;
+}
+
+/* In the middle: game log, user input, status bar */
+#gameLog {
+  background: #454e61;
+  overflow-y: scroll;
+  padding: 0.5rem;
+  height: 18px;
+  flex: 1 0;
+}
+
+#userInput {
+  width: 100%;
+  padding: 0.5rem;
+  color: #D8DEE9;
+  background: #3B4252;
+  border-bottom: 2px solid #5E81AC;
+  transition: border-color 0.33s;
+}
+
+#userInput:focus {
+  color: #E5E9F0;
+  background: #4C566A;
+  border-bottom: 2px solid #81A1C1;
+}
+
+.userText, .sysText {
+  color: #D8DEE9;
+}
+
+#statBar {
+  height: 1rem;
+  display: flex;
+  border-top: 1px solid #3B4252;
+}
+
+#hpmax,
+#mpmax,
+#epmax,
+#wpmax {
+  flex: 1;
+  display: flex;
+  color: #D8DEE9;
+  font-size: 12px;
+  line-height: 12px;
+}
+
+#mpmax {
+  border-left: 1px solid #D8DEE9;
+}
+
+#epmax {
+  border-left: 1px solid #D8DEE9;
+}
+
+#wpmax {
+  border-left: 1px solid #D8DEE9;
+}
+
+#hpnow,
+#mpnow,
+#epnow,
+#wpnow {
+  text-align: center;
+  border-right: 1px solid #D8DEE9;
+}
+
+#hpnow:hover,
+#mpnow:hover,
+#epnow:hover,
+#wpnow:hover {
+  color: #ECEFF4;
+  font-weight: bold;
+}
+
+#hpnow {
+  background: #84363d;
+}
+
+#mpnow {
+  background: #005f87;
+}
+
+#epnow {
+  background: #916919;
+}
+
+#wpnow {
+  background: #703080;
+}
+
+/* wikipedia.org/wiki/ANSI_escape_code */
+.ansi-black {
+  color: #191c22;
+  font-weight: 800;
+}
+
+.ansi-red {
+  color: #BF616A;
+}
+
+.ansi-green {
+  color: #A3BE8C;
+}
+
+.ansi-yellow {
+  color: #D08770;
+}
+
+.ansi-blue {
+  color: #5E81AC;
+}
+
+.ansi-magenta {
+  color: #B48EAD;
+}
+
+.ansi-cyan {
+  color: #8FBCBB;
+}
+
+.ansi-darkGray {
+  color: #97a7c4;
+  font-weight: 700;
+}
+
+.ansi-lightGray {
+  color: #D8DEE9;
+  font-weight: 600;
+}
+
+.ansi-white {
+  color: #ECEFF4;
+  font-weight: 600;
+}
+
+/* bright */
+.ansi-bright.ansi-black {
+  color: #97a7c4;
+  font-weight: 600;
+}
+
+.ansi-bright.ansi-red {
+  color: #c6737b;
+  font-weight: 600;
+}
+
+.ansi-bright.ansi-green {
+  color: #A3BE8C;
+  font-weight: 600;
+}
+
+.ansi-bright.ansi-yellow {
+  color: #EBCB8B;
+  font-weight: 600;
+}
+
+.ansi-bright.ansi-blue {
+  color: #81A1C1;
+  font-weight: 600;
+}
+
+.ansi-bright.ansi-magenta {
+  color: #B48EAD;
+  font-weight: 600;
+}
+
+.ansi-bright.ansi-cyan {
+  color: #88C0D0;
+  font-weight: 600;
+}
+
+.ansi-bright.ansi-lightGray {
+  color: #E5E9F0;
+  font-weight: 600;
+}
