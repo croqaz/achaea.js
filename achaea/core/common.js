@@ -8,6 +8,10 @@ export function dateDiff(d1, d2) {
   return d / 1000 / 3600;
 }
 
+export function sleep(sec) {
+  return new Promise((r) => setTimeout(r, Math.round(sec * 1000)));
+}
+
 export const CITIES = ['Ashtan', 'Cyrene', 'Eleusis', 'Hashan', 'Mhaldor', 'Targossas'];
 
 export const HOUSES = [

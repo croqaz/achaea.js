@@ -33,8 +33,15 @@ const POWER_LEVELS = [
 
 export function processDisplayText(text) {
   /*
-   * This is raw text, from the game.
+   * This is raw ANSI text, from the game.
    */
+
+  if (text.includes('magical shield')) {
+    text = text.replace(
+      'A nearly invisible magical shield forms around ',
+      'A nearly invisible magical shield 🛡️ forms around ',
+    );
+  }
 
   if (text.includes(' CRITICAL hit')) {
     let index = 0;
@@ -42,8 +49,8 @@ export function processDisplayText(text) {
       if (text.includes(p)) {
         text = text.replace(p, `${p} ${'⭐'.repeat(index + 1)}`);
         break;
-        index++;
       }
+      index++;
     }
   }
 

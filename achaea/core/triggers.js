@@ -1,7 +1,8 @@
 import ee from '../events.js';
-import * as p from '../parsers.js';
-import { STATE, updateLocation } from './state.js';
+import { STATE } from './state.js';
 import { gmcpHello, gmcpSupports, gmcpRiftItems } from './gmcp.js';
+
+const RAGE_REGEX = /\[Rage\]: \+\d+\.\d+\. Total: \d+\.\d+ Now Available: (.+)/;
 
 export default function processTriggers(text) {
   /*
@@ -10,25 +11,24 @@ export default function processTriggers(text) {
    */
   text = text.trim();
 
+  // Thief protection
+  if (STATE.MUD.greed && text.includes('A feeling of generosity spreads throughout you')) {
+    ee.emit('user:text', 'QUEUE PREPEND EB SELFISHNESS');
+    return;
+  }
+
   if (
     text.includes('You must be standing first') ||
     text.includes('You must be standing to walk') ||
-    text.includes('You open your eyes and yawn mightily') ||
-    text.includes('You open your eyes and stretch languidly, feeling deliciously well-rested')
+    text.includes('You open your eyes and yawn mightily')
   ) {
     ee.emit('user:text', 'stand');
     return;
   }
 
-  // auto attack logic
+  // Stop auto attack logic
   if (text.includes('You have slain') && text.includes(', retrieving the corpse.')) {
     STATE.MUD.battle = false;
-    return;
-  }
-
-  // try to parse survey output, to enhance location state
-  if (text.includes('You discern that you are') && text.includes('Your environment')) {
-    updateLocation(p.parseSurvey(text));
     return;
   }
 
