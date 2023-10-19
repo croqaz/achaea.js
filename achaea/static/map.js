@@ -1,11 +1,13 @@
 window.AREA = { rooms: {} };
-window.ROOM = { id: 0 };
+window.ROOM = { id: 0, items: [], players: [] };
 
 const COLOR = {
   amber: '#FFC901',
 };
 
 const EXITS = {
+  up: 'u',
+  down: 'd',
   north: 'n',
   south: 's',
   east: 'e',
@@ -47,23 +49,7 @@ window.addEventListener('load', function () {
   };
 });
 
-function throttle(callback, limit) {
-  // var x = throttle(async function(name) {console.log(`HELLO ${name}`)}, 1000);
-  // await x(1); await x(2); await x(3); await x(4); await x(5);
-  let wait = false;
-  return async function (...params) {
-    if (!wait) {
-      callback.apply(self, params);
-      wait = true;
-      setTimeout(function () {
-        wait = false;
-      }, limit);
-    }
-    // else console.log('Throttled, ignoring!', callback, params);
-  };
-}
-
-export const fetchRoom = throttle(async function fetchRoom() {
+export async function fetchRoom() {
   // Fetch the current room
   const res = await fetch('/room.json');
   const data = await res.json();
@@ -72,9 +58,9 @@ export const fetchRoom = throttle(async function fetchRoom() {
     console.log('Room:', data.name, window.ROOM);
     return data;
   }
-}, 500);
+}
 
-export const fetchMap = throttle(async function fetchMap(data) {
+export async function fetchMap(data) {
   if (!data || !data.room || !data.room.area) return;
   const areaID = data.room.area;
 
@@ -87,7 +73,7 @@ export const fetchMap = throttle(async function fetchMap(data) {
   else console.warn('Area:', area.name, 'has NO ROOMS!');
 
   window.AREA = area;
-}, 500);
+}
 
 // Related to drawing map
 let mainLayer = null;
@@ -122,14 +108,13 @@ export function drawMap(data) {
   roomGroup.addChild(roomTitle);
 
   function drawRoom(p1, p2, room) {
-    const exits = room.exits || [];
+    const exits = (room.exits || []).map((x) => EXITS[x.direction] || x.direction);
     let title = `#${room.id} -- ${room.environment.name}\n${room.title}`;
-    title += `\nExits: ${exits.map((x) => EXITS[x.direction] || x.direction).join(', ')}`;
+    title += `\nExits: ${exits.join(', ')}`;
 
     // Room group to hold the square & info
     const group = new Group({ data: { id: room.id, title } });
 
-    // const rect = roomSymbol.place([p1, p2]);
     const fillColor = room.environment.htmlcolor || '#AAA';
     const opacity = room.visited || room.id === window.ROOM.id ? 0.9 : 0.15;
     const rect = new Path.Rectangle({
@@ -179,6 +164,35 @@ export function drawMap(data) {
           }),
         );
       }
+    } else {
+      let content = '';
+      if (exits.includes('u') && exits.includes('d') && exits.includes('in') && exits.includes('out')) {
+        content = '✦';
+      } else if (exits.includes('u') && exits.includes('d')) {
+        content = '⬍';
+      } else if (exits.includes('in') && exits.includes('out')) {
+        content = '⬌';
+      } else if (exits.includes('u')) {
+        content = '▲';
+      } else if (exits.includes('d')) {
+        content = '▼';
+      } else if (exits.includes('in')) {
+        content = '❮';
+      } else if (exits.includes('out')) {
+        content = '❯';
+      }
+      if (content) {
+        group.addChild(
+          new PointText({
+            content,
+            point: [p1, p2 + FONT_SZ / 3],
+            justification: 'center',
+            fillColor: COLOR.background2,
+            fontFamily: FONT_FAM,
+            fontSize: FONT_SZ,
+          }),
+        );
+      }
     }
 
     // Display room info on mouse hover
@@ -217,22 +231,44 @@ export function drawMap(data) {
   }
 
   function drawPath(p1, p2, tgt, exit) {
-    let tgtCoord = tgt.coord;
+    const D = 22;
+    const L = tgt ? tgt.coord.z : NaN;
+    const dir = EXITS[exit.direction] || exit.direction;
+    let tgtCoord = tgt ? tgt.coord : { x: p1, y: p2 - D };
+
+    // Hack to fix the broken coords to other levels in the same Area,
+    // or to other areas with completely different coords
+    let toPoint = [tgtCoord.x * GRID, -tgtCoord.y * GRID];
+    if (L !== window.ROOM.level) {
+      if (dir === 'w' || dir === 'in') toPoint = [p1 - D, p2];
+      else if (dir === 'e' || dir === 'out') toPoint = [p1 + D, p2];
+      else if (dir === 's' || dir === 'd') toPoint = [p1, p2 + D];
+      else if (dir === 'n' || dir === 'u') toPoint = [p1, p2 - D];
+      else if (dir === 'se') toPoint = [p1 + D, p2 + D];
+      else if (dir === 'se') toPoint = [p1 + D, p2 + D];
+      else if (dir === 'sw') toPoint = [p1 - D, p2 + D];
+      else if (dir === 'ne') toPoint = [p1 + D, p2 - D];
+      else if (dir === 'nw') toPoint = [p1 - D, p2 - D];
+    }
+
     const path = new Path.Line({
       from: [p1, p2],
-      to: [tgtCoord.x * GRID, -tgtCoord.y * GRID],
+      to: toPoint,
       strokeColor: COLOR.background1,
       strokeCap: 'round',
       strokeWidth: 2,
     });
 
-    if (exit.direction === 'in' || exit.direction === 'out') {
+    if (L !== window.ROOM.level) {
+      path.dashArray = [1, 3];
+      path.strokeColor = '#999';
+    } else if (dir === 'in' || dir === 'out') {
       path.dashArray = [2, 6];
       path.strokeColor = 'red';
-    } else if (exit.direction === 'up' || exit.direction === 'down') {
+    } else if (dir === 'u' || dir === 'd') {
       path.dashArray = [2, 6];
       path.strokeColor = 'blue';
-    } else if (exit.direction === 'worm warp') {
+    } else if (dir === 'worm warp') {
       path.strokeWidth = 1;
       path.dashArray = [2, 6];
       path.strokeColor = '#999';
@@ -246,24 +282,16 @@ export function drawMap(data) {
     const p1 = parseInt(room.coord.x) * GRID;
     const p2 = -parseInt(room.coord.y) * GRID;
 
-    // Draw room
+    // Draw the room
     roomGroup.addChild(drawRoom(p1, p2, room));
 
     // Draw connections
     if (!room.exits) continue;
     for (const exit of room.exits) {
       const tgt = window.AREA.rooms[exit.target];
-      if (!tgt) {
-        // console.error('Exit not found:', exit);
-        continue;
-      }
-      if (tgt.coord.z !== window.ROOM.level) {
-        // Don't draw paths to other levels
-        continue;
-      }
       // Draw the path
       pathGroup.addChild(drawPath(p1, p2, tgt, exit));
-    } // --exits
+    }
   }
 
   const topCenter = roomGroup.bounds.topCenter;

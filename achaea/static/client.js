@@ -3,8 +3,8 @@ import * as map from './map.js';
 const ASCII_INPUT = /^[/'"0-9a-z]$/i;
 
 window.addEventListener('load', function () {
-  let historyIndex = 0;
-  const history = ['QL'];
+  const history = restoreHistory();
+  let historyIndex = history.length - 1;
 
   const gameLog = document.getElementById('gameLog');
   const userInput = document.getElementById('userInput');
@@ -15,6 +15,7 @@ window.addEventListener('load', function () {
   startWS();
 
   (async function mapData() {
+    // warmup on page refresh
     const data = await map.fetchRoom();
     await map.fetchMap(data);
   })();
@@ -72,6 +73,7 @@ window.addEventListener('load', function () {
       else if (document.activeElement.id === userInput.id && input) {
         if (history.at(-1) !== input) {
           history.push(input);
+          persistHistory(history);
           historyIndex = history.length - 1;
         }
         WS.send(input);
@@ -108,10 +110,10 @@ async function startWS() {
     // This should be a Room update
     // num: .., name: .., plane: .., environment: ..,
     // details: [], exits: {}, items: [], players: []
-    if (data.num && data.area && data.room) {
+    if (data.num && data.name && data.room) {
+      window.ROOM.id = data.num;
       // Current Z level
-      const level = data.room.coord ? data.room.coord.z : 0;
-      window.ROOM = { id: data.num, level };
+      window.ROOM.level = data.room.coord ? data.room.coord.z : 0;
       // Always mark current room as visited
       if (AREA.rooms[data.num]) {
         AREA.rooms[data.num].visited = true;
@@ -122,12 +124,20 @@ async function startWS() {
       }
       return displayRoom(data);
     }
+    if (data.textType === 'roomItems' && data.items) {
+      window.ROOM.items = data.items;
+      return displayRoom();
+    }
+    if (data.textType === 'roomPlayers' && data.players) {
+      window.ROOM.players = data.players;
+      return displayRoom();
+    }
 
-    // This should be a Player update
+    // This should be Player info
     // name: .., race: .., level: .., xp: .., class: .., city: ..,
     // hp: .. maxhp: .. mp: .. maxmp: .. ep: .. maxep: .. wp: .. maxwp: ..
     // bal: '1', eq: '1', rift: [], items: [], afflictions: [], defences: []
-    if (data.race && data.level) {
+    if (data.name && data.race && data.level) {
       return displayMyself(data);
     }
 
@@ -183,13 +193,37 @@ window.probeItem = function probeItem(elem) {
   WS.send(`PROBE ${id}`);
 };
 
+function persistHistory(history) {
+  // Limit history, so it doesn't explode
+  if (history.length > 999) history.shift();
+  // Save user's command history in the browser
+  localStorage.setItem('History', JSON.stringify(history));
+}
+
+function restoreHistory() {
+  // Load user's command history from last time
+  const h = localStorage.getItem('History');
+  if (h) return JSON.parse(h);
+  return ['QL'];
+}
+
 function displayRoom(data) {
   const roomX = document.getElementById('room');
   let room = '';
 
-  if (data.players.length) {
-    room += `<h5>${data.players.length} Players:</h5>`;
-    for (const x of data.players) {
+  if (data && data.name) {
+    const locX = document.getElementById('loc');
+    let loc = '';
+    if (data.area) {
+      loc += `${data.area.replace(/^the |^a /, '')}: `;
+    }
+    loc += data.name;
+    locX.innerHTML = loc;
+  }
+
+  if (window.ROOM.players && window.ROOM.players.length) {
+    room += `<h5>${window.ROOM.players.length} Players:</h5>`;
+    for (const x of window.ROOM.players) {
       // Level X Race, Color based on city
       room += `<p data-id="${x.name}" class="roomPlayer" title="${x.fullname}" onclick="whoisPlayer(this)">- ${x.name}</p>`;
     }
@@ -197,8 +231,8 @@ function displayRoom(data) {
 
   const items = [];
   const denizen = [];
-  if (data.items.length) {
-    for (const x of data.items) {
+  if (window.ROOM.items && window.ROOM.items.length) {
+    for (const x of window.ROOM.items) {
       if (x.attrib === 'm') denizen.push(x);
       else items.push(x);
     }
@@ -272,15 +306,15 @@ function displayMyself(data) {
 
   let html = `<h5>${data.name} (Lvl ${data.level} ${data.race})</h5>`;
   if (data.defences.length) {
-    html += '<h5>Defences:</h5>';
+    html += '<h5>Defences:</h5> - ';
     for (const x of data.defences) {
-      html += `<p>- ${x.name}</p>`;
+      html += `<span class="playerDef" title="${x.desc}">${x.name}</span>; `;
     }
   }
   if (data.afflictions.length) {
-    html += '<h5>Afflictions:</h5>';
+    html += '<h5>Afflictions:</h5> - ';
     for (const x of data.afflictions) {
-      html += `<p>- ${x.name}</p>`;
+      html += `<span class="playerAff" title="${x.desc}">${x.name}</span>; `;
     }
   }
   playerX.innerHTML = html;

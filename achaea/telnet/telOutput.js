@@ -27,18 +27,18 @@ export default class TelnetOutput extends Transform {
     return xlateBuf.slice(0, xlateIndex);
   }
 
+  writeCommand(command) {
+    const cmdBuf = Buffer.alloc(2);
+    cmdBuf[0] = telOpts.TELNET_IAC;
+    cmdBuf[1] = command;
+    return this.push(cmdBuf);
+  }
+
   _writeOption(command, option) {
     const cmdBuf = Buffer.alloc(3);
     cmdBuf[0] = telOpts.TELNET_IAC;
     cmdBuf[1] = command;
     cmdBuf[2] = option;
-    return this.push(cmdBuf);
-  }
-
-  writeCommand(command) {
-    const cmdBuf = Buffer.alloc(2);
-    cmdBuf[0] = telOpts.TELNET_IAC;
-    cmdBuf[1] = command;
     return this.push(cmdBuf);
   }
 
