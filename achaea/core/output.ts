@@ -1,10 +1,9 @@
-/*
- * Game text processor.
- * Can be used to highlight text, display meta-data, shrink or, mute game text.
- */
+import { dim, italic } from 'ansicolor';
+import { STATE } from './state.ts';
+import extraProcessDisplayText from '../extra/output.ts';
 
 const CRITIC_LEVELS = [
-  // "You have scored a CRITICAL hit", // no need
+  // You have scored a CRITICAL hit // no need
   'You have scored a CRUSHING CRITICAL hit',
   'You have scored an OBLITERATING CRITICAL hit',
   'You have scored an ANNIHILATINGLY POWERFUL CRITICAL hit',
@@ -31,16 +30,44 @@ const POWER_LEVELS = [
   ['looks weak and feeble', 1, '1-4'],
 ];
 
-export function processDisplayText(text) {
-  /*
-   * This is raw ANSI text, from the game.
-   */
+const ANSI_CODE = '\x1B[[][0-9]+m';
+const PROMPT = new RegExp(
+  `^(?:${ANSI_CODE})?${ANSI_CODE}\\d{1,6}h, ${ANSI_CODE}${ANSI_CODE}\\d{1,6}m` +
+    `(?:, ${ANSI_CODE}${ANSI_CODE}\\d{1,7}e, ${ANSI_CODE}${ANSI_CODE}\\d{1,7}w)?` +
+    `(?:, ${ANSI_CODE}${ANSI_CODE}\\d{1,6}R)?[ ]?${ANSI_CODE}[ ]?[a-z]+?-$`,
+  'm',
+);
 
-  if (text.includes('magical shield')) {
-    text = text.replace(
-      'A nearly invisible magical shield forms around ',
-      'A nearly invisible magical shield 🛡️ forms around ',
-    );
+// let count = 1;
+
+export default function processDisplayText(text: string): string {
+  /*
+   * Game text processor.
+   * Used to highlight or replace text, display meta-data...
+   * This is raw ANSI text, from the game.
+   * It is only used for display in the GUI,
+   * it is not used for triggers.
+   */
+  // console.time(`core-output-${count}`);
+
+  {
+    const p = text.match(PROMPT);
+    if (p) {
+      let extra = '';
+      if (STATE.Battle.active && STATE.Battle.tgtHP) {
+        extra += italic.yellow(` tgt=${STATE.Battle.tgtHP}`);
+      }
+      if (STATE.Me.hp < STATE.Me.oldhp) {
+        extra += dim.red(` -${STATE.Me.oldhp - STATE.Me.hp}HP`);
+      }
+      if (STATE.Me.mp < STATE.Me.oldmp) {
+        extra += dim.blue(` -${STATE.Me.oldmp - STATE.Me.mp}MP`);
+      }
+      if (!extra) {
+        extra = ' ●';
+      }
+      text = text.replace(p[0], p[0] + extra + '\n');
+    }
   }
 
   if (text.includes(' CRITICAL hit')) {
@@ -56,26 +83,18 @@ export function processDisplayText(text) {
 
   if (text.includes(' health remaining.')) {
     for (const p of POWER_LEVELS) {
-      if (text.includes(p[0])) {
-        text = text.replace(p[0], `${p[0]} 🦾=${p[1]} LVL=${p[2]}`);
+      if (text.includes(p[0] as string)) {
+        text = text.replace(p[0] as string, `${p[0]} 🦾=${p[1]} LVL=${p[2]}`);
         break;
       }
     }
   }
 
-  if (text.includes('talisman')) {
-    text = text.replaceAll(' talisman piece', ' talisman piece 🧿');
-  }
+  text = extraProcessDisplayText(text);
 
-  if (text.includes('sovereigns')) {
-    text = text.replaceAll(' golden sovereigns', ' golden sovereigns 🪙');
-  }
-
-  if (text.includes('the corpse')) {
-    text = text.replace(', retrieving the corpse.', ', retrieving the corpse 💀.');
-  }
-
-  //
   process.stdout.write(text);
+  // console.timeEnd(`core-output-${count}`);
+  // count++;
+
   return text;
 }
