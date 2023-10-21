@@ -93,7 +93,7 @@ export var STATE: T.StateType = Object.seal({
     time: 'It is deep night in Achaea, before midnight.',
   }),
   //
-  Queue: Object.seal({ bal: [], eq: [], eb: [] }),
+  // Queue
   //
   Custom: {
     // user's current input
@@ -277,6 +277,7 @@ export function gmcpProcessAfflictions(type: string, data) {
   if (type === 'Char.Afflictions.List') {
     updateMyself({ afflictions: data });
   } else if (type === 'Char.Afflictions.Add') {
+    const tsData = data as T.GmcpAffliction;
     ee.emit(
       'sys:text',
       ansiToHtml(
@@ -286,6 +287,7 @@ export function gmcpProcessAfflictions(type: string, data) {
     );
     addToStateList('Me', 'afflictions', tsData);
   } else if (type === 'Char.Afflictions.Remove') {
+    const tsData = data as string[];
     ee.emit('sys:text', ansiToHtml(italic.magenta(`Afflictions -- ${data}`)));
     for (const item of tsData) {
       remFromStateList('Me', 'afflictions', item);
