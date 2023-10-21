@@ -6,6 +6,7 @@ import ansiToHtml from './core/ansi.ts';
 import processDisplayText from './core/output.ts';
 import { TelnetSocket, telOpts } from './telnet/index.js';
 
+// import core stuff
 import './core/triggers.ts';
 import './extra/index.ts';
 
@@ -80,14 +81,16 @@ export function connect(player: string) {
 
   // TODO :: move this to logs.ts
   ee.on('log:write', (line) => {
-    log.write('$ ' + line + '\n');
+    line = '$ ' + line;
+    console.log(line);
+    log.write(line + '\n');
   });
 
   ee.on('quit', () => {
     telnet.destroy();
     log.destroy();
     process.exit();
-  })
+  });
 
   // if the socket closes, terminate the program
   // BUG: Bun doesn't emit this event, for some reason

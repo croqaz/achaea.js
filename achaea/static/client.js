@@ -222,7 +222,7 @@ function displayRoom(data) {
   }
 
   if (window.ROOM.players && window.ROOM.players.length) {
-    room += `<h5>${window.ROOM.players.length} Players:</h5>`;
+    room += `<h5>${window.ROOM.players.length} Players here:</h5>`;
     for (const x of window.ROOM.players) {
       // Level X Race, Color based on city
       room += `<p data-id="${x.name}" class="roomPlayer" title="${x.fullname}" onclick="whoisPlayer(this)">- ${x.name}</p>`;
@@ -238,18 +238,22 @@ function displayRoom(data) {
     }
   }
   if (denizen.length) {
-    room += `<h5>${denizen.length} Denizens:</h5>`;
+    room += `<h5>${denizen.length} Denizens here:</h5>`;
     for (const x of denizen) {
       // On-click, probe denizen
       room += `<p data-id="${x.id}" class="roomItem" title="[${x.id}] ${x.name}" onclick="probeItem(this)">- ${x.name}</p>`;
     }
+  } else {
+    room += `<h5>No denizens here</h5>`;
   }
   if (items.length) {
-    room += `<h5>${items.length} Items:</h5> - `;
+    room += `<h5>${items.length} Items here:</h5> - `;
     for (const x of items) {
       // On-click, probe item
       room += `<span data-id="${x.id}" class="roomItem" title="[${x.id}] ${x.name}" onclick="probeItem(this)">${x.name}</span>; `;
     }
+  } else {
+    room += `<h5>No items here</h5>`;
   }
 
   roomX.innerHTML = room;
@@ -310,12 +314,16 @@ function displayMyself(data) {
     for (const x of data.defences) {
       html += `<span class="playerDef" title="${x.desc}">${x.name}</span>; `;
     }
+  } else {
+    html += '<h5>No defences</h5>';
   }
   if (data.afflictions.length) {
     html += '<h5>Afflictions:</h5> - ';
     for (const x of data.afflictions) {
       html += `<span class="playerAff" title="${x.desc}">${x.name}</span>; `;
     }
+  } else {
+    html += '<h5>No afflictions</h5>';
   }
   playerX.innerHTML = html;
 }
