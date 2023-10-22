@@ -68,7 +68,7 @@ html, body, canvas, main, aside, div, pre {
   padding: 0;
 }
 
-p, b, span, pre, h5 {
+p, b, small, span, pre, h5 {
   line-height: 1.66rem;
   font-size: 14px;
   margin: 0;
@@ -76,6 +76,14 @@ p, b, span, pre, h5 {
 
 b, h5 {
   color: #E5E9F0;
+}
+
+small {
+  font-size: 12px;
+}
+
+.bold {
+  font-weight: 900;
 }
 
 body {

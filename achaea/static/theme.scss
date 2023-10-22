@@ -86,7 +86,7 @@ html, body, canvas, main, aside, div, pre {
   padding: 0;
 }
 
-p, b, span, pre, h5 {
+p, b, small, span, pre, h5 {
   line-height: 1.66rem;
   font-size: $font-size;
   margin: 0;
@@ -94,6 +94,12 @@ p, b, span, pre, h5 {
 
 b, h5 {
   color: $nord5;
+}
+small {
+  font-size: $font-size - 2;
+}
+.bold {
+  font-weight: 900;
 }
 
 body {

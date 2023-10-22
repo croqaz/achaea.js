@@ -130,5 +130,7 @@ dist
 .pnp.*
 
 # local
-maps
 logs
+log-archive
+db_*.json
+DB_*

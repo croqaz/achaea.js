@@ -215,7 +215,8 @@ function displayRoom(data) {
     const locX = document.getElementById('loc');
     let loc = '';
     if (data.area) {
-      loc += `${data.area.replace(/^the |^a /, '')}: `;
+      const a = data.area.replace(/^the |^a /, '').replace(/ \(indoors\)$/, '');
+      loc += `<small class="bold">${a}</small>: `;
     }
     loc += data.name;
     locX.innerHTML = loc;
