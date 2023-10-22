@@ -41,6 +41,35 @@ Has a cute browser GUI. *I think* it's cute. GUI features:
 * enemy tracker
 * many others
 
+## Base aliases
+
+* wares -- run WARES and collect prices in DB
+* qwho -- run quick WHO and collect users in DB
+* honours -- run HONOURS and update player in DB
+
+* ll - look at all denizens in the room
+* la - look at all players in the room
+
+* //stress ITEM - run all kinds of actions on an item, to see what works (twist, turn, push, pull...)
+* //quest NPC - say all kinds of questy things to an NPC
+
+* //map room WHATEVER - try to find the room ID using the MAP data, so you can walk to it
+* //map area WHATEVER - try to find the area ID using the MAP data
+* //map mid UID - try to find the middle room of the area ID, so you can walk to it
+
+* //find wares ITEM - find and list all matching items from the DB
+* //find whois NAME - find and list all matching players from the DB
+* //find room NAME - find and list all matching room names from the DB
+* //find item NAME - find and list all matching items from the DB
+* //find npc NAME - find and list all matching NPCs from the DB
+
+* //me - show myself as JSON, for debug
+* //room - show room as JSON, for debug
+* //state - show state as JSON, for debug
+
+* www - writhe forever, to keep yourself off balance
+* wxx - writhe stop
+
 ## Usage
 
 This is a [Bun](https://bun.sh) project.
@@ -49,7 +78,7 @@ Git clone, Bun install, then run:
 $ bun main.ts &lt;NAME>
 
 The *name* is your Achaea character and it's used to create the local DB with your name.
-Type your password and start playing Achaea.
+You need to open a browser on http://127.0.0.1:18888/ ; type your password and start playing Achaea.
 
 ## Alternatives
 
