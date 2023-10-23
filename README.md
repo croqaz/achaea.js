@@ -87,6 +87,7 @@ You need to open a browser on http://127.0.0.1:18888/ ; type your password and s
 * https://github.com/Blightmud/Blightmud
 * https://tintin.mudhalla.net/
 * https://gammon.com.au/mushclient/mushclient.htm -- Old, Windows only
+* https://wikipedia.org/wiki/List_of_MUD_clients
 
 ## License
 
