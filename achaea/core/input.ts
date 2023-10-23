@@ -56,8 +56,9 @@ export default function processUserInput(text: string): string | void {
     // Don't return here! Continue processing...
   }
 
+  // The user will quit
   if (text === 'quit') {
-    ee.emit('will:quit');
+    STATE.Custom.quitting = true;
   }
 
   const extra = extraProcessUserInput(text, parts);

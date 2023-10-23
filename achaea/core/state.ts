@@ -107,6 +107,7 @@ export var STATE: T.StateType = Object.seal({
     whoisDB: false,
     getPlants: false, // gather/ harvest?
     getMinerals: false,
+    quitting: false,
     //
   },
   // TOOD: Queue ...

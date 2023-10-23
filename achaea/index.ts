@@ -57,6 +57,7 @@ export function connect(player: string) {
   // on any data/ text, display on STDOUT
   telnet.on('data', (buffer) => {
     const rawText = buffer.toString('utf8');
+    // TODO :::: process HTML first, and move to server
     const viewText = escapeHtml(processDisplayText(rawText));
     ee.emit('game:html', ansiToHtml(viewText));
     const cleanText = ansiColor.strip(rawText);
@@ -86,18 +87,12 @@ export function connect(player: string) {
     log.write(line + '\n');
   });
 
-  ee.on('quit', () => {
+  // if the socket closes, terminate the program
+  telnet.on('close', () => {
+    console.log('Telnet closed. Bye!');
     telnet.destroy();
     log.destroy();
     process.exit();
-  });
-
-  // if the socket closes, terminate the program
-  // BUG: Bun doesn't emit this event, for some reason
-  // Node.js does emit this
-  telnet.on('close', () => {
-    console.log('Telnet closed. Bye!');
-    ee.emit('quit');
   });
 }
 
