@@ -1,9 +1,9 @@
 # Events
 
-How to listen for events:
+How to listen for events, from the `custom` folder:
 
 ```js
-import ee from '../events/index.ts';
+import ee from '../achaea/events/index.ts';
 
 ee.on('game:start', function () {
   // Run some logic in game start...
@@ -67,3 +67,8 @@ It is used by the interface to display the room items.
 Emitted when the room players are updated, eg: a player enters or leaves the room.
 
 It is used by the interface to display the room players.
+
+### have:eb
+
+Emitted when you have both physical balance & mental equilibrium, and you recovered either one of them.
+This is considered a new round.
