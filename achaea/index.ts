@@ -5,8 +5,10 @@ import ee from './events/index.ts';
 import ansiToHtml from './core/ansi.ts';
 import processDisplayText from './core/output.ts';
 import { TelnetSocket, telOpts } from './telnet/index.js';
+// import { teloptFmt } from './telnet/util.js';
 
 // import core stuff
+import './core/queue.ts';
 import './core/triggers.ts';
 import './extra/index.ts';
 
@@ -39,18 +41,18 @@ export function connect(player: string) {
   // negociate connection options
   telnet.on('will', (option) => {
     if (option === telOpts.TELNET_GMCP) {
-      // console.log('IAC WILL do:', teloptFmt(option))
+      // console.log('IAC WILL do:', teloptFmt(option));
       telnet.writeDo(option);
     } else {
       // tell remote we DONT do whatever they WILL offer
-      // console.log('IAC WILL dont:', teloptFmt(option))
+      // console.log('IAC WILL dont:', teloptFmt(option));
       telnet.writeDont(option);
     }
   });
 
   telnet.on('do', (option) => {
     // tell remote we WONT do anything we're asked to DO
-    // console.log('IAC DO:', teloptFmt(option))
+    // console.log('IAC DO:', teloptFmt(option));
     telnet.writeWont(option);
   });
 

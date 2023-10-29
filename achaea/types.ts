@@ -4,7 +4,7 @@ export interface StateType {
   Battle: StateBattle;
   Time: GmcpTime;
   Custom: Record<string, any>;
-  // Queue: Record<string, string[]>;
+  Queue: Record<string, string[]>;
 }
 
 export interface StateMe {
@@ -64,6 +64,7 @@ export interface StateRoom {
 export interface StateBattle {
   rage: number;
   active: boolean;
+  combat: boolean;
   tgtID?: number;
   tgtHP?: string;
   // local target name

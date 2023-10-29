@@ -27,16 +27,16 @@ export function setupDB(player) {
 }
 
 export function dbIter(prefix, limit = Infinity) {
-  if (prefix) return DB.iterator({ gte: `${prefix}-0`, lte: `${prefix}-z`, limit });
+  if (prefix) return DB.iterator({ gte: `${prefix}-0`, lte: `${prefix}-zzz`, limit });
   else return DB.iterator();
 }
 
 export function dbKeys(prefix, limit = Infinity) {
-  return DB.keys({ gte: `${prefix}-0`, lte: `${prefix}-z`, limit });
+  return DB.keys({ gte: `${prefix}-0`, lte: `${prefix}-zzz`, limit });
 }
 
 export function dbValues(prefix, limit = Infinity) {
-  return DB.values({ gte: `${prefix}-0`, lte: `${prefix}-z`, limit });
+  return DB.values({ gte: `${prefix}-0`, lte: `${prefix}-zzz`, limit });
 }
 
 export async function dbGet(prefix, id) {
@@ -66,7 +66,7 @@ export async function dbStats() {
     denizen: 0,
   };
   for (const prefix of Object.keys(stats)) {
-    for await (const x of dbValues(prefix)) {
+    for await (const _ of dbValues(prefix)) {
       stats[prefix]++;
     }
   }

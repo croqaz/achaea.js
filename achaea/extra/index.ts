@@ -6,3 +6,11 @@ import './wares.ts';
 import './whois.ts';
 import './rooms.ts';
 import './triggers.ts';
+
+try {
+  // @ts-ignore: Types
+  await import('../../custom/index.ts');
+  // console.log('Custom user folder loaded!');
+} catch {
+  // console.error('Custom user folder not found');
+}

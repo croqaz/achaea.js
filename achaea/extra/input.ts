@@ -6,6 +6,15 @@ import * as m from '../maps/index.ts';
 import * as w from '../maps/walker.ts';
 import { STATE, listDenizens } from '../core/state.ts';
 
+let customProcessUserInput;
+try {
+  // @ts-ignore: Types
+  customProcessUserInput = (await import('../../custom/input.ts')).default;
+  // console.log('Custom user input function loaded!');
+} catch {
+  // console.error('Custom user input function not found');
+}
+
 export default function extraProcessUserInput(text: string, parts: string[]): string | void {
   /*
    * [EXTRA] proces user text input, eg: aliases, custom commands
@@ -16,47 +25,10 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
   const secondWord = parts[1] ? parts[1].toLowerCase() : '';
   const query = parts[2] ? parts.slice(2).join(' ') : '';
 
-  // Auto attack specific target
-  //
-  if (text.startsWith('qq ')) {
-    // Attack specific target
-    const tgt = parts.slice(1).join(' ');
-    // Reset target. Useful after you flee!
-    if (tgt === '-' || tgt === '0') {
-      STATE.Battle.target = null;
-      STATE.Battle.active = false;
-      return;
-    }
-    if (tgt !== STATE.Battle.target) {
-      STATE.Battle.target = tgt;
-      ee.emit('user:text', `st ${tgt}`);
-    }
-    STATE.Battle.active = true;
-    // Alias set kk <...>
-    return `kk ${tgt}`;
-  } else if (text === 'qqa') {
-    // Attack first denizen in the room
-    const tgt = listDenizens()[0];
-    if (tgt !== STATE.Battle.target) {
-      STATE.Battle.target = tgt;
-      ee.emit('user:text', `st ${tgt}`);
-    }
-    STATE.Battle.active = true;
-    // Alias set kk <...>
-    return `kk ${tgt}`;
-  } else if (text === 'qq' && STATE.Battle.target) {
-    // Attack the last used target
-    STATE.Battle.active = true;
-    return `kk ${STATE.Battle.target}`;
-  } else if (text === 'qq') {
-    // If there is no target, replace the QUIT cmd
-    return 'QL';
-  }
-
   // WWW = writhe forever
   // WXX = writhe stop
   // You begin to writhe helplessly, throwing your body off balance
-  else if (text === 'www') {
+  if (text === 'www') {
     STATE.Custom.writhe = true;
     return 'WRITHE';
   } else if (text === 'wwx' || text === 'wxx') {
@@ -65,12 +37,12 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
   }
 
   // Collect wares DB
-  if (firstWord === 'wares' || firstWord === 'cart wares') {
+  if (firstWord === 'wares' || (firstWord === 'cart' && secondWord === 'wares')) {
     STATE.Custom.waresDB = true;
     return text;
   }
   // Collect whois DB
-  if (firstWord === 'qwho') {
+  else if (firstWord === 'qwho') {
     STATE.Custom.whoisDB = true;
     return text;
   }
@@ -240,6 +212,11 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
 
     // end of special cmds; don't return here !!
     // the user can also implement custom // cmds
+  }
+
+  // Run custom function
+  if (customProcessUserInput) {
+    text = customProcessUserInput(text, parts);
   }
 
   return text;

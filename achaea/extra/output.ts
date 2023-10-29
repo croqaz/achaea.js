@@ -1,4 +1,11 @@
-const ANSI_CODE = '\x1B[[][0-9]+m';
+let customProcessDisplayText;
+try {
+  // @ts-ignore: Types
+  customProcessDisplayText = (await import('../../custom/output.ts')).default;
+  // console.log('Custom user output function loaded!');
+} catch {
+  // console.error('Custom user output function not found');
+}
 
 export default function extraProcessDisplayText(text: string): string {
   /*
@@ -13,10 +20,21 @@ export default function extraProcessDisplayText(text: string): string {
   // Visual things
   //
 
+  // Make Hypnotise snap super visible... event if it's late
+  text = text.replace(
+    /(\w+) snaps (his|her) fingers in front of you\./,
+    '$1 snaps $2 fingers 🤞 in front of you 🤢💀 !!!',
+  );
+
   // Make Loki venom super mega visible
   text = text.replace(
     'You are confused as to the effects of the venom.',
-    'You are confused ⁉️ as to the effects of the venom ☣️🤢💀 !!!',
+    'You are confused ⁉️ as to the effects of the venom 🤢💀 !!!',
+  );
+
+  text = text.replace(
+    'A beam of prismatic light suddenly shoots into the room.',
+    'A beam of PRISMATIC light ✨ suddenly shoots into the room!',
   );
 
   if (text.includes('magical shield')) {
@@ -32,6 +50,11 @@ export default function extraProcessDisplayText(text: string): string {
     );
   }
 
+  if (text.includes('sovereign')) {
+    text = text.replace(/[ \n\r]+golden[ \n\r]+sovereigns?/g, ' golden sovereigns 🪙');
+    text = text.replace(/[ \n\r]+pile of sovereigns/g, ' pile of sovereigns 🪙');
+  }
+
   if (text.includes('the corpse')) {
     text = text.replace(', retrieving the corpse.', ', retrieving the corpse 💀.');
   }
@@ -40,6 +63,11 @@ export default function extraProcessDisplayText(text: string): string {
   // Gag spammy text
   //
   // ...
+
+  // Run custom function
+  if (customProcessDisplayText) {
+    text = customProcessDisplayText(text);
+  }
 
   // Return the changed text to be displayed in the GUI
   return text;
