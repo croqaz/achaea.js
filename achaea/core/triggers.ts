@@ -16,7 +16,10 @@ export default function processTriggers(text: string) {
   }
 
   // Make sure the user is really quitting
-  if (STATE.Custom.quitting && text.includes('You grow still and begin to silently pray for preservation of your soul')) {
+  if (
+    STATE.Custom.quitting &&
+    text.includes('You grow still and begin to silently pray for preservation of your soul')
+  ) {
     // Emit quitting, for cleanup
     ee.emit('game:quit');
   }

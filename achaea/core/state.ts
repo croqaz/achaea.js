@@ -40,10 +40,10 @@ export var STATE: T.StateType = Object.seal({
     wp: 0,
     maxwp: 0,
 
-    bal: true,
-    eq: true,
-    eb: true,
-    round: 0, // rounds of balance / equilibrium
+    bal: true, // physical balance
+    eq: true, // mental equilibrium
+    eb: true, // bal & eq
+    round: 0, // rounds of bal & eq
 
     rift: [],
     items: [],
@@ -74,6 +74,7 @@ export var STATE: T.StateType = Object.seal({
   Battle: Object.seal({
     rage: 0,
     active: false,
+    combat: false, // PVP
     tgtID: null,
     tgtHP: null,
     target: null, // attack target name
@@ -93,7 +94,7 @@ export var STATE: T.StateType = Object.seal({
     time: 'It is deep night in Achaea, before midnight.',
   }),
   //
-  // Queue
+  Queue: Object.seal({ bal: [], eq: [], eb: [] }),
   //
   Custom: {
     // user's current input
@@ -201,7 +202,8 @@ export function gmcpProcessChar(_type: string, data: T.GmcpChar) {
     } else {
       data.bal = false;
     }
-    // if (data.bal && data.bal !== STATE.Me.bal) ee.emit('have:bal'); ??
+    // Have physical balance
+    if (data.bal && data.bal !== STATE.Me.bal) ee.emit('have:bal');
   }
   if (data.eq) {
     if (data.eq === '1') {
@@ -209,7 +211,8 @@ export function gmcpProcessChar(_type: string, data: T.GmcpChar) {
     } else {
       data.eq = false;
     }
-    // if (data.eq && data.eq !== STATE.Me.eq) ee.emit('have:eq'); ??
+    // Have mental equilibrium
+    if (data.eq && data.eq !== STATE.Me.eq) ee.emit('have:eq');
   }
   if (data.bal && data.eq && (data.bal !== STATE.Me.bal || data.eq !== STATE.Me.eq)) {
     STATE.Me.round++;
@@ -237,7 +240,15 @@ export function gmcpProcessChar(_type: string, data: T.GmcpChar) {
     for (const cs of data.charstats) {
       if (cs.startsWith('Rage:')) {
         const [, r] = cs.split(': ');
-        if (r) STATE.Battle.rage = parseInt(r);
+        if (r) {
+          const oldRage = STATE.Battle.rage;
+          STATE.Battle.rage = parseInt(r);
+          // Doesn't make sense to emit the event for small rage values
+          // or outside of battle
+          if (STATE.Battle.active && STATE.Battle.rage !== oldRage && STATE.Battle.rage >= 14) {
+            ee.emit('myself:rage', STATE.Battle.rage);
+          }
+        }
         break;
       }
     }
@@ -249,12 +260,13 @@ export function gmcpProcessChar(_type: string, data: T.GmcpChar) {
 
 export function gmcpProcessTarget(type: string, data) {
   if (type === 'IRE.Target.Set') {
+    const tsData = data as string;
     // Ignore targets outside of battle
-    if (STATE.Battle.active) STATE.Battle.tgtID = parseInt(data as string);
+    if (STATE.Battle.active) STATE.Battle.tgtID = parseInt(tsData) || tsData.toTitleCase();
   } else if (type === 'IRE.Target.Info') {
     const tsData = data as Record<string, string>;
-    STATE.Battle.tgtID = parseInt(tsData.id as string);
-    STATE.Battle.tgtHP = tsData.hpperc;
+    if (tsData.id !== '-1') STATE.Battle.tgtID = parseInt(tsData.id as string);
+    if (tsData.hpperc !== '-1') STATE.Battle.tgtHP = tsData.hpperc;
   }
 }
 
@@ -393,7 +405,7 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
   }
 
   if (data.location === 'inv') {
-    ee.emit('inv:update', STATE.Me);
+    ee.emit('inv:update', STATE.Me.items);
   } else if (data.location === 'room') {
     ee.emit('items:update', STATE.Room.items);
   }
@@ -407,7 +419,7 @@ export function gmcpProcessRift(type: string, data) {
   } else if (type === 'IRE.Rift.Remove') {
     remFromStateList('Me', 'rift', data.item);
   }
-  ee.emit('rift:update', STATE.Me);
+  ee.emit('rift:update', STATE.Me.rift);
 }
 
 export function gmcpProcessSkills(type: string, data) {
