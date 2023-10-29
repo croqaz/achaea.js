@@ -1,5 +1,9 @@
 import u from '@yanick/updeep-remeda';
 
+String.prototype.toTitleCase = function () {
+  return this.charAt(0).toUpperCase() + this.substr(1).toLowerCase();
+};
+
 export function isoDate(): string {
   return new Date().toISOString().split('.')[0];
 }
