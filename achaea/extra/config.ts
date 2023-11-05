@@ -1,3 +1,5 @@
+import ee from '../events/index.ts';
+
 export const Config = {
   //
   // Hunting attack name

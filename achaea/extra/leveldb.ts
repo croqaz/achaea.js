@@ -79,7 +79,7 @@ export async function dbStats() {
 export async function waresFind(key) {
   const arr = [];
   for await (const item of dbValues('wares')) {
-    if (item.id.startsWith(key) || (item.name && item.name.includes(key))) {
+    if (item.id.startsWith(key) || (item.name && item.name.toLowerCase().includes(key))) {
       const area = item.area;
       let room = item.room.replace(/ \(indoors\)$/, '');
       if (room.length > 20) room = room.slice(0, 20) + '…';

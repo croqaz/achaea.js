@@ -12,9 +12,9 @@ const CRITIC_LEVELS = [
 ];
 
 const POWER_LEVELS = [
-  ['almost glows with nearly god-like power', 16, '☠️☠️☠️'],
-  ['does not even register your presence as a threat', 15, '☠️☠️'],
-  ['exudes an aura of overwhelming power', 14, '☠️'],
+  ['almost glows with nearly god-like power', 16, '??-☠️☠️☠️'],
+  ['does not even register your presence as a threat', 15, '??-☠️☠️'],
+  ['exudes an aura of overwhelming power', 14, '150++☠️'],
   ['has an air of extreme strength', 13, '125++'],
   ['looks to be crushingly strong', 12, '100-124'],
   ['appears to be extraordinarily strong', 11, '75-99'],
@@ -96,5 +96,5 @@ export default function processDisplayText(text: string): string {
   // console.timeEnd(`core-output-${count}`);
   // count++;
 
-  return text;
+  return text.trim();
 }

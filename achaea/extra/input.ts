@@ -42,7 +42,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
     return text;
   }
   // Collect whois DB
-  else if (firstWord === 'qwho') {
+  else if (firstWord === 'bw' || firstWord === 'qwho') {
     STATE.Custom.whoisDB = true;
     return text;
   }
@@ -101,10 +101,13 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
           if (n && n.dir) {
             ee.emit('user:text', n.dir);
           } else {
-            ee.emit('sys:text', '<b>[Path]</b>: Direction not defined!');
+            ee.emit(
+              'sys:text',
+              '<i class="ansi-dim ansi-red"><b>[Path]</b>: Direction not defined!</i>',
+            );
           }
         } else {
-          ee.emit('sys:text', '<b>[Path]</b>: Walk not defined!');
+          ee.emit('sys:text', '<i class="ansi-dim ansi-red"><b>[Path]</b>: Walk not defined!</i>');
         }
       } else if (secondWord === 'stop' || secondWord === 'start') {
         const walk = STATE.Custom.autoWalk ? STATE.Custom.autoWalk.walk : null;
@@ -112,7 +115,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
           ee.emit('sys:text', `<b>[Path]</b>: Walk ${secondWord}!`);
           STATE.Custom.autoWalk[secondWord]();
         } else {
-          ee.emit('sys:text', '<b>[Path]</b>: Walk not defined!');
+          ee.emit('sys:text', '<i class="ansi-dim ansi-red"><b>[Path]</b>: Walk not defined!</i>');
         }
       } // JS hack to check if param is numeric
       else if (+secondWord) {
@@ -126,7 +129,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
           }
         }, 1);
       } else {
-        console.error('[SYS] Unknown GOTO command');
+        ee.emit('sys:text', '<i class="ansi-dim ansi-red"><b>[Path]</b>: Unknown GOTO command!</i>');
       }
       return;
     }
@@ -134,7 +137,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
     // Query MAP info in game
     else if (firstWord === '//map') {
       if (parts.length < 3) {
-        console.error('MAP query must specify 3 args');
+        ee.emit('sys:text', '<i class="ansi-dim ansi-red"><b>[MAP]</b>: Query must specify 3 args!</i>');
         return;
       }
       if (secondWord === 'room') {
@@ -161,7 +164,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
         const x = JSON.stringify(room, null, 2);
         ee.emit('sys:text', `Middle of Area: ${x}`);
       } else {
-        console.error('[SYS] Unknown MAP command');
+        ee.emit('sys:text', '<i class="ansi-dim ansi-red"><b>[MAP]</b>: Unknown MAP command!</i>');
       }
       return;
     }

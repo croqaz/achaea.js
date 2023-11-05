@@ -55,7 +55,7 @@ if (process.env.NODE_ENV !== 'test') {
       onRoomInfoUpdate.apply(null, arguments);
     } catch (err) {
       const msg = `[SYS] ROOM INFO update CRASHED: ${err} !`;
-      ee.emit('sys:text', msg);
+      ee.emit('sys:text', `<i class="ansi-dim ansi-red">${msg}</i>`);
       ee.emit('log:write', msg);
     }
   });
@@ -65,7 +65,7 @@ if (process.env.NODE_ENV !== 'test') {
       onRoomItemsUpdate.apply(null, arguments);
     } catch (err) {
       const msg = `[SYS] ROOM ITEMS update CRASHED: ${err} !`;
-      ee.emit('sys:text', msg);
+      ee.emit('sys:text', `<i class="ansi-dim ansi-red">${msg}</i>`);
       ee.emit('log:write', msg);
     }
   });

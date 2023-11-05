@@ -63,6 +63,7 @@ export interface StateRoom {
 
 export interface StateBattle {
   rage: number;
+  rounds: number;
   active: boolean;
   combat: boolean;
   tgtID?: number;

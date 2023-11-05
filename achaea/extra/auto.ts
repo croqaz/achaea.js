@@ -8,6 +8,13 @@ function procesRound() {
    */
   const userInput: string = STATE.Custom.input;
 
+  // Count battle rounds
+  //
+  if (STATE.Battle.active && STATE.Battle.tgtID) {
+    STATE.Battle.rounds++;
+    ee.emit('battle:update', STATE.Battle);
+  }
+
   // Writhe forever
   //
   if (STATE.Custom.writhe && userInput === 'www') {

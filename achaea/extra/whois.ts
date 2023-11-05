@@ -1,5 +1,3 @@
-import { italic } from 'ansicolor';
-
 import * as T from '../types.ts';
 import ee from '../events/index.ts';
 import * as p from '../parsers.ts';
@@ -7,7 +5,6 @@ import { dateDiff, isoDate } from '../core/common.ts';
 import { dbGet, dbSave } from './leveldb.ts';
 import { parseQuickWho } from '../parsers.ts';
 import { STATE } from '../core/state.ts';
-import ansiToHtml from '../core/ansi.ts';
 
 export function mergeWhois(oldWhois: T.DBPlayer, newWhois: T.DBPlayer): T.DBPlayer {
   const data = { ...oldWhois, ...newWhois };
@@ -29,8 +26,7 @@ export async function saveQuickWho(text: string) {
    */
   const names = parseQuickWho(text);
   if (!names || names.length === 0) {
-    ee.emit('sys:text', ansiToHtml(italic.red('[DB] Cannot parse text as QWHO!')));
-    return;
+    return ee.emit('sys:text', '<i class="ansi-red"><b>[DB]</b> Cannot parse text as QWHO!</i>');
   }
   const dt = isoDate();
   let index = 0;
@@ -43,8 +39,8 @@ export async function saveQuickWho(text: string) {
       if (oldWhois && dateDiff(oldWhois.dt, dt) < 48) {
         continue;
       } else if (oldWhois) {
-        const msg = `[DB] Old whois data for "${name}": ${oldWhois.dt}. Refreshing...`;
-        ee.emit('sys:text', ansiToHtml(italic.darkGray(msg)));
+        const msg = `Old whois data for "${name}": ${oldWhois.dt}. Refreshing...`;
+        ee.emit('sys:text', `<i class="ansi-darkGray"><b>[DB]</b> ${msg}</i>`);
       }
     } catch {}
     const data = await fetchWhois(name);
@@ -53,7 +49,7 @@ export async function saveQuickWho(text: string) {
     await dbSave('whois', mergeWhois(oldWhois, data));
     index++;
   }
-  ee.emit('sys:text', ansiToHtml(italic.darkGray(`[DB] ${index} entries saved in WHOIS`)));
+  ee.emit('sys:text', `<i class="ansi-darkGray"><b>[DB]</b> ${index} entries saved in WHOIS.</i>`);
 }
 
 export async function saveWhois(user) {
@@ -71,7 +67,7 @@ export async function saveWhois(user) {
     whois = mergeWhois(user, newWhois);
   }
   await dbSave('whois', whois);
-  ee.emit('sys:text', ansiToHtml(italic.darkGray(`[DB] ${user.id} updated in WHOIS`)));
+  ee.emit('sys:text', `<i class="ansi-darkGray"><b>[DB]</b> ${user.id} updated in WHOIS.</i>`);
 }
 
 export async function fetchWhois(name: string): Promise<T.DBPlayer> {
@@ -83,7 +79,7 @@ export async function fetchWhois(name: string): Promise<T.DBPlayer> {
     user.id = name;
     return user;
   } catch (err) {
-    ee.emit('sys:text', ansiToHtml(italic.red(`[DB] Fetch WHOIS failed for: ${name}!`)));
+    ee.emit('sys:text', `<i class="ansi-red"><b>[DB]</b> Fetch WHOIS failed for: ${name}!</i>`);
   }
 }
 
@@ -116,7 +112,7 @@ if (process.env.NODE_ENV !== 'test') {
       whoisTriggers.apply(null, arguments);
     } catch (err) {
       const msg = `[SYS] WHOIS trigger CRASHED: ${err} !`;
-      ee.emit('sys:text', msg);
+      ee.emit('sys:text', `<i class="ansi-dim ansi-red">${msg}</i>`);
       ee.emit('log:write', msg);
     }
   });

@@ -1,12 +1,9 @@
-import { italic } from 'ansicolor';
-
 import ee from '../events/index.ts';
 import * as p from '../parsers.ts';
 import { dbSave } from './leveldb.ts';
 import { parseWares } from '../parsers.ts';
 import { STATE } from '../core/state.ts';
 import { isoDate } from '../core/common.ts';
-import ansiToHtml from '../core/ansi.ts';
 
 export async function saveWares(text: string) {
   const dt = isoDate();
@@ -21,7 +18,7 @@ export async function saveWares(text: string) {
     await dbSave('wares', item);
     index++;
   }
-  ee.emit('sys:text', ansiToHtml(italic.darkGray(`[DB] ${index} entries saved in WARES`)));
+  ee.emit('sys:text', `<i class="ansi-darkGray"><b>[DB]</b> ${index} entries saved in WARES</i>`);
 }
 
 export function waresTriggers(text: string) {
@@ -59,7 +56,7 @@ if (process.env.NODE_ENV !== 'test') {
       waresTriggers.apply(null, arguments);
     } catch (err) {
       const msg = `[SYS] WARES trigger CRASHED: ${err} !`;
-      ee.emit('sys:text', msg);
+      ee.emit('sys:text', `<i class="ansi-dim ansi-red">${msg}</i>`);
       ee.emit('log:write', msg);
     }
   });

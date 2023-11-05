@@ -22,7 +22,7 @@ export default function extraProcessDisplayText(text: string): string {
 
   // Make Hypnotise snap super visible... event if it's late
   text = text.replace(
-    /(\w+) snaps (his|her) fingers in front of you\./,
+    /(\w+) snaps (his|her|faes) fingers in front of you\./,
     '$1 snaps $2 fingers 🤞 in front of you 🤢💀 !!!',
   );
 
@@ -34,9 +34,10 @@ export default function extraProcessDisplayText(text: string): string {
 
   text = text.replace(
     'A beam of prismatic light suddenly shoots into the room.',
-    'A beam of PRISMATIC light ✨ suddenly shoots into the room!',
+    'A beam of PRISMATIC light ✨ suddenly shoots into the room !!',
   );
 
+  // Make shield auras more visible
   if (text.includes('magical shield')) {
     text = text.replace(
       'A nearly invisible magical shield forms around ',
@@ -47,6 +48,12 @@ export default function extraProcessDisplayText(text: string): string {
     text = text.replace(
       'You suddenly perceive the vague outline of an aura of rebounding around ',
       'You suddenly perceive the vague outline 👻 of an aura of rebounding 🛡️ around ',
+    );
+  }
+  if (text.includes('prismatic barrier')) {
+    text = text.replace(
+      ' strums a few notes on a Lasallian lyre, and a prismatic barrier forms around ',
+      ' strums a few notes on a Lasallian lyre 🎵 and a prismatic barrier 🛡️ forms around ',
     );
   }
 

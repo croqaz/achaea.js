@@ -73,6 +73,7 @@ export var STATE: T.StateType = Object.seal({
   //
   Battle: Object.seal({
     rage: 0,
+    rounds: 0,
     active: false,
     combat: false, // PVP
     tgtID: null,
@@ -111,7 +112,6 @@ export var STATE: T.StateType = Object.seal({
     quitting: false,
     //
   },
-  // TOOD: Queue ...
 });
 
 // Hack to keep a frozen clone clone of the initial custom state
@@ -191,6 +191,19 @@ export function listDenizens(): string[] {
   return STATE.Room.items.filter(isDenizen).map((x) => x.id.toString());
 }
 
+export function stateStartBattle() {
+  STATE.Battle.active = true;
+  ee.emit('battle:update', STATE.Battle);
+}
+
+export function stateStopBattle() {
+  STATE.Battle.tgtID = null;
+  STATE.Battle.rounds = 0;
+  STATE.Battle.active = false;
+  STATE.Battle.combat = false;
+  ee.emit('battle:stop');
+}
+
 //
 // GMCP processing functions
 //
@@ -261,12 +274,12 @@ export function gmcpProcessChar(_type: string, data: T.GmcpChar) {
 export function gmcpProcessTarget(type: string, data) {
   if (type === 'IRE.Target.Set') {
     const tsData = data as string;
-    // Ignore targets outside of battle
-    if (STATE.Battle.active) STATE.Battle.tgtID = parseInt(tsData) || tsData.toTitleCase();
+    STATE.Battle.tgtID = parseInt(tsData) || tsData.toTitleCase();
   } else if (type === 'IRE.Target.Info') {
     const tsData = data as Record<string, string>;
     if (tsData.id !== '-1') STATE.Battle.tgtID = parseInt(tsData.id as string);
     if (tsData.hpperc !== '-1') STATE.Battle.tgtHP = tsData.hpperc;
+    if (STATE.Battle.active) ee.emit('battle:update', STATE.Battle);
   }
 }
 
@@ -459,13 +472,29 @@ export function gmcpProcessRoomPlayers(type: string, data) {
     STATE.Room.players = data as T.GmcpPlayer[];
     // remove current player from the list
     STATE.Room.players = STATE.Room.players.filter((x) => x.name !== STATE.Me.name);
+    // sync battle targets
+    for (const p of STATE.Room.players) {
+      STATE.Battle.tgts[p.name] = { player: true, name: p.name, defs: new Set() };
+    }
   } else if (type === 'Room.AddPlayer') {
     const tsData = data as T.GmcpPlayer;
     ee.emit('sys:text', ansiToHtml(bright.italic(`Players ++ ${tsData.name}`)));
     STATE.Room.players.push(data as T.GmcpPlayer);
+    // sync battle targets
+    STATE.Battle.tgts[tsData.name] = { player: true, name: tsData.name, defs: new Set() };
   } else if (type === 'Room.RemovePlayer') {
     ee.emit('sys:text', ansiToHtml(bright.italic(`Players -- ${data}`)));
     STATE.Room.players = STATE.Room.players.filter((x) => x.name !== (data as string));
+    //
+    // Sync battle targets here ??
+    // Should I keep the player state for some time ??
+    delete STATE.Battle.tgts[data];
+    //
+    // Black magic! Stop battle if the player who left the room,
+    // is the battle target
+    if (data === STATE.Battle.target) {
+      STATE.Battle.active = false;
+    }
   }
   ee.emit('players:update', STATE.Room.players);
 }

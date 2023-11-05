@@ -3,6 +3,7 @@ import ansiColor from 'ansicolor';
 
 import ee from './events/index.ts';
 import ansiToHtml from './core/ansi.ts';
+import { isoDate } from './core/common.ts';
 import processDisplayText from './core/output.ts';
 import { TelnetSocket, telOpts } from './telnet/index.js';
 // import { teloptFmt } from './telnet/util.js';
@@ -16,6 +17,13 @@ let telnet;
 
 function escapeHtml(txt) {
   return txt.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+const PROMPT = /(^\d{1,6}h, \d{1,6}m(?:, \d{1,7}e, \d{1,7}w)?(?:, \d{1,6}R)?[ ]+?[a-z]*?-$)/m;
+
+function replacePrompt(text) {
+  const dt = isoDate().replace('T', ' ');
+  return text.replace(PROMPT, `\n(${dt}) :: $1`);
 }
 
 export function connect(player: string) {
@@ -58,13 +66,13 @@ export function connect(player: string) {
 
   // on any data/ text, display on STDOUT
   telnet.on('data', (buffer) => {
-    const rawText = buffer.toString('utf8');
+    const rawText = buffer.toString('utf8').trim();
     // TODO :::: process HTML first, and move to server
     const viewText = escapeHtml(processDisplayText(rawText));
     ee.emit('game:html', ansiToHtml(viewText));
     const cleanText = ansiColor.strip(rawText);
     ee.emit('game:text', cleanText);
-    log.write(cleanText + '\n\n');
+    log.write('\n' + replacePrompt(cleanText) + '\n\n');
     // log.write(rawText + '\n\n');
   });
 
@@ -79,8 +87,7 @@ export function connect(player: string) {
 
   // setup logging
   if (!fs.existsSync('./logs')) fs.mkdirSync('./logs');
-  const dt = new Date().toISOString().split('.')[0];
-  const log = fs.createWriteStream('./logs/' + dt + '.log');
+  const log = fs.createWriteStream('./logs/' + isoDate() + '.log');
 
   // TODO :: move this to logs.ts
   ee.on('log:write', (line) => {
