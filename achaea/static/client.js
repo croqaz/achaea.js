@@ -82,10 +82,14 @@ window.addEventListener('load', function () {
         setTimeout(() => {
           gameLog.scrollTop = gameLog.scrollHeight;
         }, 100);
-        // Twice ??
+        // Twice
         setTimeout(() => {
           gameLog.scrollTop = gameLog.scrollHeight;
-        }, 333);
+        }, 200);
+        // Thrice
+        setTimeout(() => {
+          gameLog.scrollTop = gameLog.scrollHeight;
+        }, 300);
       }
     }
     // When we start to write, delete & focus
@@ -131,6 +135,12 @@ async function startWS() {
     if (data.textType === 'roomPlayers' && data.players) {
       window.ROOM.players = data.players;
       return displayRoom();
+    }
+    if (data.textType === 'battleUpdate' && data.battle) {
+      return displayBattle(data.battle);
+    } else if (data.textType === 'battleStop') {
+      document.getElementById('battleWrap').style.display = 'none';
+      return;
     }
 
     // This should be Player info
@@ -215,11 +225,18 @@ function displayRoom(data) {
     const locX = document.getElementById('loc');
     let loc = '';
     if (data.area) {
-      const a = data.area.replace(/^the |^a /, '').replace(/ \(indoors\)$/, '');
+      const a = data.area.replace(/^the |^a /, '');
       loc += `<small class="bold">${a}</small>: `;
     }
-    loc += data.name;
+    loc += data.name.replace(/ \(indoors\)$/, '');
     locX.innerHTML = loc;
+  }
+
+  if (data && data.exits) {
+    const exitX = document.getElementById('exits');
+    let exits = '<small class="bold">Exits</small>: ';
+    exits += Object.keys(data.exits).join(', ');
+    exitX.innerHTML = exits;
   }
 
   if (window.ROOM.players && window.ROOM.players.length) {
@@ -309,7 +326,7 @@ function displayMyself(data) {
     wpNow.style.borderRight = 'none';
   }
 
-  let html = `<h5>${data.name} (Lvl ${data.level} ${data.race})</h5>`;
+  let html = `<h5>${data.name} (Lvl ${data.level}<span class="thin">+${data.xp}</span> ${data.class})</h5>`;
   if (data.defences.length) {
     html += '<h5>Defences:</h5> - ';
     for (const x of data.defences) {
@@ -327,6 +344,38 @@ function displayMyself(data) {
     html += '<h5>No afflictions</h5>';
   }
   playerX.innerHTML = html;
+}
+
+function displayBattle(data) {
+  if (!data.active) return;
+  // Ignore PVP for now
+  if (data.combat) return;
+  // console.log('BATTLE !!', data);
+  const elem = document.getElementById('battle');
+  const wrap = document.getElementById('battleWrap');
+  const hpNow = document.getElementById('targetHpnow');
+  let html = '';
+  let round = '';
+  if (data.rounds) {
+    round = `<span style="float:right">Round #${data.rounds}</span>`;
+  }
+  if (data.tgtID && data.tgts && data.tgts[data.tgtID]) {
+    const tgt = data.tgts[data.tgtID];
+    html += `<h5>Hunting: <i>${tgt.name}</i> !${round}</h5>`;
+    const npcElem = document.querySelector(`.roomItem[data-id="${data.tgtID}"]`);
+    if (npcElem) npcElem.classList.add('ansi-red');
+  } else if (data.target) {
+    html += `<h5>Hunting: <i>${data.target}</i> !${round}</h5>`;
+  }
+  if (data.tgtHP) {
+    hpNow.title = `HP: ${data.tgtHP}`;
+    hpNow.style.width = data.tgtHP;
+    hpNow.innerText = data.tgtHP;
+  }
+  if (html) {
+    wrap.style.display = 'block';
+    elem.innerHTML = html;
+  }
 }
 
 function displayChannel(data) {
