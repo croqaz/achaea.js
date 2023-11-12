@@ -71,6 +71,7 @@ wss.on('connection', function (ws, req) {
 
   // pass game text to the client
   ee.on('game:html', (text: string) => {
+    if (!text) return;
     ws.send(JSON.stringify({ textType: 'gameText', text }));
   });
   // Game comm channels
@@ -104,6 +105,13 @@ wss.on('connection', function (ws, req) {
 
   ee.on('myself:update', (data) => {
     ws.send(JSON.stringify(data));
+  });
+
+  ee.on('battle:update', (battle) => {
+    ws.send(JSON.stringify({ textType: 'battleUpdate', battle }));
+  });
+  ee.on('battle:stop', () => {
+    ws.send(JSON.stringify({ textType: 'battleStop' }));
   });
 });
 

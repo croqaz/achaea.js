@@ -224,22 +224,42 @@ To restore the defaults, enter CONFIG COLOUR DEFAULT
     if (roomNo === 0 || roomNo === ROOMS.length - 1) roomGrowing = !roomGrowing;
   }, 2100);
 
-  // add & remove items
+  // add & remove players & items
   setInterval(async () => {
     ee.emit(
       'game:gmcp',
-      `Char.Items.Add {
-      "location": "room", "item": { "id": "120075", "name": "an unformed thing of chaos", "icon": "fiend", "attrib": "m"
-    } }`,
+      `Room.AddPlayer {
+        "name": "Proficy", "fullname": "Proficy Ikari"
+      }`,
     );
-    await sleep(1.25);
+    ee.emit(
+      'game:gmcp',
+      `Char.Items.Add {
+        "location": "room", "item": { "id": "99123", "name": "Ruffian, an Infernal dingo", "icon": "fiend", "attrib": "mx"
+      } }`,
+    );
+    ee.emit(
+      'game:gmcp',
+      `Char.Items.Add {
+        "location": "room", "item": { "id": "99234", "name": "a Baalzadeen", "icon": "fiend", "attrib": "m"
+      } }`,
+    );
+
+    await sleep(2.75);
+    ee.emit('game:gmcp', `Room.RemovePlayer "Proficy"`);
     ee.emit(
       'game:gmcp',
       `Char.Items.Remove {
-      "location": "room", "item": { "id": "120075", "name": "an unformed thing of chaos", "icon": "fiend", "attrib": "m"
-    } }`,
+        "location": "room", "item": { "id": "99123", "name": "Ruffian, an Infernal dingo", "icon": "fiend", "attrib": "mx"
+      } }`,
     );
-  }, 2500);
+    ee.emit(
+      'game:gmcp',
+      `Char.Items.Remove {
+        "location": "room", "item": { "id": "99234", "name": "a Baalzadeen", "icon": "fiend", "attrib": "m"
+      } }`,
+    );
+  }, 7250);
 
   await sleep(0.25);
   ee.emit(
