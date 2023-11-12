@@ -4,6 +4,7 @@ import ansiColor from 'ansicolor';
 import ee from './events/index.ts';
 import ansiToHtml from './core/ansi.ts';
 import { isoDate } from './core/common.ts';
+import { PROMPT } from './core/output.ts';
 import processDisplayText from './core/output.ts';
 import { TelnetSocket, telOpts } from './telnet/index.js';
 // import { teloptFmt } from './telnet/util.js';
@@ -19,11 +20,9 @@ function escapeHtml(txt) {
   return txt.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-const PROMPT = /(^\d{1,6}h, \d{1,6}m(?:, \d{1,7}e, \d{1,7}w)?(?:, \d{1,6}R)?[ ]+?[a-z]*?-$)/m;
-
 function replacePrompt(text) {
   const dt = isoDate().replace('T', ' ');
-  return text.replace(PROMPT, `\n(${dt}) :: $1`);
+  return text.replace(PROMPT, `\n\n(${dt}) :: $1\n`);
 }
 
 export function connect(player: string) {
@@ -48,7 +47,7 @@ export function connect(player: string) {
 
   // negociate connection options
   telnet.on('will', (option) => {
-    if (option === telOpts.TELNET_GMCP) {
+    if (option === telOpts.TELNET_GMCP || option === telOpts.TELNET_EOR) {
       // console.log('IAC WILL do:', teloptFmt(option));
       telnet.writeDo(option);
     } else {
@@ -67,13 +66,12 @@ export function connect(player: string) {
   // on any data/ text, display on STDOUT
   telnet.on('data', (buffer) => {
     const rawText = buffer.toString('utf8').trim();
-    // TODO :::: process HTML first, and move to server
-    const viewText = escapeHtml(processDisplayText(rawText));
-    ee.emit('game:html', ansiToHtml(viewText));
-    const cleanText = ansiColor.strip(rawText);
-    ee.emit('game:text', cleanText);
-    log.write('\n' + replacePrompt(cleanText) + '\n\n');
-    // log.write(rawText + '\n\n');
+    process.stdout.write(rawText);
+    // normalize text for triggers ??
+    ee.emit('game:text', ansiColor.strip(rawText));
+    const viewText = ansiToHtml(escapeHtml(rawText));
+    ee.emit('game:html', processDisplayText(viewText));
+    log.write('\n' + replacePrompt(viewText.trim()) + '\n');
   });
 
   // handle the response of our SUB commands
@@ -81,25 +79,27 @@ export function connect(player: string) {
     if (buffer.length) {
       const subText = buffer.toString('utf8');
       ee.emit('game:gmcp', subText);
-      log.write('GMCP: ' + subText + '\n\n');
+      log.write('GMCP: ' + subText.trim() + '\n');
     }
   });
 
   // setup logging
   if (!fs.existsSync('./logs')) fs.mkdirSync('./logs');
-  const log = fs.createWriteStream('./logs/' + isoDate() + '.log');
+  const log = fs.createWriteStream('./logs/' + isoDate() + '.htm');
+  log.write('<body><pre>');
 
   // TODO :: move this to logs.ts
   ee.on('log:write', (line) => {
     line = '$ ' + line;
     console.log(line);
-    log.write(line + '\n');
+    log.write('\n' + line + '\n');
   });
 
   // if the socket closes, terminate the program
   telnet.on('close', () => {
     console.log('Telnet closed. Bye!');
     telnet.destroy();
+    log.write('\n\n</pre></body>');
     log.destroy();
     process.exit();
   });

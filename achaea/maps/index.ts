@@ -5,7 +5,6 @@ import { fileURLToPath } from 'url';
 import * as T from './types.ts';
 import { dbGet } from '../extra/leveldb.js';
 
-// @ts-ignore: Types
 const dirName = dirname(fileURLToPath(import.meta.url));
 // @ts-ignore: Types
 export const MAP: T.MapType = Object.freeze(JSON.parse(fs.readFileSync(dirName + '/official-map.json')));
@@ -136,7 +135,7 @@ export async function getArea(uid: string, enhance = false): Promise<T.MapArea> 
   const area = { ...MAP.areas[uid] };
   area.id = uid;
   area.rooms = {};
-  const levels = new Set();
+  const levels: Set<number> = new Set();
   for (const x of AREAS[uid]) {
     const room = { ...x };
     // The Room from DB, to check if it's visited
@@ -152,6 +151,7 @@ export async function getArea(uid: string, enhance = false): Promise<T.MapArea> 
     area.rooms[x.id] = room;
     levels.add(room.coord.z || 0);
   }
+  // @ts-ignore
   area.levels = [...levels].sort((a, b) => a - b);
   // console.timeEnd('get-area');
   return area;

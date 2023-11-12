@@ -1,5 +1,6 @@
 import asciiTable from 'as-table';
 import { ClassicLevel } from 'classic-level';
+import { dateDiff, isoDate } from '../core/common.ts';
 
 import * as m from '../maps/index.js';
 
@@ -58,16 +59,22 @@ export async function dbSave(prefix, item) {
 }
 
 export async function dbStats() {
+  const dt = isoDate();
+  const OLD = 30 * 24;
   const stats = {
     wares: 0,
+    oldWares: 0,
     whois: 0,
     room: 0,
     item: 0,
     denizen: 0,
   };
   for (const prefix of Object.keys(stats)) {
-    for await (const _ of dbValues(prefix)) {
+    for await (const val of dbValues(prefix)) {
       stats[prefix]++;
+      if (prefix === 'wares' && val.dt && dateDiff(val.dt, dt) > OLD) {
+        stats.oldWares++;
+      }
     }
   }
   return stats;
@@ -103,10 +110,10 @@ export async function waresFind(key) {
   return asciiTable.configure({ delimiter: ' | ' })(arr);
 }
 
-export async function whoisFind(key) {
+export async function whoisFind(key, table = true) {
   const arr = [];
   for await (const who of dbValues('whois')) {
-    if (who.id.startsWith(key) || who.fullname.toLowerCase().includes(key)) {
+    if (who.id === key || who.fullname.toLowerCase().includes(key)) {
       delete who.player_kills;
       delete who.mob_kills;
       arr.push(who);

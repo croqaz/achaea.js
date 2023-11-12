@@ -41,7 +41,7 @@ export default function processTriggers(text: string) {
 
   // Track room shields & rebounding auras
   {
-    let m = text.match(SHIELD_REGEX);
+    let m = text.match(RE.shield);
     if (m && m[1]) {
       const tgt = Object.values(STATE.Battle.tgts).find((t) => t.name === m[1]);
       // Found the enemy with shield!
@@ -128,7 +128,10 @@ export default function processTriggers(text: string) {
 
   // Stop auto-PVP attack
   //
-  if (text.includes('You have been defeated and are thrown out of the Arena.\n')) {
+  if (
+    text.includes('You have been defeated and are thrown out of the Arena.\n') ||
+    text.includes('You have been victorious and leave the Arena in triumph!\n')
+  ) {
     STATE.Battle.tgtHP = null;
     return stateStopBattle();
   } else if (

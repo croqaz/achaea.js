@@ -1,3 +1,4 @@
+// @ts-nocheck Ignore file
 // deno-lint-ignore-file no-explicit-any
 
 import Listener from './Listener';
@@ -252,5 +253,7 @@ function isSingleListener<Type>(value: Type | Type[]): value is Type {
 
 export type EventsT<Template extends EventTemplateT> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [Event in TemplateEventT<Template>]?: Listener<Template, Event, any> | Listener<Template, Event, any>[];
+  [Event in TemplateEventT<Template>]?:
+    | Listener<Template, Event, any>
+    | Listener<Template, Event, any>[];
 };

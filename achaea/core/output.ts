@@ -3,12 +3,12 @@ import { STATE } from './state.ts';
 import extraProcessDisplayText from '../extra/output.ts';
 
 const CRITIC_LEVELS = [
-  // You have scored a CRITICAL hit // no need
+  // You have scored a CRITICAL hit // no need for Stars
   'You have scored a CRUSHING CRITICAL hit',
   'You have scored an OBLITERATING CRITICAL hit',
   'You have scored an ANNIHILATINGLY POWERFUL CRITICAL hit',
   'You have scored a WORLD-SHATTERING CRITICAL hit',
-  'You have scored a PLANE-RAZING CRITICAL hit',
+  'You have scored a PLANE-RAZING CRITICAL hit', // 5x Stars
 ];
 
 const POWER_LEVELS = [
@@ -30,11 +30,13 @@ const POWER_LEVELS = [
   ['looks weak and feeble', 1, '1-4'],
 ];
 
-const ANSI_CODE = '\x1B[[][0-9]+m';
-const PROMPT = new RegExp(
-  `^(?:${ANSI_CODE})?${ANSI_CODE}\\d{1,6}h, ${ANSI_CODE}${ANSI_CODE}\\d{1,6}m` +
-    `(?:, ${ANSI_CODE}${ANSI_CODE}\\d{1,7}e, ${ANSI_CODE}${ANSI_CODE}\\d{1,7}w)?` +
-    `(?:, ${ANSI_CODE}${ANSI_CODE}\\d{1,6}R)?[ ]?${ANSI_CODE}[ ]?[a-z]+?-$`,
+const SPAN_CODE = '<span class="[a-zA-Z- ]+">';
+const SPAN_STOP = '</span>\n?';
+// This can only handle CONFIG PROMPT STATS & ALL
+export const PROMPT = new RegExp(
+  `(${SPAN_CODE}[0-9]{1,6}h, ${SPAN_STOP}${SPAN_CODE}[0-9]{1,6}m,? ${SPAN_STOP}` +
+    `(?:${SPAN_CODE}[0-9]{1,8}e, ${SPAN_STOP}${SPAN_CODE}[0-9]{1,8}w,? ${SPAN_STOP})?` +
+    `(?:${SPAN_CODE}[0-9]{1,6}R${SPAN_STOP})?${SPAN_CODE}[ ]?[a-z]*-${SPAN_STOP})$`,
   'm',
 );
 
@@ -55,18 +57,18 @@ export default function processDisplayText(text: string): string {
     if (p) {
       let extra = '';
       if (STATE.Battle.active && STATE.Battle.tgtHP) {
-        extra += italic.yellow(` tgt=${STATE.Battle.tgtHP}`);
+        extra += ` <i class="ansi-yellow">tgt=${STATE.Battle.tgtHP}</i>`;
       }
       if (STATE.Me.hp < STATE.Me.oldhp) {
-        extra += dim.red(` -${STATE.Me.oldhp - STATE.Me.hp}HP`);
+        extra += ` <i class="ansi-dim ansi-red">-${STATE.Me.oldhp - STATE.Me.hp}HP</i>`;
       }
       if (STATE.Me.mp < STATE.Me.oldmp) {
-        extra += dim.blue(` -${STATE.Me.oldmp - STATE.Me.mp}MP`);
+        extra += ` <i class="ansi-dim ansi-blue">-${STATE.Me.oldmp - STATE.Me.mp}MP</i>`;
       }
       if (!extra) {
-        extra = ' ●';
+        extra = ' <b>●</b>';
       }
-      text = text.replace(p[0], p[0] + extra + '\n');
+      text = text.replace(p[0], p[0] + extra);
     }
   }
 
@@ -90,9 +92,13 @@ export default function processDisplayText(text: string): string {
     }
   }
 
+  // Fix the fucking newline, it's driving me crazy
+  if (text.includes('You have recovered')) {
+    text = text.replace(/\s+You have recovered /, 'You have recovered ');
+  }
+
   text = extraProcessDisplayText(text);
 
-  process.stdout.write(text);
   // console.timeEnd(`core-output-${count}`);
   // count++;
 

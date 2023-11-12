@@ -62,6 +62,10 @@ export default function processUserInput(text: string): string | void {
   }
 
   const extra = extraProcessUserInput(text, parts);
+
+  // Intercept unprocessed special cmds
+  if (extra && extra.startsWith('//')) return;
+
   // console.timeEnd(`core-input-${count}`);
   // count++;
 

@@ -99,7 +99,7 @@ export function whoisTriggers(text: string) {
 
   // auto whois DB
   //
-  if (STATE.Custom.whoisDB && userInput.startsWith('qwho')) {
+  if (STATE.Custom.whoisDB && (userInput === 'bw' || userInput === 'qwho')) {
     STATE.Custom.whoisDB = false;
     return saveQuickWho(text);
   }

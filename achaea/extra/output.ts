@@ -68,8 +68,8 @@ export default function extraProcessDisplayText(text: string): string {
 
   //
   // Gag spammy text
+  // If you return nothing, the text will be ignored
   //
-  // ...
 
   // Run custom function
   if (customProcessDisplayText) {

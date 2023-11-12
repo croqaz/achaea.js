@@ -71,8 +71,20 @@ export interface StateBattle {
   // local target name
   target?: string;
   // battle targets, NPCs & Players
-  // each target has: id, name, defs, affs
-  tgts: Record<string, any>;
+  tgts: Record<string, BattleTarget>;
+  bals: Record<string, boolean>;
+}
+
+export interface BattleTarget {
+  id: string | number;
+  name: string;
+  hp?: number;
+  maxhp?: number;
+  hpperc?: string;
+  attrib?: string;
+  player?: boolean;
+  affs?: Set<string>;
+  defs?: Set<string>;
 }
 
 export interface GmcpPlayer {

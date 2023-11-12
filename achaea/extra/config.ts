@@ -28,7 +28,7 @@ export const Config = {
   EXCLUDE_HERBS: ['kuzu', 'slipper'],
   //
   // Ignore some gathering materials
-  EXCLUDE_MATERIAL: ['dust', 'fruit', 'vegetable'],
+  EXCLUDE_MATERIAL: ['fruit', 'vegetable'],
 };
 
 function defaultAttack() {

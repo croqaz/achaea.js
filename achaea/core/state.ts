@@ -82,6 +82,14 @@ export var STATE: T.StateType = Object.seal({
     // battle targets, NPCs & Players
     // each target has: id, name, defs, affs
     tgts: {},
+    bals: {
+      a1: true,
+      a2: true,
+      a3: true,
+      a4: true,
+      a5: true,
+      a6: true,
+    },
   }),
   //
   Time: Object.seal({
@@ -163,6 +171,12 @@ function updateMyself(meta) {
   }
 }
 
+export function findInventory(name: string) {
+  // Find one item in the inventory, by name
+  name = name.toLowerCase();
+  return STATE.Me.items.filter((x) => x.name.toLowerCase() === name);
+}
+
 function syncWieldedWpn(item: T.GmcpItem) {
   // Sync a wielded weapon
   // Overwrite whatever weapons are already wielded
@@ -193,6 +207,7 @@ export function listDenizens(): string[] {
 
 export function stateStartBattle() {
   STATE.Battle.active = true;
+  STATE.Battle.rounds = 1;
   ee.emit('battle:update', STATE.Battle);
 }
 
@@ -235,6 +250,11 @@ export function gmcpProcessChar(_type: string, data: T.GmcpChar) {
     STATE.Me.eb = false;
   }
 
+  // On class change, emit (old, new)
+  if (data.class && data.class !== STATE.Me.class) {
+    ee.emit('class:update', STATE.Me.class, data.class);
+  }
+
   if (data.gold) {
     data.gold = parseInt(data.gold as string);
   }
@@ -259,7 +279,13 @@ export function gmcpProcessChar(_type: string, data: T.GmcpChar) {
           // Doesn't make sense to emit the event for small rage values
           // or outside of battle
           if (STATE.Battle.active && STATE.Battle.rage !== oldRage && STATE.Battle.rage >= 14) {
-            ee.emit('myself:rage', STATE.Battle.rage);
+            ee.emit('battle:rage', STATE.Battle.rage);
+          }
+          // Reset all battle-rage balances to be available next time
+          else if (STATE.Battle.rage === 0 && STATE.Battle.rage !== oldRage) {
+            for (const k of Object.keys(STATE.Battle.bals)) {
+              STATE.Battle.bals[k] = true;
+            }
           }
         }
         break;
@@ -274,6 +300,7 @@ export function gmcpProcessChar(_type: string, data: T.GmcpChar) {
 export function gmcpProcessTarget(type: string, data) {
   if (type === 'IRE.Target.Set') {
     const tsData = data as string;
+    // @ts-ignore: Types
     STATE.Battle.tgtID = parseInt(tsData) || tsData.toTitleCase();
   } else if (type === 'IRE.Target.Info') {
     const tsData = data as Record<string, string>;
@@ -443,6 +470,9 @@ export function gmcpProcessSkills(type: string, data) {
     }
   } else if (type === 'Char.Skills.List') {
     const tsData = data as T.GmcpSkillList;
+    if (!STATE.Me.skills[tsData.group]) {
+      STATE.Me.skills[tsData.group] = { rank: '', list: [] };
+    }
     STATE.Me.skills[tsData.group].list = tsData.list;
   }
 }
@@ -468,22 +498,51 @@ export function gmcpProcessRoomInfo(_type: string, data: T.GmcpRoom) {
 }
 
 export function gmcpProcessRoomPlayers(type: string, data) {
+  const playerInfo = async (name) => {
+    try {
+      // IT'S A BAD IDEA TO IMPORT HERE and I feel ashamed
+      const { dbGet } = await import('../extra/leveldb.ts');
+      const p = await dbGet('whois', name);
+      const city = p.city ? p.city.toTitleCase() : 'Rogue';
+      return `${p.fullname}, ${p.race} lvl.${p.level}, ${city}`;
+    } catch {}
+  };
+
   if (type === 'Room.Players') {
     STATE.Room.players = data as T.GmcpPlayer[];
     // remove current player from the list
     STATE.Room.players = STATE.Room.players.filter((x) => x.name !== STATE.Me.name);
     // sync battle targets
     for (const p of STATE.Room.players) {
-      STATE.Battle.tgts[p.name] = { player: true, name: p.name, defs: new Set() };
+      STATE.Battle.tgts[p.name] = { player: true, id: p.name, name: p.name, defs: new Set() };
     }
   } else if (type === 'Room.AddPlayer') {
     const tsData = data as T.GmcpPlayer;
-    ee.emit('sys:text', ansiToHtml(bright.italic(`Players ++ ${tsData.name}`)));
+    setTimeout(async () => {
+      const info = await playerInfo(tsData.name.toLowerCase());
+      if (info) {
+        ee.emit('sys:text', `<b>Players ++ ${info}</b>`);
+      } else {
+        ee.emit('sys:text', `<b>Players ++ ${tsData.name}</b>`);
+      }
+    }, 1);
     STATE.Room.players.push(data as T.GmcpPlayer);
     // sync battle targets
-    STATE.Battle.tgts[tsData.name] = { player: true, name: tsData.name, defs: new Set() };
+    STATE.Battle.tgts[tsData.name] = {
+      player: true,
+      id: tsData.name,
+      name: tsData.name,
+      defs: new Set(),
+    };
   } else if (type === 'Room.RemovePlayer') {
-    ee.emit('sys:text', ansiToHtml(bright.italic(`Players -- ${data}`)));
+    setTimeout(async () => {
+      const info = await playerInfo(data.toLowerCase());
+      if (info) {
+        ee.emit('sys:text', `<b>Players -- ${info}</b>`);
+      } else {
+        ee.emit('sys:text', `<b>Players -- ${data}</b>`);
+      }
+    }, 1);
     STATE.Room.players = STATE.Room.players.filter((x) => x.name !== (data as string));
     //
     // Sync battle targets here ??

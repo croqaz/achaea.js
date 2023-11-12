@@ -4,6 +4,7 @@ import ee from '../events/index.ts';
 import * as db from './leveldb.js';
 import * as m from '../maps/index.ts';
 import * as w from '../maps/walker.ts';
+import * as comm from '../core/common.ts';
 import { STATE, listDenizens } from '../core/state.ts';
 
 let customProcessUserInput;
@@ -23,7 +24,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
    */
   const firstWord = parts[0].toLowerCase();
   const secondWord = parts[1] ? parts[1].toLowerCase() : '';
-  const query = parts[2] ? parts.slice(2).join(' ') : '';
+  const otherWords = parts[2] ? parts.slice(2).join(' ') : '';
 
   // WWW = writhe forever
   // WXX = writhe stop
@@ -121,7 +122,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
       else if (+secondWord) {
         setTimeout(async function () {
           const fromID = STATE.Room.num.toString();
-          STATE.Custom.autoWalk = await w.autoWalker(fromID, secondWord, { type: query });
+          STATE.Custom.autoWalk = await w.autoWalker(fromID, secondWord, { type: otherWords });
           if (STATE.Custom.autoWalk && STATE.Custom.autoWalk.walk) {
             const len = STATE.Custom.autoWalk.walk.path.length;
             const m = `<b>[Path]</b>: Walk from: ${fromID} to: ${secondWord} is <b>${len} rooms</b> distance.`;
@@ -141,7 +142,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
         return;
       }
       if (secondWord === 'room') {
-        const arr = m.findRooms(query).map((x) => {
+        const arr = m.findRooms(otherWords).map((x) => {
           let name = x.title;
           if (name.length > 30) name = name.slice(0, 30) + '…';
           if (x.area.length > 24) x.area = x.area.slice(0, 24) + '…';
@@ -156,11 +157,11 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
         if (!arr.length) ee.emit('sys:text', '---');
         else ee.emit('sys:text', asciiTable.configure({ delimiter: ' | ' })(arr));
       } else if (secondWord === 'area') {
-        const arr = m.findAreas(query);
+        const arr = m.findAreas(otherWords);
         if (!arr.length) ee.emit('sys:text', '---');
         else ee.emit('sys:text', asciiTable.configure({ delimiter: ' | ' })(arr));
       } else if (secondWord === 'mid') {
-        const room = m.calcAreaMiddle(query);
+        const room = m.calcAreaMiddle(otherWords);
         const x = JSON.stringify(room, null, 2);
         ee.emit('sys:text', `Middle of Area: ${x}`);
       } else {
@@ -175,20 +176,25 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
         ee.emit('sys:text', '<b>FIND</b> query must specify 3+ args');
         return;
       }
-      const lower = query.toLowerCase();
+      const lower = otherWords.toLowerCase();
+      //
       // eg: DB find wares vial
-      if (secondWord === 'wares') {
+      else if (secondWord === 'wares') {
         db.waresFind(lower).then((x) => ee.emit('sys:text', x + '\n---\n'));
-      } // eg: DB find whois Sarapis
+      } //
+      // eg: DB find whois Sarapis
       else if (secondWord === 'whois') {
         db.whoisFind(lower).then((x) => ee.emit('sys:text', x + '\n---\n'));
-      } // eg: DB find room parade
+      } //
+      // eg: DB find room parade
       else if (secondWord === 'room') {
         db.roomFind(lower).then((x) => ee.emit('sys:text', x + '\n---\n'));
-      } // eg: DB find npc Seasone
+      } //
+      // eg: DB find npc Seasone
       else if (secondWord === 'npc') {
         db.denizenFind(lower).then((x) => ee.emit('sys:text', x + '\n---\n'));
-      } // eg: DB find item umbrella
+      } //
+      // eg: DB find item umbrella
       else if (secondWord === 'item') {
         db.roomItemFind(lower).then((x) => ee.emit('sys:text', x + '\n---\n'));
       }
@@ -200,8 +206,8 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
       if (secondWord === 'area') {
         if (STATE.Room.room) {
           const areaID = STATE.Room.room.area;
-          ee.emit('sys:text', `DELETE all area rooms: "#${areaID}-${STATE.Room.area}" from DB !!`);
           db.delAreaRooms(areaID);
+          ee.emit('sys:text', `DELETED all area rooms: "#${areaID}-${STATE.Room.area}" from DB !!`);
         } else {
           ee.emit('sys:text', "[DBX] Current room doesn't have an area ID!");
         }
@@ -219,7 +225,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
 
   // Run custom function
   if (customProcessUserInput) {
-    text = customProcessUserInput(text, parts);
+    text = customProcessUserInput({ text, parts, firstWord, secondWord, otherWords });
   }
 
   return text;
