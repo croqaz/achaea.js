@@ -178,6 +178,26 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
       }
       const lower = otherWords.toLowerCase();
       //
+      // eg: DB find herb pear
+      if (secondWord === 'herb' || secondWord === 'plant') {
+        const r = comm.findHerb(lower);
+        ee.emit('sys:text', JSON.stringify(r, null, 2) + '\n---\n');
+      } //
+      // eg: DB find mineral aurum
+      else if (secondWord === 'mineral') {
+        const r = comm.findMineral(lower);
+        ee.emit('sys:text', JSON.stringify(r, null, 2) + '\n---\n');
+      } //
+      // eg: DB find venom curare
+      else if (secondWord === 'venom' || secondWord === 'poison') {
+        const r = comm.findVenom(lower);
+        ee.emit('sys:text', JSON.stringify(r, null, 2) + '\n---\n');
+      } //
+      // eg: DB find rune fehu
+      else if (secondWord === 'rune') {
+        const r = comm.findRune(lower);
+        ee.emit('sys:text', JSON.stringify(r, null, 2) + '\n---\n');
+      } //
       // eg: DB find wares vial
       else if (secondWord === 'wares') {
         db.waresFind(lower).then((x) => ee.emit('sys:text', x + '\n---\n'));

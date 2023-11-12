@@ -1,5 +1,6 @@
 import u from '@yanick/updeep-remeda';
 
+// @ts-ignore
 String.prototype.toTitleCase = function () {
   return this.charAt(0).toUpperCase() + this.substr(1).toLowerCase();
 };
@@ -225,175 +226,175 @@ export const RUNES = Object.freeze({
     effect: 'inspires fear',
     req: '1 red ink',
     symbol: 'nightmare',
-    desc: 'a rune to inspire fear',
+    short: 'a rune to inspire fear',
   },
   uruz: {
     effect: 'heals allies',
     req: '1 blue ink, 1 yellow ink',
     symbol: 'lightning bolt',
-    desc: 'heal your allies with earth magic',
+    short: 'heal your allies with earth magic',
   },
   fehu: {
     effect: 'causes sleeping',
     req: '1 red ink',
     symbol: 'closed eye',
-    desc: 'causes sleeping urges',
+    short: 'causes sleeping urges',
   },
   pithakhan: {
     effect: 'attacks mana',
     req: '1 red ink',
     symbol: 'square box',
-    desc: 'attack the mental reserves of your enemies',
+    short: 'attack the mental reserves of your enemies',
   },
   jera: {
     effect: 'str+1 con+1',
     req: '1 purple ink',
     symbol: 'mighty oak',
-    desc: 'a rune to increase the vitality of the bearer',
+    short: 'a rune to increase the vitality of the bearer',
   },
   inguz: {
     effect: 'enemy paralysis',
     req: '1 red ink',
     symbol: 'stickman',
-    desc: 'a rune with the ability to paralyse',
+    short: 'a rune with the ability to paralyse',
   },
   wunjo: {
     effect: 'returns sight',
     req: '1 red ink',
     symbol: 'open eye',
-    desc: "upon encountering this, an enemy's sight will be returned",
+    short: "upon encountering this, an enemy's sight will be returned",
   },
   lagul: {
     effect: 'increases weapon bleeding',
     req: '1 purple ink',
     symbol: 'dirk',
-    desc: 'add an element of bleeding to your strategem',
+    short: 'add an element of bleeding to your strategem',
   },
   sowulu: {
     effect: 'damages enemy health',
     req: '1 red ink',
     symbol: 'nail',
-    desc: 'damages the health of enemies',
+    short: 'damages the health of enemies',
   },
   algiz: {
     effect: '10% damage protection',
     req: '1 green ink',
     symbol: 'elk',
-    desc: 'a rune of protection from damage',
+    short: 'a rune of protection from damage',
   },
   isaz: {
     effect: 'calls forth shockwaves',
     req: '1 blue ink, 1 red ink',
     symbol: 'flurry of lightning bolts',
-    desc: 'a rune to call shockwaves to take your enemies off balance',
+    short: 'a rune to call shockwaves to take your enemies off balance',
   },
   dagaz: {
     effect: 'cure afflictions',
     req: '1 green ink, 1 red ink',
     symbol: 'rising sun',
-    desc: 'this rune will heal afflictions from you at random',
+    short: 'this rune will heal afflictions from you at random',
   },
   gebu: {
     effect: 'armour blunt protection',
     req: '1 gold ink',
     symbol: 'shield',
-    desc: 'this rune will increase the blunt protection of armour',
+    short: 'this rune will increase the blunt protection of armour',
   },
   gebo: {
     effect: 'armour cutting protection',
     req: '1 gold ink',
     symbol: 'chain',
-    desc: 'a rune to increase the cutting protection of armour',
+    short: 'a rune to increase the cutting protection of armour',
   },
   gular: {
     effect: 'raises a stone wall',
     req: '1 red ink',
     symbol: 'wall',
-    desc: 'drawing on the power of the earth, raise a stone wall',
+    short: 'drawing on the power of the earth, raise a stone wall',
   },
   raido: {
     effect: 'teleports to rune',
     req: '1 green ink',
     symbol: 'horse',
-    desc: 'summon a spiritual steed to bear you home',
+    short: 'summon a spiritual steed to bear you home',
   },
   thurisaz: {
     effect: 'calls forth molten lava',
     req: '1 blue ink, 1 red ink',
     symbol: 'volcano',
-    desc: 'call forth a spout of molten lava from the earth',
+    short: 'call forth a spout of molten lava from the earth',
   },
   lagua: {
     effect: 'increases weapon damage',
     req: '1 purple ink',
     symbol: 'large hammer',
-    desc: 'further punish your foe',
+    short: 'further punish your foe',
   },
   hugalaz: {
     effect: 'calls down a hailstorm',
     req: '1 blue ink',
     symbol: 'ball of ice',
-    desc: 'call down a hailstorm around you',
+    short: 'call down a hailstorm around you',
   },
   nauthiz: {
     effect: 'sucks the nourishment from foes',
     req: '1 blue ink, 1 yellow ink',
     symbol: 'leech',
-    desc: 'suck the nourishment from your foes',
+    short: 'suck the nourishment from your foes',
   },
   mannaz: {
     effect: 'returns hearing',
     req: '1 red ink',
     symbol: 'bell',
-    desc: 'return hearing to a victim',
+    short: 'return hearing to a victim',
   },
   othala: {
     effect: 'burns enemies with lava',
     req: '5 red inks',
     symbol: 'mountain range',
-    desc: 'besiege your enemies with multiple spouts of molten lava',
+    short: 'besiege your enemies with multiple spouts of molten lava',
   },
   sleizak: {
     effect: 'afflicts foes with voyria',
     req: '1 blue ink',
     symbol: 'viper',
-    desc: 'afflict a foe with the horrible voyria poison',
+    short: 'afflict a foe with the horrible voyria poison',
   },
   tiwaz: {
     effect: 'removes a defence from enemies',
     req: '1 blue ink, 2 red inks',
     symbol: 'upwards-pointing arrow',
-    desc: 'this rune will remove the defenses of your enemies',
+    short: 'this rune will remove the defenses of your enemies',
   },
   berkana: {
     effect: 'health regeneration',
     req: '3 yellow inks',
     symbol: 'lion',
-    desc: 'provides health regeneration to the bearer',
+    short: 'provides health regeneration to the bearer',
   },
   nairat: {
     effect: 'beguiles and transfixes enemies',
     req: '1 yellow ink',
     symbol: 'butterfly',
-    desc: 'a rune to entangle',
+    short: 'a rune to entangle',
   },
   eihwaz: {
     effect: 'dampens vibrations',
     req: '1 blue ink, 1 yellow ink',
     symbol: 'yew',
-    desc: 'a powerful vibration-dampening rune',
+    short: 'a powerful vibration-dampening rune',
   },
   laguz: {
     effect: 'increased weapon damage',
     req: '1 purple ink',
     symbol: 'long slim blade',
-    desc: 'increased damage to the limbs of your foe',
+    short: 'increased damage to the limbs of your foe',
   },
   loshre: {
     effect: 'afflicts enemies with anorexia',
     req: '1 blue ink',
     symbol: 'apple core',
-    desc: 'cause an opponent to become afflicted with anorexia',
+    short: 'cause an opponent to become afflicted with anorexia',
   },
 });
 
@@ -602,3 +603,59 @@ export const MINERAL_EQ_HERB = u.freeze(Object.fromEntries(_mineral_eq_herb));
 export const HERB_EQ_MINERAL = u.freeze(Object.fromEntries(_mineral_eq_herb.map((x) => [x[1], x[0]])));
 // Release memory
 _mineral_eq_herb = null;
+
+export function findHerb(name: string) {
+  const result = [];
+  name = name.toLowerCase();
+  for (const [n, info] of Object.entries(HERBS)) {
+    if (name === n || info.short.includes(name) || info.long.includes(name)) {
+      const equal = HERB_EQ_MINERAL[n];
+      result.push({ name: n, equal, ...info });
+    }
+  }
+  return result;
+}
+
+export function findMineral(name: string) {
+  const result = [];
+  name = name.toLowerCase();
+  for (const [n, info] of Object.entries(MINERALS)) {
+    if (name === n || info.short.includes(name) || info.long.includes(name)) {
+      const equal = MINERAL_EQ_HERB[n];
+      result.push({ name: n, equal, ...info });
+    }
+  }
+  return result;
+}
+
+export function findVenom(name: string) {
+  const result = [];
+  name = name.toLowerCase();
+  for (const [n, info] of Object.entries(VENOMS)) {
+    if (
+      name === n ||
+      info.aff.startsWith(name) ||
+      info.short.includes(name) ||
+      info.long.includes(name)
+    ) {
+      result.push({ name: n, ...info });
+    }
+  }
+  return result;
+}
+
+export function findRune(name: string) {
+  const result = [];
+  name = name.toLowerCase();
+  for (const [n, info] of Object.entries(RUNES)) {
+    if (
+      name === n ||
+      info.symbol.includes(name) ||
+      info.effect.includes(name) ||
+      info.short.includes(name)
+    ) {
+      result.push({ name: n, ...info });
+    }
+  }
+  return result;
+}
