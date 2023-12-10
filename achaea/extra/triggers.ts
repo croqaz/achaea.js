@@ -1,6 +1,9 @@
 import ee from '../events/index.ts';
 import { STATE, stateStopBattle } from '../core/state.ts';
 
+// TODO ::
+// An icewall is here, blocking passage to the up.
+//
 const RE = {
   assess: /^You glance over ([A-Za-z]+) and see that his health is at (\d+)\/(\d+)\.$/m,
   shield: /^A nearly invisible magical shield forms around (.+)\.$/m,
@@ -19,17 +22,16 @@ export default function processTriggers(text: string) {
   text = text.trim();
 
   // Auto diagnose on Loki
-  if (text.includes('You are confused as to the effects of the venom')) {
-    ee.emit('user:text', 'QUEUE PREPEND eb DIAG ME');
+  if (text.includes('You are confused as to the effects of the venom.')) {
+    // if (STATE.me.hp === STATE.me.maxhp && STATE.me.mp === STATE.me.maxmp)
+    // ee.emit('user:text', 'CURING PREDICT RECKLESSNESS') ??
+    ee.emit('user:text', 'QUEUE PREPEND e DIAG ME');
   }
 
   // Thief protection
-  if (STATE.Custom.greed && text.includes('A feeling of generosity spreads throughout you')) {
-    ee.emit('user:text', 'QUEUE PREPEND eb SELFISHNESS');
+  if (STATE.Custom.greed && text.includes('A feeling of generosity spreads throughout you.')) {
+    ee.emit('user:text', 'QUEUE PREPEND e SELFISHNESS');
   }
-
-  // The bubble of air around you dissipates.
-  // You choke as you inhale water.
 
   if (
     text.includes('You must be standing ') ||
@@ -37,6 +39,16 @@ export default function processTriggers(text: string) {
     // text.includes('You open your eyes and stretch languidly')
   ) {
     ee.emit('user:text', 'STAND');
+  }
+
+  // Auto air-pocket under-water
+  if (STATE.Room.details.includes('underwater') && text.includes('You choke as you inhale water.')) {
+    ee.emit('user:text', 'CURING PRIORITY DEFENCE AIRPOCKET 25');
+  } else if (
+    !STATE.Room.details.includes('underwater') &&
+    text.includes('The pocket of air around you dissipates into the atmosphere.')
+  ) {
+    ee.emit('user:text', 'CURING PRIORITY DEFENCE AIRPOCKET RESET');
   }
 
   // Track room shields & rebounding auras
@@ -120,6 +132,7 @@ export default function processTriggers(text: string) {
   // The main logic uses GMCP data
   //
   if (text.includes('You have slain') && text.includes(', retrieving the corpse.')) {
+    STATE.Stats.kills++;
     STATE.Battle.tgtHP = null;
     return stateStopBattle();
   } else if (text.includes('You cannot see that being here.')) {
@@ -140,6 +153,22 @@ export default function processTriggers(text: string) {
       text.includes(`You have been slain by ${STATE.Battle.target}.`))
   ) {
     return stateStopBattle();
+  }
+
+  // Track balances
+  //
+  const dt = new Date();
+  if (/^You eat (?:a|some) [a-z ]+\.$/m.test(text)) {
+    STATE.Stats.eat = dt;
+  }
+  if (/^You take a drink from a[a-zA-Z ]+ vial\.$/m.test(text)) {
+    STATE.Stats.drink = dt;
+  }
+  if (/^You take out some salve and quickly rub it on your (?:arms|legs|skin)\.$/m.test(text)) {
+    STATE.Stats.apply = dt;
+  }
+  if (/^You take a long drag of [a-z]+ off your pipe\.$/m.test(text)) {
+    STATE.Stats.smoke = dt;
   }
 
   // DISABLED: currently unused
