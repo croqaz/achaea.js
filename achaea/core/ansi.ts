@@ -3,6 +3,9 @@ import { parse } from 'ansicolor';
 export default function ansiToHtml(text: string): string {
   const parts = [];
   for (const el of parse(text).spans) {
+    if (!el.text) {
+      continue;
+    }
     const cls = [];
     if (el.color) {
       if (el.color.name) {

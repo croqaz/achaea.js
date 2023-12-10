@@ -10,6 +10,7 @@ import { WebSocketServer } from 'ws';
 
 import ee from '../events/index.ts';
 import * as m from '../maps/index.ts';
+import * as db from '../extra/leveldb.ts';
 import { STATE } from '../core/state.ts';
 import processUserInput from '../core/input.ts';
 
@@ -42,6 +43,15 @@ app.get('/room/:id.json', async (req, res) => {
   // For DEBUG: see a single map room
   res.set('Cache-control', 'public, max-age=1');
   res.json(await m.getRoom(req.params.id, true));
+});
+
+// Find API
+app.get('/wares.json', async (req, res) => {
+  res.json(await db.waresFind(req.query.key || req.params.key, false));
+});
+
+app.get('/whois.json', async (req, res) => {
+  res.json(await db.whoisFind(req.query.key || req.params.key, false));
 });
 
 wss.on('connection', function (ws, req) {

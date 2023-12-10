@@ -1,6 +1,6 @@
 import asciiTable from 'as-table';
 import { ClassicLevel } from 'classic-level';
-import { dateDiff, isoDate } from '../core/common.ts';
+import { dateDiff, isoDate } from '../core/util.ts';
 
 import * as m from '../maps/index.js';
 
@@ -83,7 +83,7 @@ export async function dbStats() {
 //
 // Utility
 //
-export async function waresFind(key) {
+export async function waresFind(key, table = true) {
   const arr = [];
   for await (const item of dbValues('wares')) {
     if (item.id.startsWith(key) || (item.name && item.name.toLowerCase().includes(key))) {
@@ -107,7 +107,8 @@ export async function waresFind(key) {
   }
   if (!arr.length) return '';
   arr.sort((a, b) => a.pp - b.pp);
-  return asciiTable.configure({ delimiter: ' | ' })(arr);
+  if (table) return asciiTable.configure({ delimiter: ' | ' })(arr);
+  return arr;
 }
 
 export async function whoisFind(key, table = true) {
@@ -120,7 +121,8 @@ export async function whoisFind(key, table = true) {
     }
   }
   if (!arr.length) return '';
-  return asciiTable.configure({ delimiter: ' | ' })(arr);
+  if (table) return asciiTable.configure({ delimiter: ' | ' })(arr);
+  return arr;
 }
 
 export async function roomFind(key, table = true) {
@@ -182,7 +184,7 @@ export async function delAreaRooms(areaID) {
     try {
       await DB.del(`room-${room.id}`);
       console.log('DELETE', room.id, room.title);
-    } catch (err) {
+    } catch {
       console.warn(`Room ${room.id} cannot be deleted from DB!`);
     }
   }

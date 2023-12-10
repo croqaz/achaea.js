@@ -173,7 +173,7 @@ test('char wielded state', () => {
 test('room players state', () => {
   expect(s.STATE.Room.players.length).toBeFalsy();
 
-  g.processGMCP('Room.AddPlayer { "name": "Abc", "fullname": "Outlander Abc" }');
+  g.processGMCP('Room.AddPlayer { "name": "Abc", "fullname": "The Abc" }');
   expect(s.STATE.Room.players[0].name).toBe('Abc');
 
   // try to remove inexistent player

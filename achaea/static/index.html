@@ -15,12 +15,22 @@
 <body>
   <aside id="leftSide">
     <div id="loc">Location</div>
+    <div id="exits">Exits</div>
     <canvas id="map" resize></canvas>
     <div id="room">Room</div>
     <div id="player">Player</div>
   </aside>
   <main id="main">
-    <div id="gameLog">Game log</div>
+    <div id="gameLog">
+      <div id="battleWrap">
+        <div id="battle"><h5>Combat!<h5></div>
+        <div id="battleBar">
+          <div id="targetHpmax">
+            <div id="targetHpnow" style="width: 50%"></div>
+          </div>
+        </div>
+      </div><p class="gameText">Game log below.</p>
+    </div>
     <div id="statBar">
       <div id="hpmax">
         <div id="hpnow" style="width: 50%"></div>
@@ -37,7 +47,7 @@
     </div>
     <input id="userInput" type="text" required>
   </main>
-  <aside id="rightSide"><p>Comms channels</p></aside>
+  <aside id="rightSide"><p class="bold">Comms channels</p></aside>
   <script src="paper.js"></script>
   <script src="client.js" type="module" defer></script>
 </body>

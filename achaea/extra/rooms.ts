@@ -2,7 +2,8 @@ import * as T from '../types.ts';
 import ee from '../events/index.ts';
 import { dbSave } from './leveldb.ts';
 import { STATE } from '../core/state.ts';
-import { isoDate } from '../core/common.ts';
+import { isoDate } from '../core/util.ts';
+import { logWrite } from '../logs/index.ts';
 
 async function onRoomInfoUpdate(data: Record<string, string>) {
   if (!data.num || !data.name) return;
@@ -56,7 +57,7 @@ if (process.env.NODE_ENV !== 'test') {
     } catch (err) {
       const msg = `[SYS] ROOM INFO update CRASHED: ${err} !`;
       ee.emit('sys:text', `<i class="ansi-dim ansi-red">${msg}</i>`);
-      ee.emit('log:write', msg);
+      logWrite('\n' + msg + '\n');
     }
   });
 
@@ -66,7 +67,7 @@ if (process.env.NODE_ENV !== 'test') {
     } catch (err) {
       const msg = `[SYS] ROOM ITEMS update CRASHED: ${err} !`;
       ee.emit('sys:text', `<i class="ansi-dim ansi-red">${msg}</i>`);
-      ee.emit('log:write', msg);
+      logWrite('\n' + msg + '\n');
     }
   });
 }

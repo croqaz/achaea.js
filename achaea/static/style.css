@@ -1,38 +1,50 @@
-/* latin-ext */
 @font-face {
-  font-family: "IBM Plex Mono";
+  font-family: "Monego";
+  src: url("Monego/Monego-Regular.otf") format("opentype");
+  font-weight: normal;
   font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("fonts/IBM Plex Mono latin-ext.woff2") format("woff2");
-  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
-/* latin */
 @font-face {
-  font-family: "IBM Plex Mono";
+  font-family: "MonegoBold";
+  src: url("Monego/Monego-Bold.otf") format("opentype");
+  font-weight: normal;
   font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("fonts/IBM Plex Mono latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-/* latin-ext */
 @font-face {
-  font-family: "IBM Plex Sans";
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("fonts/IBM Plex Sans latin-ext.woff2") format("woff2");
-  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  font-family: "MonegoBoldItalic";
+  src: url("Monego/Monego-BoldItalic.otf") format("opentype");
+  font-weight: normal;
+  font-style: italic;
 }
-/* latin */
 @font-face {
-  font-family: "IBM Plex Sans";
+  font-family: "MonegoItalic";
+  src: url("Monego/Monego-Italic.otf") format("opentype");
+  font-weight: normal;
+  font-style: italic;
+}
+@font-face {
+  font-family: "MononokiRegular";
+  src: url("Mononoki/Mononoki-Regular.ttf") format("truetype");
+  font-weight: normal;
   font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url("fonts/IBM Plex Sans latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "MononokiBold";
+  src: url("Mononoki/Mononoki-Bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "MononokiBoldItalic";
+  src: url("Mononoki/Mononoki-BoldItalic.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+}
+@font-face {
+  font-family: "MononokiItalic";
+  src: url("Mononoki/Mononoki-Italic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
 }
 :root {
   --background: #2E3440;
@@ -42,15 +54,6 @@
   --foreground: #E5E9F0;
   --dark-foreground: #D8DEE9;
   --bright-foreground: #ECEFF4;
-  --blue1: #88C0D0;
-  --blue2: #81A1C1;
-  --blue3: #5E81AC;
-  font-weight: 500;
-  font-size: 14px;
-  font-family: "IBM Plex Mono", monospace;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #E5E9F0;
 }
 
 *,
@@ -63,27 +66,66 @@ html, body {
   height: 100%;
 }
 
-html, body, canvas, main, aside, div, pre {
-  margin: 0;
-  padding: 0;
+body > * {
+  font-size: 15px;
+  font-family: MononokiRegular, monospace;
+  font-variant-ligatures: contextual;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
 }
 
-p, b, small, span, pre, h5 {
-  line-height: 1.66rem;
-  font-size: 14px;
+html, body, canvas, main, aside, div, span, pre, input {
+  border: 0;
   margin: 0;
+  padding: 0;
+  outline: 0;
+  color: #E5E9F0;
+  font-size: 15px;
+  font-family: MononokiRegular, monospace;
+}
+
+p, b, i, small, span, pre, h5 {
+  margin: 0;
+  line-height: 1.6rem;
+  font-family: MononokiRegular, monospace;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+}
+
+i {
+  font-family: MononokiItalic, monospace;
 }
 
 b, h5 {
+  font-family: MononokiBold, monospace;
   color: #E5E9F0;
 }
 
 small {
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .bold {
-  font-weight: 900;
+  font-family: MononokiBold, monospace;
+}
+
+.italic {
+  font-family: MononokiItalic, monospace;
+}
+
+.bold.italic {
+  font-family: MononokiBoldItalic, monospace;
+}
+
+.thin {
+  font-weight: lighter !important;
+}
+
+input {
+  border: 0;
+  outline: 0;
+  font-weight: 500;
 }
 
 body {
@@ -91,15 +133,6 @@ body {
   grid-template-columns: repeat(9, 1fr);
   background-color: var(--background);
   max-height: 99.9vh;
-}
-
-input {
-  border: 0;
-  margin: 0;
-  outline: 0;
-  font-weight: 500;
-  font-size: 14px;
-  font-family: "IBM Plex Mono", monospace;
 }
 
 #leftSide {
@@ -121,6 +154,15 @@ input {
   position: relative;
 }
 
+#rightSide.big {
+  position: fixed;
+  right: 0;
+  width: 50vw;
+  height: calc(99vh - 4rem);
+  border: 2px solid #E5E9F0;
+  z-index: 999;
+}
+
 #main {
   display: flex;
   grid-column: 3/8;
@@ -129,15 +171,6 @@ input {
   border-right: 1px solid #3B4252;
   min-height: 99.5vh;
   max-height: 99.9vh;
-}
-
-#rightSide.big {
-  position: fixed;
-  right: 0;
-  width: 50vw;
-  height: calc(99vh - 4rem);
-  border: 2px solid #E5E9F0;
-  z-index: 999;
 }
 
 /* Left side: map, room, player */
@@ -152,18 +185,29 @@ input {
   position: fixed;
   left: 4rem;
   top: 2rem;
-  width: calc(100% - 8rem);
-  height: calc(99vh - 8rem);
+  width: calc(100% - 10rem);
+  height: calc(99vh - 10rem);
   border: 2px solid #E5E9F0;
   z-index: 999;
 }
 
-#loc {
-  font-size: 12px;
-  display: inline;
-  padding: 0.5rem;
+#loc, #exits {
+  font-size: 13px;
   background: rgba(59, 66, 82, 0.5);
   position: absolute;
+}
+
+#loc {
+  padding: 0.3rem 0.5rem 0.3rem 0.5rem;
+  display: inline;
+}
+
+#exits {
+  height: 2rem;
+  line-height: 2rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  top: calc(33% - 2rem + 2px);
 }
 
 #room {
@@ -184,11 +228,11 @@ input {
 
 .roomPlayer:hover, .roomItem:hover {
   cursor: pointer;
-  font-style: italic;
+  font-family: MononokiItalic, monospace;
 }
 
 .playerDef:hover, .playerAff:hover {
-  font-style: italic;
+  font-family: MononokiItalic, monospace;
 }
 
 /* In the middle: game log, user input, status bar */
@@ -200,9 +244,14 @@ input {
   flex: 1 0;
 }
 
+#gameLog > p {
+  white-space: pre-wrap;
+}
+
 #userInput {
   width: 100%;
   padding: 0.5rem;
+  font-size: 15px;
   color: #D8DEE9;
   background: #3B4252;
   border-bottom: 2px solid #5E81AC;
@@ -219,6 +268,48 @@ input {
   color: #D8DEE9;
 }
 
+#battleWrap {
+  display: none;
+  position: fixed;
+  border: 1px solid #3B4252;
+  border-top: 0;
+  font-size: 13px;
+  left: calc(50% - 18rem);
+  top: 0;
+  width: 36rem;
+  padding: 0.5rem;
+  white-space: normal;
+  background: rgba(76, 86, 106, 0.9);
+}
+
+#battleBar {
+  height: 1rem;
+  display: flex;
+  margin-top: 0.5rem;
+  background-color: var(--background);
+}
+
+#targetHpmax {
+  flex: 1;
+  display: flex;
+  color: #D8DEE9;
+  line-height: 13px;
+  border-left: 1px solid #D8DEE9;
+}
+
+#targetHpnow {
+  text-align: center;
+  font-size: 13px;
+  border-right: 1px solid #D8DEE9;
+  background: #84363d;
+  transition: width 0.5s;
+}
+
+#targetHpnow:hover {
+  color: #ECEFF4;
+  font-family: MononokiBold, monospace;
+}
+
 #statBar {
   height: 1rem;
   display: flex;
@@ -232,18 +323,11 @@ input {
   flex: 1;
   display: flex;
   color: #D8DEE9;
-  font-size: 12px;
-  line-height: 12px;
+  line-height: 13px;
 }
 
-#mpmax {
-  border-left: 1px solid #D8DEE9;
-}
-
-#epmax {
-  border-left: 1px solid #D8DEE9;
-}
-
+#mpmax,
+#epmax,
 #wpmax {
   border-left: 1px solid #D8DEE9;
 }
@@ -253,7 +337,9 @@ input {
 #epnow,
 #wpnow {
   text-align: center;
+  font-size: 13px;
   border-right: 1px solid #D8DEE9;
+  transition: width 0.5s;
 }
 
 #hpnow:hover,
@@ -261,7 +347,7 @@ input {
 #epnow:hover,
 #wpnow:hover {
   color: #ECEFF4;
-  font-weight: bold;
+  font-family: MononokiBold, monospace;
 }
 
 #hpnow {
@@ -283,7 +369,8 @@ input {
 /* wikipedia.org/wiki/ANSI_escape_code */
 .ansi-black {
   color: #191c22;
-  font-weight: 800;
+  font-family: MononokiBold, monospace;
+  font-weight: bold;
 }
 
 .ansi-red {
@@ -299,6 +386,7 @@ input {
 }
 
 .ansi-blue {
+  /* blue1: $nord8; blue2: $nord9; blue3: $nord10; */
   color: #5E81AC;
 }
 
@@ -312,67 +400,67 @@ input {
 
 .ansi-darkGray {
   color: #97a7c4;
-  font-weight: 700;
+  font-family: MononokiBold, monospace;
 }
 
 .ansi-lightGray {
   color: #D8DEE9;
-  font-weight: 600;
+  font-family: MononokiBold, monospace;
 }
 
 .ansi-white {
   color: #ECEFF4;
-  font-weight: 600;
+  font-family: MononokiBold, monospace;
 }
 
 /* bright */
+.ansi-bright {
+  font-family: MononokiBold, monospace;
+  font-weight: bold;
+}
+
 .ansi-bright.ansi-black {
   color: #97a7c4;
-  font-weight: 600;
 }
 
 .ansi-bright.ansi-red {
   color: #c6737b;
-  font-weight: 600;
 }
 
 .ansi-bright.ansi-green {
   color: #A3BE8C;
-  font-weight: 600;
 }
 
 .ansi-bright.ansi-yellow {
   color: #EBCB8B;
-  font-weight: 600;
 }
 
 .ansi-bright.ansi-blue {
   color: #81A1C1;
-  font-weight: 600;
 }
 
 .ansi-bright.ansi-magenta {
   color: #B48EAD;
-  font-weight: 600;
 }
 
 .ansi-bright.ansi-cyan {
   color: #88C0D0;
-  font-weight: 600;
 }
 
 .ansi-bright.ansi-lightGray {
   color: #E5E9F0;
-  font-weight: 600;
 }
 
 /* dim */
+.ansi-dim {
+  font-family: MononokiBoldItalic, monospace;
+  font-weight: bold;
+}
+
 .ansi-dim.ansi-red {
   color: #b84f59;
-  font-weight: 600;
 }
 
 .ansi-dim.ansi-blue {
   color: #5f88b0;
-  font-weight: 600;
 }

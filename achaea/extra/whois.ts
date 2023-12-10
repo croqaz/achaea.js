@@ -1,9 +1,10 @@
 import * as T from '../types.ts';
 import ee from '../events/index.ts';
 import * as p from '../parsers.ts';
-import { dateDiff, isoDate } from '../core/common.ts';
+import { dateDiff, isoDate } from '../core/util.ts';
 import { dbGet, dbSave } from './leveldb.ts';
 import { parseQuickWho } from '../parsers.ts';
+import { logWrite } from '../logs/index.ts';
 import { STATE } from '../core/state.ts';
 
 export function mergeWhois(oldWhois: T.DBPlayer, newWhois: T.DBPlayer): T.DBPlayer {
@@ -11,11 +12,31 @@ export function mergeWhois(oldWhois: T.DBPlayer, newWhois: T.DBPlayer): T.DBPlay
   delete data.name;
   // Maintain all the player classes
   if (oldWhois && newWhois && oldWhois.class && newWhois.class && oldWhois.class !== newWhois.class) {
-    if (typeof oldWhois.class === 'string') oldWhois.class = [...oldWhois.class.split(',')];
-    if (typeof newWhois.class === 'string') newWhois.class = [...newWhois.class.split(',')];
-    oldWhois.class = oldWhois.class.map((x) => x.toLowerCase());
-    newWhois.class = newWhois.class.map((x) => x.toLowerCase());
-    data.class = oldWhois.class.concat(newWhois.class.filter((x) => oldWhois.class.indexOf(x) < 0));
+    if (typeof oldWhois.class === 'string') {
+      oldWhois.class = oldWhois.class.toLowerCase();
+      oldWhois.class = [...oldWhois.class.split(',')];
+    }
+    if (typeof newWhois.class === 'string') {
+      newWhois.class = newWhois.class.toLowerCase();
+      newWhois.class = [...newWhois.class.split(',')];
+    }
+    // class is an array
+    data.class = [...new Set(oldWhois.class.concat(newWhois.class))];
+  }
+  // Maintain all the player races
+  if (oldWhois && newWhois && oldWhois.race && newWhois.race && oldWhois.race !== newWhois.race) {
+    if (typeof oldWhois.race === 'string') {
+      oldWhois.race = oldWhois.race.toLowerCase();
+      // @ts-ignore: Types
+      oldWhois.race = [...oldWhois.race.split(',')];
+    }
+    if (typeof newWhois.race === 'string') {
+      newWhois.race = newWhois.race.toLowerCase();
+      // @ts-ignore: Types
+      newWhois.race = [...newWhois.race.split(',')];
+    }
+    // race is a string
+    data.race = [...new Set(oldWhois.race.concat(newWhois.race))].join(',');
   }
   return data;
 }
@@ -45,6 +66,9 @@ export async function saveQuickWho(text: string) {
     } catch {}
     const data = await fetchWhois(name);
     if (!data) continue;
+    if (!data.level) continue;
+    data.level = parseInt(data.level);
+    if (data.level < 10) continue;
     data.dt = dt;
     await dbSave('whois', mergeWhois(oldWhois, data));
     index++;
@@ -66,6 +90,9 @@ export async function saveWhois(user) {
     const newWhois = await fetchWhois(user.id);
     whois = mergeWhois(user, newWhois);
   }
+  if (!whois.level) return;
+  whois.level = parseInt(whois.level);
+  if (whois.level < 10) return;
   await dbSave('whois', whois);
   ee.emit('sys:text', `<i class="ansi-darkGray"><b>[DB]</b> ${user.id} updated in WHOIS.</i>`);
 }
@@ -78,21 +105,21 @@ export async function fetchWhois(name: string): Promise<T.DBPlayer> {
     const user = (await resp.json()) as T.DBPlayer;
     user.id = name;
     return user;
-  } catch (err) {
+  } catch {
     ee.emit('sys:text', `<i class="ansi-red"><b>[DB]</b> Fetch WHOIS failed for: ${name}!</i>`);
   }
 }
 
-export function whoisTriggers(text: string) {
+export function whoisTriggers(origText: string, normText: string) {
   const userInput = STATE.Custom.input.trim();
 
   // try to parse Honours/ Whois, to enhance whois DB
   //
   if (
     (userInput.startsWith('honours ') || userInput.startsWith('whois ')) &&
-    text.includes('is considered to be approximately')
+    normText.includes('is considered to be approximately')
   ) {
-    const user = p.parseHonours(text);
+    const user = p.parseHonours(origText);
     user.name = userInput.split(' ').filter((x) => !!x)[1];
     return saveWhois(user);
   }
@@ -101,7 +128,7 @@ export function whoisTriggers(text: string) {
   //
   if (STATE.Custom.whoisDB && (userInput === 'bw' || userInput === 'qwho')) {
     STATE.Custom.whoisDB = false;
-    return saveQuickWho(text);
+    return saveQuickWho(origText);
   }
 }
 
@@ -113,7 +140,7 @@ if (process.env.NODE_ENV !== 'test') {
     } catch (err) {
       const msg = `[SYS] WHOIS trigger CRASHED: ${err} !`;
       ee.emit('sys:text', `<i class="ansi-dim ansi-red">${msg}</i>`);
-      ee.emit('log:write', msg);
+      logWrite('\n' + msg + '\n');
     }
   });
 }

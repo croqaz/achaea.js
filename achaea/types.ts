@@ -3,6 +3,7 @@ export interface StateType {
   Room: StateRoom;
   Battle: StateBattle;
   Time: GmcpTime;
+  Stats: StateStats;
   Custom: Record<string, any>;
   Queue: Record<string, string[]>;
 }
@@ -17,6 +18,7 @@ export interface StateMe {
   city: string;
   house: string;
   gold: number;
+  bank: number;
 
   hp: number;
   oldhp: number;
@@ -75,6 +77,21 @@ export interface StateBattle {
   bals: Record<string, boolean>;
 }
 
+export interface StateStats {
+  begDt?: Date;
+  endDt?: Date;
+  gold: number;
+  bank: number;
+  kills: number;
+  ping: number;
+  bal?: Date;
+  eq?: Date;
+  eat?: Date;
+  drink?: Date;
+  apply?: Date;
+  smoke?: Date;
+}
+
 export interface BattleTarget {
   id: string | number;
   name: string;
@@ -115,6 +132,7 @@ export interface GmcpChar extends GmcpPlayer {
   city: string;
   house: string;
   gold: string | number;
+  bank: string | number;
   target?: string;
   rage?: number;
 }
@@ -192,6 +210,7 @@ export interface DBPlayer {
   age: string;
   city: string;
   class: string | string[];
+  level?: number;
   sex: string;
   race: string;
   dt?: string;

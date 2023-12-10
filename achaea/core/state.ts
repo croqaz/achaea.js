@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 'use strict';
-import { bright, italic } from 'ansicolor';
+import { italic } from 'ansicolor';
 
 import * as T from '../types.ts';
 import ee from '../events/index.ts';
@@ -28,6 +28,7 @@ export var STATE: T.StateType = Object.seal({
     city: 'City',
     house: 'House',
     gold: 0,
+    bank: 0,
 
     hp: 0,
     oldhp: 0,
@@ -43,7 +44,7 @@ export var STATE: T.StateType = Object.seal({
     bal: true, // physical balance
     eq: true, // mental equilibrium
     eb: true, // bal & eq
-    round: 0, // rounds of bal & eq
+    round: 0, // Global, rounds of bal & eq
 
     rift: [],
     items: [],
@@ -73,7 +74,7 @@ export var STATE: T.StateType = Object.seal({
   //
   Battle: Object.seal({
     rage: 0,
-    rounds: 0,
+    rounds: 0, // battle rounds
     active: false,
     combat: false, // PVP
     tgtID: null,
@@ -101,6 +102,21 @@ export var STATE: T.StateType = Object.seal({
     daynight: '1',
     moonphase: '..',
     time: 'It is deep night in Achaea, before midnight.',
+  }),
+  //
+  Stats: Object.seal({
+    begDt: new Date(), // starting time
+    endDt: null, // finish time
+    gold: 0, // starting inv gold
+    bank: 0, // starting bank gold
+    kills: 0, // hunting counter
+    ping: 0,
+    bal: null, // physical balance
+    eq: null, // mental equilibrium
+    eat: null, // herb or mineral
+    drink: null, // health or mana
+    apply: null, // salves
+    smoke: null, // mineral or plant
   }),
   //
   Queue: Object.seal({ bal: [], eq: [], eb: [] }),
@@ -250,6 +266,11 @@ export function gmcpProcessChar(_type: string, data: T.GmcpChar) {
     STATE.Me.eb = false;
   }
 
+  // Fix the city name
+  // maybe in the future, save the city level?
+  if (data.city) {
+    data.city = data.city.split(' ')[0];
+  }
   // On class change, emit (old, new)
   if (data.class && data.class !== STATE.Me.class) {
     ee.emit('class:update', STATE.Me.class, data.class);
@@ -257,6 +278,9 @@ export function gmcpProcessChar(_type: string, data: T.GmcpChar) {
 
   if (data.gold) {
     data.gold = parseInt(data.gold as string);
+  }
+  if (data.bank) {
+    data.bank = parseInt(data.bank as string);
   }
   if (data.level) {
     data.level = parseInt((data.level as string).split(' ')[0]);
@@ -386,8 +410,6 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
         if (item.attrib && (item.attrib.includes('m') || item.attrib.includes('x')))
           STATE.Battle.tgts[item.id] = item;
       }
-    } else {
-      ee.emit('log:write', `[GMCP] DON'T KNOW WHAT TODO WITH Char.Items.List: ${tsData.location}`);
     }
   }
   //
@@ -503,8 +525,19 @@ export function gmcpProcessRoomPlayers(type: string, data) {
       // IT'S A BAD IDEA TO IMPORT HERE and I feel ashamed
       const { dbGet } = await import('../extra/leveldb.ts');
       const p = await dbGet('whois', name);
-      const city = p.city ? p.city.toTitleCase() : 'Rogue';
-      return `${p.fullname}, ${p.race} lvl.${p.level}, ${city}`;
+      const race = p.race ? p.race.toTitleCase() + ' ' : '';
+      let city = p.city ? p.city.toTitleCase() : 'Rogue';
+      let clr = '';
+      if (city === 'Rogue') clr = 'ansi-yellow';
+      else if (city === 'Ashtan') clr = 'ansi-magenta';
+      else if (city === 'Cyrene') clr = 'ansi-cyan ansi-bright';
+      else if (city === 'Eleusis') clr = 'ansi-green';
+      else if (city === 'Hashan') clr = 'ansi-cyan';
+      else if (city === 'Mhaldor') clr = 'ansi-red';
+      else if (city === 'Targossas') clr = 'ansi-bright ansi-yellow';
+      // Highlight my own city
+      if (city === STATE.Me.city) city = '★ ' + city;
+      return `<span class="${clr}">${p.fullname}, ${race}lvl.${p.level}, <b>${city}</b></span>`;
     } catch {}
   };
 
@@ -521,9 +554,9 @@ export function gmcpProcessRoomPlayers(type: string, data) {
     setTimeout(async () => {
       const info = await playerInfo(tsData.name.toLowerCase());
       if (info) {
-        ee.emit('sys:text', `<b>Players ++ ${info}</b>`);
+        ee.emit('sys:text', `<b>Players ++</b> ${info}`);
       } else {
-        ee.emit('sys:text', `<b>Players ++ ${tsData.name}</b>`);
+        ee.emit('sys:text', `<b>Players ++</b> ${tsData.name}`);
       }
     }, 1);
     STATE.Room.players.push(data as T.GmcpPlayer);
@@ -538,9 +571,9 @@ export function gmcpProcessRoomPlayers(type: string, data) {
     setTimeout(async () => {
       const info = await playerInfo(data.toLowerCase());
       if (info) {
-        ee.emit('sys:text', `<b>Players -- ${info}</b>`);
+        ee.emit('sys:text', `<b>Players -- </b>${info}`);
       } else {
-        ee.emit('sys:text', `<b>Players -- ${data}</b>`);
+        ee.emit('sys:text', `<b>Players -- </b>${data}`);
       }
     }, 1);
     STATE.Room.players = STATE.Room.players.filter((x) => x.name !== (data as string));

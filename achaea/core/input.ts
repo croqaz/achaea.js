@@ -47,9 +47,13 @@ export default function processUserInput(text: string): string | void {
       const x = JSON.stringify(STATE.Room, null, 2);
       ee.emit('sys:text', `ROOM: ${x}`);
       return;
-    } else if (cmd === 'state') {
-      const x = JSON.stringify(STATE.Custom, null, 2);
-      ee.emit('sys:text', `STATE: ${x}`);
+    } else if (cmd === 'battle') {
+      const x = JSON.stringify(STATE.Battle, null, 2);
+      ee.emit('sys:text', `BATTLE: ${x}`);
+      return;
+    } else if (cmd === 'stats') {
+      const x = JSON.stringify(STATE.Stats, null, 2);
+      ee.emit('sys:text', `STATS: ${x}`);
       return;
     }
 
@@ -65,6 +69,9 @@ export default function processUserInput(text: string): string | void {
 
   // Intercept unprocessed special cmds
   if (extra && extra.startsWith('//')) return;
+
+  // Input intentionally ignored
+  if (extra === '') return;
 
   // console.timeEnd(`core-input-${count}`);
   // count++;

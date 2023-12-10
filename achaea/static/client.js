@@ -1,5 +1,5 @@
 import * as map from './map.js';
-
+window.BATTLE = { tgtID: null };
 const ASCII_INPUT = /^[/'"0-9a-z]$/i;
 
 window.addEventListener('load', function () {
@@ -24,6 +24,9 @@ window.addEventListener('load', function () {
     // console.log(ev);
     // Full expand map
     if (ev.ctrlKey && ev.key === 'm') {
+      if (rightElem.classList.contains('big')) {
+        rightElem.classList.toggle('big');
+      }
       mapElem.classList.toggle('big');
       // Force Paper.js to resize & recalculate
       // https://github.com/paperjs/paper.js/issues/662
@@ -32,6 +35,10 @@ window.addEventListener('load', function () {
     }
     // Half screen expand the chat
     if (ev.ctrlKey && ev.key === ',') {
+      if (mapElem.classList.contains('big')) {
+        mapElem.classList.toggle('big');
+        window.dispatchEvent(new Event('resize'));
+      }
       return rightElem.classList.toggle('big');
     }
     // Ignore all the other meta events
@@ -137,9 +144,11 @@ async function startWS() {
       return displayRoom();
     }
     if (data.textType === 'battleUpdate' && data.battle) {
+      window.BATTLE = data.battle;
       return displayBattle(data.battle);
     } else if (data.textType === 'battleStop') {
       document.getElementById('battleWrap').style.display = 'none';
+      window.BATTLE = { tgtID: null };
       return;
     }
 
@@ -162,7 +171,7 @@ async function startWS() {
       return console.warn(`Unknown message format:`, data);
     }
 
-    const txt = document.createElement('pre');
+    const txt = document.createElement('p');
     if (data.textType === 'userText') {
       text = `> ${text}`;
     }
@@ -197,10 +206,11 @@ window.whoisPlayer = function whoisPlayer(elem) {
   WS.send(`WHOIS ${id}`);
 };
 
-window.probeItem = function probeItem(elem) {
+window.probeItem = function probeItem(event, elem) {
   const id = elem.dataset.id;
-  console.log(`PROBE: ${id}`);
-  WS.send(`PROBE ${id}`);
+  const isDeniz = elem.classList.contains('denizen');
+  if (isDeniz && event.ctrlKey) WS.send(`kk ${id}`);
+  else WS.send(`PROBE ${id}`);
 };
 
 function persistHistory(history) {
@@ -225,7 +235,10 @@ function displayRoom(data) {
     const locX = document.getElementById('loc');
     let loc = '';
     if (data.area) {
-      const a = data.area.replace(/^the |^a /, '');
+      // shorter area name
+      let a = data.area.replace(/^the |^a /, '');
+      // title-case
+      a = a.charAt(0).toUpperCase() + a.substr(1);
       loc += `<small class="bold">${a}</small>: `;
     }
     loc += data.name.replace(/ \(indoors\)$/, '');
@@ -247,6 +260,11 @@ function displayRoom(data) {
     }
   }
 
+  let battleTgtID = null;
+  if (window.BATTLE.tgtID && window.BATTLE.tgts && window.BATTLE.tgts[window.BATTLE.tgtID]) {
+    battleTgtID = window.BATTLE.tgtID;
+  }
+
   const items = [];
   const denizen = [];
   if (window.ROOM.items && window.ROOM.items.length) {
@@ -258,8 +276,10 @@ function displayRoom(data) {
   if (denizen.length) {
     room += `<h5>${denizen.length} Denizens here:</h5>`;
     for (const x of denizen) {
+      let cls = 'denizen roomItem';
+      if (x.id === battleTgtID) cls += ' ansi-red';
       // On-click, probe denizen
-      room += `<p data-id="${x.id}" class="roomItem" title="[${x.id}] ${x.name}" onclick="probeItem(this)">- ${x.name}</p>`;
+      room += `<p data-id="${x.id}" class="${cls}" title="[${x.id}] ${x.name}" onclick="probeItem(event,this)">- ${x.name}</p>`;
     }
   } else {
     room += `<h5>No denizens here</h5>`;
@@ -268,7 +288,7 @@ function displayRoom(data) {
     room += `<h5>${items.length} Items here:</h5> - `;
     for (const x of items) {
       // On-click, probe item
-      room += `<span data-id="${x.id}" class="roomItem" title="[${x.id}] ${x.name}" onclick="probeItem(this)">${x.name}</span>; `;
+      room += `<span data-id="${x.id}" class="roomItem" title="[${x.id}] ${x.name}" onclick="probeItem(event,this)">${x.name}</span>; `;
     }
   } else {
     room += `<h5>No items here</h5>`;

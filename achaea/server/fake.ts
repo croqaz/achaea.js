@@ -23,6 +23,10 @@ export default async function fakeEvents() {
   ee.emit('game:html', ansiToHtml(lightGray('This is light gray.')));
   ee.emit('game:html', ansiToHtml(darkGray('This is dark gray.')));
 
+  await sleep(0.1);
+  ee.emit('sys:text', `<i class="ansi-darkGray"><b>[DB]</b> 6789 entries saved in WARES.</i>`);
+  ee.emit('sys:text', `<i class="ansi-darkGray"><b>[DB]</b> 0123 entries saved in WHOIS.</i>`);
+
   await sleep(0.5);
   ee.emit('user:text', 'User text');
   ee.emit(

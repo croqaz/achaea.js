@@ -5,7 +5,7 @@ import * as db from './leveldb.js';
 import * as m from '../maps/index.ts';
 import * as w from '../maps/walker.ts';
 import * as comm from '../core/common.ts';
-import { STATE, listDenizens } from '../core/state.ts';
+import { listDenizens, STATE } from '../core/state.ts';
 
 let customProcessUserInput;
 try {
@@ -34,7 +34,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
     return 'WRITHE';
   } else if (text === 'wwx' || text === 'wxx') {
     STATE.Custom.writhe = false;
-    return;
+    return '';
   }
 
   // Collect wares DB
@@ -54,12 +54,12 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
     for (const d of listDenizens()) {
       ee.emit('user:text', `LOOK ${d}`);
     }
-    return;
+    return '';
   } else if (text === 'la') {
     for (const p of STATE.Room.players) {
       ee.emit('user:text', `LOOK ${p.name}`);
     }
-    return;
+    return '';
   }
 
   // Special commands

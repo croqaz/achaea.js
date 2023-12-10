@@ -57,8 +57,7 @@ export function processGMCP(text: string) {
   let data = {};
   try {
     data = JSON.parse(text.slice(text.indexOf(' ') + 1));
-  } catch (err) {
-    ee.emit('log:write', `[GMCP] CANNOT parse JSON: ${err} !`);
+  } catch {
     return;
   }
 
@@ -125,8 +124,7 @@ export function processGMCP(text: string) {
     return;
   }
 
-  console.warn('[GMCP] Unhandled STATE ??', type, data);
-  ee.emit('log:write', `[GMCP] Unhandled STATE ?? ${type}`);
+  console.warn('[GMCP] Unhandled/ Unknown STATE ??', type, data);
 }
 
 ee.on('game:gmcp', processGMCP);

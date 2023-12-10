@@ -1,4 +1,3 @@
-import { dim, italic } from 'ansicolor';
 import { STATE } from './state.ts';
 import extraProcessDisplayText from '../extra/output.ts';
 
@@ -34,9 +33,9 @@ const SPAN_CODE = '<span class="[a-zA-Z- ]+">';
 const SPAN_STOP = '</span>\n?';
 // This can only handle CONFIG PROMPT STATS & ALL
 export const PROMPT = new RegExp(
-  `(${SPAN_CODE}[0-9]{1,6}h, ${SPAN_STOP}${SPAN_CODE}[0-9]{1,6}m,? ${SPAN_STOP}` +
+  `^(${SPAN_CODE}[0-9]{1,6}h, ${SPAN_STOP}${SPAN_CODE}[0-9]{1,6}m,? ${SPAN_STOP}` +
     `(?:${SPAN_CODE}[0-9]{1,8}e, ${SPAN_STOP}${SPAN_CODE}[0-9]{1,8}w,? ${SPAN_STOP})?` +
-    `(?:${SPAN_CODE}[0-9]{1,6}R${SPAN_STOP})?${SPAN_CODE}[ ]?[a-z]*-${SPAN_STOP})$`,
+    `(?:${SPAN_CODE}[0-9]{1,6}R${SPAN_STOP})?${SPAN_CODE}[ ]?[a-z]*-\n?${SPAN_STOP})`,
   'm',
 );
 
@@ -46,8 +45,8 @@ export default function processDisplayText(text: string): string {
   /*
    * Game text processor.
    * Used to highlight or replace text, display meta-data...
-   * This is raw ANSI text, from the game.
-   * It is only used for display in the GUI,
+   * This is HTML text, from the game.
+   * The output is used for display and the logs,
    * it is not used for triggers.
    */
   // console.time(`core-output-${count}`);
@@ -90,11 +89,6 @@ export default function processDisplayText(text: string): string {
         break;
       }
     }
-  }
-
-  // Fix the fucking newline, it's driving me crazy
-  if (text.includes('You have recovered')) {
-    text = text.replace(/\s+You have recovered /, 'You have recovered ');
   }
 
   text = extraProcessDisplayText(text);

@@ -1,24 +1,5 @@
 import u from '@yanick/updeep-remeda';
 
-// @ts-ignore
-String.prototype.toTitleCase = function () {
-  return this.charAt(0).toUpperCase() + this.substr(1).toLowerCase();
-};
-
-export function isoDate(): string {
-  return new Date().toISOString().split('.')[0];
-}
-
-export function dateDiff(d1, d2): number {
-  // Date difference, calculated in hours
-  const d = Math.abs(new Date(d1).getTime() - new Date(d2).getTime());
-  return d / 1000 / 3600;
-}
-
-export function sleep(sec: number) {
-  return new Promise((r) => setTimeout(r, Math.round(sec * 1000)));
-}
-
 export const CITIES = Object.freeze(['Ashtan', 'Cyrene', 'Eleusis', 'Hashan', 'Mhaldor', 'Targossas']);
 
 export const HOUSES = Object.freeze([
@@ -645,6 +626,12 @@ export function findVenom(name: string) {
 }
 
 export function findRune(name: string) {
+  //   kena: {
+  //   effect: 'inspires fear',
+  //   req: '1 red ink',
+  //   symbol: 'nightmare',
+  //   desc: 'a rune to inspire fear',
+  // },
   const result = [];
   name = name.toLowerCase();
   for (const [n, info] of Object.entries(RUNES)) {
@@ -658,4 +645,34 @@ export function findRune(name: string) {
     }
   }
   return result;
+}
+
+export function weaponType(text: string): string {
+  if (
+    text.includes(' Dreadblade ') ||
+    text.includes(' Soulreaver ') ||
+    text.includes(' Dawnrender ') ||
+    text.includes(' bastard sword')
+  ) {
+    return 'bastard sword';
+  } else if (
+    text.includes(' Hellforge ') ||
+    text.includes(' Worldforge ') ||
+    text.includes(` Stonesmith's `)
+  ) {
+    return 'warhammer';
+  } else if (text.includes(' Orcsplitter ') || text.includes('Logosian Battleaxe')) {
+    return 'battleaxe';
+  } else if (text.includes('Scimitar of ')) {
+    return 'scimitar';
+  } else if (
+    text.includes(`Assassin's Dirk`) ||
+    text.includes(`Buckawn's Spine`) ||
+    text.includes(`Thoth's Fang`)
+  ) {
+    return 'dirk';
+  } else if (text.endsWith(' cleaver')) {
+    return 'cleaver';
+  }
+  return '';
 }

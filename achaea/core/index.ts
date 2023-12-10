@@ -1,7 +1,9 @@
 import ee from '../events/index.ts';
 
-export { sleep, CITIES, HOUSES, CLASSES, RACES } from './common.js';
-export { VENOMS, RUNES, HERBS, MINERALS, MATERIALS } from './common.js';
+export { CITIES, HOUSES, CLASSES, RACES } from './common.ts';
+export { VENOMS, RUNES, HERBS, MINERALS, MATERIALS } from './common.ts';
+export { sleep, isoDate, dateDiff } from './util.ts';
+export { logWrite } from '../logs/index.ts';
 
 export function userText(line: string) {
   // Send a user command to the game
@@ -15,12 +17,4 @@ export function displayText(line: string) {
   // The text is NOT sent to the game
   // and is NOT persisted in the LOGS
   ee.emit('sys:text', line);
-}
-
-export function logText(line: string) {
-  // Write some text in the LOG file
-  // This is useful for later debug
-  // The text is NOT sent to the game and
-  // you can't see it in the interface
-  ee.emit('log:write', line);
 }
