@@ -123,7 +123,7 @@ function roomSlowness(uid: string): number {
   ) {
     return 4;
   }
-  return 1;
+  return 1.5;
 }
 
 export async function getArea(uid: string, enhance = false): Promise<T.MapArea> {

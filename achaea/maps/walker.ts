@@ -42,7 +42,8 @@ export const REV_EXITS = Object.freeze({
 // NEEDS TO HANDLE
 // on the clouds / duanathar
 // "Now now, don't be so hasty!"
-// "You slip and fall on the ice as you try to leave ??
+// You slip and fall on the ice as you try to leave ??
+// You stumble through the fog, attempting to find a way out.
 // Some fast river washing you away
 // Special exits, need to twist/push/pull, or Say something
 // You sweep your trained eye across your surroundings, searching for hidden exits.
