@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="language" content="english">
+  <meta property="og:locale" content="en_US">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="author" href="https://crlf.link/author/">
+  <meta name="author" content="Cristi Constantin">
+  <meta name="publisher" content="Cristi Constantin">
+  <meta name="copyright" content="Copyright 2023">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body > * {
+      font-size: 16px;
+      font-family: monospace;
+      font-variant-ligatures: contextual;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    html, body, main, table, input, select, pre {
+      margin: 0;
+      padding: 0;
+      font-size: 16px;
+      font-family: monospace;
+    }
+    .small {
+      font-size: 14px;
+    }
+    #main {
+      display: flex;
+      margin: 0.4rem;
+    }
+    #db {
+      height: 2rem;
+      padding: 0.1rem;
+      padding-left: 0.3rem;
+      border: 1px solid #888;
+    }
+    #query {
+      height: 2rem;
+      padding: 0.1rem;
+      padding-left: 0.2rem;
+      margin-left: -1px;
+      border: 1px solid #888;
+      width: 100%;
+    }
+    #result {
+      display: flex;
+      margin: 0.4rem;
+      border: 1px solid #ccc;
+    }
+    #result td {
+      padding-right: 0.33rem;
+      border-right: 1px dotted #ccc;
+    }
+  </style>
+  <title>DB explorer</title>
+</head>
+<body>
+  <main id="main">
+    <select id="db">
+      <option value="whois">Whois</option>
+      <option value="wares">Wares</option>
+      <option value="item" disabled>Item</option>
+      <option value="npc" disabled>Denizen</option>
+    </select><input id="query" type="text" required>
+  </main>
+  <table id="result"></table>
+  <script src="search.js" type="module" defer></script>
+</body>
+</html>
