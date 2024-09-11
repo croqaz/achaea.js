@@ -12,6 +12,7 @@ export interface MapArea {
 }
 
 export interface MapEnv {
+  id?: string;
   name: string;
   color: string;
 }
@@ -21,7 +22,7 @@ export interface MapRoom {
   title: string;
   area: string;
   areaID?: string;
-  environment: string;
+  environment: MapEnv | string;
   coord: any;
   exits: any[];
   visited: boolean;

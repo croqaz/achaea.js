@@ -137,5 +137,5 @@ def process_crowd_map():
 if __name__ == "__main__":
     download_official_map()
     process_official_map()
-    download_crowd_map()
-    process_crowd_map()
+    # download_crowd_map()
+    # process_crowd_map()

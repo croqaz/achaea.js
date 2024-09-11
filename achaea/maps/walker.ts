@@ -1,20 +1,10 @@
 import Heap from 'qheap';
 
+import * as m from './maps.ts';
+import * as mi from './index.ts';
 import * as T from './types.ts';
-import * as m from './index.ts';
 import { STATE } from '../core/state.ts';
 import { userText, displayText, sleep } from '../core/index.ts';
-
-export const EXITS = Object.freeze({
-  north: 'n',
-  south: 's',
-  east: 'e',
-  west: 'w',
-  northeast: 'ne',
-  northwest: 'nw',
-  southeast: 'se',
-  southwest: 'sw',
-});
 
 export const REV_EXITS = Object.freeze({
   n: 's',
@@ -39,7 +29,7 @@ export const REV_EXITS = Object.freeze({
   out: 'in',
 });
 
-// NEEDS TO HANDLE
+// TODO: NEEDS TO HANDLE
 // on the clouds / duanathar
 // "Now now, don't be so hasty!"
 // You slip and fall on the ice as you try to leave ??
@@ -52,27 +42,32 @@ export const REV_EXITS = Object.freeze({
 const INTERVAL = 250;
 const WALK_DELAY = 0.5;
 //
-// This is a high level auto-walker
+// Public, external, high level auto-walker
 //
 export async function autoWalker(
   fromID: string,
   toID: string,
-  { type = null, autoStart = true, interval = INTERVAL, walkDelay = WALK_DELAY } = {},
+  { autoStart = true, type = '', interval = INTERVAL, walkDelay = WALK_DELAY } = {},
 ) {
-  let walk = await walkFromTo(fromID, toID, type);
-  if (!walk) return displayText('<b>[Path]</b>: No path was found!');
+  let walk = await innerWalker(fromID, toID, type);
+  if (!walk) return displayText('<i class="ansi-dim ansi-red"><b>[Path]</b>: No path was found!</i>');
 
   const MAX_TIME = 5000 / INTERVAL; // 5 seconds
-  let intID = null;
+  let intID: ReturnType<typeof setTimeout> | null = null;
   let timer = 0;
 
   const move = async () => {
     if (!walk) {
-      return stop();
+      walk = null;
+      return pause();
     }
     if (!walk.curr().next) {
-      displayText('<b>[Path]</b>: You have arrived!');
-      return stop();
+      setTimeout(() => {
+        // Make sure to delete the Walker instance
+        displayText('<b>[Path]</b>: You have arrived!');
+        walk = null;
+      }, 750);
+      return pause();
     }
     timer++;
 
@@ -86,22 +81,22 @@ export async function autoWalker(
         await sleep(walkDelay);
         return userText(nextRoom.dir);
       } else {
-        displayText('<b>[Path]</b>: Cannot move!!');
-        return stop();
+        displayText('<i class="ansi-dim ansi-red"><b>[Path]</b>: Cannot move!</i>');
+        return pause();
       }
     }
     // If we cannot move for a long time, abandon
     //
     if (timer >= MAX_TIME) {
-      displayText("<b>[Path]</b>: Couldn't move! Walk aborted!");
-      return stop();
+      displayText('<i class="ansi-dim ansi-red"><b>[Path]</b>: I\'m stuck! Walk aborted!</i>');
+      return pause();
     }
   };
 
   // Is auto-move running ?
   const moving = () => !!intID;
 
-  const stop = () => {
+  const pause = () => {
     if (intID) clearInterval(intID);
     intID = null;
     timer = MAX_TIME;
@@ -120,20 +115,31 @@ export async function autoWalker(
       userText(nextRoom.dir);
       start();
     } else {
-      displayText('<b>[Path]</b>: Cannot move! No path!');
+      displayText(
+        '<i class="ansi-dim ansi-red"><b>[Path]</b>: Cannot move! No path to destination!</i>',
+      );
       walk = null;
     }
   }
 
   // next, prev & path are found inside "walk"
-  return { walk, start, stop, moving };
+  return { walk, start, pause, moving };
 }
 
-export async function walkFromTo(fromID: string, targetID: string, type: string) {
+/*
+ * Internal auto-walker, used in tests.
+ * This can be used to walk from point to point,
+ * or to explore the area starting from a point.
+ */
+export async function innerWalker(
+  fromID: string,
+  targetID: string,
+  type: string = '',
+) {
   // Local area graph
   const room = m.MAP.rooms[fromID];
   if (!room) return null;
-  const area = await m.getArea(room.area, false);
+  const area = await mi.getArea(room.area, false);
   if (!area) return null;
   // If walk type is Global, use the big graph
   // Else, use a small graph of the local area
@@ -142,10 +148,11 @@ export async function walkFromTo(fromID: string, targetID: string, type: string)
   try {
     path = walkDirections(gr, fromID, targetID);
   } catch (err) {
-    console.warn('Error in auto-walk:', err);
+    console.warn('Inner-walker error:', err);
     return null;
   }
   if (!path || !path.length) return null;
+
   let index = 0;
   // Current room ID
   const curr = () => {
@@ -168,11 +175,14 @@ export async function walkFromTo(fromID: string, targetID: string, type: string)
   return { path, curr, next, prev };
 }
 
+/*
+ * Helper to convert walk IDs to map directions.
+ */
 export function walkDirections(graph, start: string, finish: string) {
   let index = 1;
+  let prev = null;
   const directions = [];
   const walk = walkRooms(graph, start, finish);
-  let prev = null;
   for (const uid of walk) {
     const nextID = walk[index];
     // Auto walking over
@@ -185,7 +195,7 @@ export function walkDirections(graph, start: string, finish: string) {
     for (const exit of thisRoom.exits) {
       const dir = exit.direction;
       if (exit.target === nextID) {
-        found = { uid, next: EXITS[dir] || dir, prev };
+        found = { uid, next: m.EXITS[dir] || dir, prev };
         break;
       }
     }
@@ -196,21 +206,23 @@ export function walkDirections(graph, start: string, finish: string) {
   return directions;
 }
 
+/*
+ * Adapted Dijkstra algorithm
+ * Original author: Max Burstein (mburst)
+ * https://github.com/mburst/dijkstras-algorithm
+ */
 export function walkRooms(graph, start: string, finish: string) {
-  // Adapted Dijkstra algorithm
-  // https://github.com/mburst/dijkstras-algorithm
-  // By Max Burstein (mburst)
-  const distances = {};
-  const previous = {};
+  const distances = new Map();
+  const previous = new Map();
   const nodes = new Heap({ compar: (a, b) => a.cost - b.cost });
-  const vertices = graph.vertices as Record<string, T.GraphEdge>;
+  const vertices = graph.vertices as Map<string, Map<string, T.GraphEdge>>;
 
-  for (const vertex of Object.keys(vertices)) {
+  for (const vertex of vertices.keys()) {
     if (vertex === start) {
-      distances[vertex] = 0;
+      distances.set(vertex, 0);
       nodes.enqueue({ cost: 0, key: vertex });
     } else {
-      distances[vertex] = Infinity;
+      distances.set(vertex, Infinity);
       nodes.enqueue({ cost: Infinity, key: vertex });
     }
   }
@@ -222,32 +234,32 @@ export function walkRooms(graph, start: string, finish: string) {
 
     if (smallest === finish) {
       path = [];
-
-      while (previous[smallest]) {
+      while (previous.get(smallest)) {
         path.push(smallest);
-        smallest = previous[smallest];
+        smallest = previous.get(smallest);
       }
-
       break;
     }
 
     // All remaining vertices are inaccessible from source
-    if (!smallest || distances[smallest] === Infinity) {
+    if (!smallest || distances.get(smallest) === Infinity) {
       continue;
     }
 
     // Look at all the nodes that this vertex is attached to
-    for (const [neighbor, props] of Object.entries(vertices[smallest])) {
+    for (const [neighbor, props] of vertices.get(smallest).entries()) {
       // Alternative path distance
-      const alt = distances[smallest] + props.cost;
+      const alt = distances.get(smallest) + (props.cost || 1);
       // If there is a new shortest path update our priority queue (relax)
-      if (alt < distances[neighbor]) {
-        distances[neighbor] = alt;
-        previous[neighbor] = smallest;
+      if (alt < distances.get(neighbor)) {
+        distances.set(neighbor, alt);
+        previous.set(neighbor, smallest);
         nodes.enqueue({ cost: alt, key: neighbor });
       }
     }
   } // --while
 
+  previous.clear();
+  distances.clear();
   return path.concat([start]).reverse();
 }
