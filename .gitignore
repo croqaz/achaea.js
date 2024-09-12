@@ -1,5 +1,4 @@
 # Logs
-logs
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -25,12 +24,6 @@ coverage
 
 # nyc test coverage
 .nyc_output
-
-# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
-.grunt
-
-# Bower dependency directory (https://bower.io/)
-bower_components
 
 # node-waf configuration
 .lock-wscript
@@ -79,6 +72,9 @@ web_modules/
 .env.production.local
 .env.local
 
+# direnv
+.envrc
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
@@ -104,9 +100,6 @@ dist
 .temp
 .cache
 
-# Docusaurus cache and generated files
-.docusaurus
-
 # Serverless directories
 .serverless/
 
@@ -130,7 +123,9 @@ dist
 .pnp.*
 
 # local
-logs
-log-archive
+logs/*.txt
+logs/*.htm
+log-archive/
+log-battle/
 db_*.json
 DB_*

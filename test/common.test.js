@@ -70,3 +70,10 @@ test('search venom & rune', () => {
   expect(c.findRune('horse')[0].name).toBe('raido');
   expect(c.findRune('entangle')[0].name).toBe('nairat');
 });
+
+test('find weapon type', () => {
+  expect(c.weaponType(`a butcher's cleaver`)).toBe('cleaver');
+  expect(c.weaponType(`a mighty butcher's cleaver`)).toBe('cleaver');
+  expect(c.weaponType('a Dawnrender bastard sword')).toBe('bastard sword');
+  expect(c.weaponType(`a Stonesmith's Maul`)).toBe('warhammer');
+});
