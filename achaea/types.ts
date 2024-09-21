@@ -45,6 +45,8 @@ export interface StateMe {
   afflictions: GmcpAffliction[];
   defences: GmcpDefence[];
   skills: GmcpSkillList;
+
+  displayRace: number;
 }
 
 export interface StateRoom {
@@ -55,7 +57,6 @@ export interface StateRoom {
   name: string;
   desc: string;
   owner: string; // wares proprietor
-  coord: any;
   room: any; // meta from map
   details?: string[];
   exits?: Record<string, number>;
@@ -234,6 +235,6 @@ export interface DBRoom {
   desc: string;
   area: string;
   env: string;
-  features?: string;
+  features?: string; // GMCP details
   dt?: string;
 }

@@ -57,12 +57,12 @@ export function connect(player: string) {
     telnet.writeWont(option);
   });
 
-  // Necessary to have a stream consumer
+  // Necessary to have a stream consumer!
   telnet.on('data', (buff) => {
     if (!buff.length) return;
     const txt = buff.toString();
     if (!txt.trim()) return;
-    process.stdout.write('\n');
+    // process.stdout.write('\n');
     process.stdout.write(txt);
   });
 

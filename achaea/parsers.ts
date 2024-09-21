@@ -1,5 +1,6 @@
 import * as T from './types.ts';
 import { STATE } from './core/state.ts';
+import { Config } from './extra/config.ts';
 import { CITIES, HERBS, MINERALS, MATERIALS } from './core/common.ts';
 
 export function parseSurvey(text: string) {
@@ -87,7 +88,7 @@ export function parseQuickWho(text: string) {
   const names = [];
   for (const line of lines) {
     for (let name of line.split(',')) {
-      name = name.replace(/[\r .]*$/g, '');
+      name = name.trim().replace(/[.]*$/g, '');
       if (name.startsWith('and ')) {
         name = name.slice(4);
       }
@@ -136,18 +137,11 @@ export function parseHonours(text: string): T.DBPlayer {
   return { id: null, fullname: name, age, city, class: clss, sex, race };
 }
 
-// TODO :: move the excluded list in the CONFIG
-// Ignore these minerals for now: Cinnabar
-const EXCLUDE_MINERALS = ['cinnabar'];
-const EXTRACT_MINERALS = Object.keys(MINERALS).filter((x) => !EXCLUDE_MINERALS.includes(x));
-
-// Ignore some plants for now
-const EXCLUDE_HERBS = ['kuzu', 'slipper'];
-const HARVEST_PLANTS = Object.keys(HERBS).filter((x) => !EXCLUDE_HERBS.includes(x));
-
+const EXTRACT_MINERALS = Object.keys(MINERALS).filter((x) => !Config.EXCLUDE_MINERALS.includes(x));
+// Ignore some plants from config
+const HARVEST_PLANTS = Object.keys(HERBS).filter((x) => !Config.EXCLUDE_HERBS.includes(x));
 // Ignore some gathering materials
-const EXCLUDE_MATERIAL = ['dust', 'fruit', 'vegetable'];
-const GATHER_MATERIALS = Object.keys(MATERIALS).filter((x) => !EXCLUDE_MATERIAL.includes(x));
+const GATHER_MATERIALS = Object.keys(MATERIALS).filter((x) => !Config.EXCLUDE_MATERIAL.includes(x));
 
 export function parseMinerals(text: string) {
   if (!text.includes('You spot the following minerals here')) {
