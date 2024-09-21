@@ -29,6 +29,9 @@ export default async function fakeEvents() {
 
   await sleep(0.5);
   ee.emit('user:text', 'User text');
+  ee.emit('user:text', 'TEST ligatures: fi, ffi, th ...');
+  ee.emit('user:text', 'TEST ligatures: find fluffy jello ...');
+
   ee.emit(
     'game:gmcp',
     `Char.Status {
@@ -44,6 +47,14 @@ export default async function fakeEvents() {
     `Char.Defences.List [
       { "name": "boartattoo", "desc": "This tattoo will passively regenerate your health." }
     ]`,
+  );
+
+  ee.emit(
+    'game:gmcp',
+    `IRE.Time.Update {
+    "day": "6", "mon": "3", "month": "Glacian", "year": "955", "hour": "11",
+    "time": "Dusk has overtaken the light in Achaea.", "moonphase": "Waxing Crescent"
+  }`,
   );
 
   ee.emit(
@@ -138,10 +149,14 @@ To restore the defaults, enter CONFIG COLOUR DEFAULT
 [33m                    Cutting%    4;  Blunt%    4;  Magic%  n/a[37m`),
   );
 
+  let dayNight = 1;
   let userTextNo = 1;
   setInterval(() => {
     ee.emit('user:text', `User text ${userTextNo}`);
+    ee.emit('game:gmcp', `IRE.Time.Update { "daynight": "${dayNight}" }`);
     userTextNo++;
+    dayNight += 4;
+    if (dayNight > 199) dayNight = 1;
   }, 2500);
 
   let fakeHP = 1500;

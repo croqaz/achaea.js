@@ -15,6 +15,7 @@ import { STATE } from '../core/state.ts';
 import processUserInput from '../core/input.ts';
 
 const app = express();
+// Game index, DB explorer, etc
 app.use(express.static(`${dirName}/static`));
 
 export const server = createServer(app);
@@ -47,11 +48,19 @@ app.get('/room/:id.json', async (req, res) => {
 
 // Find API
 app.get('/wares.json', async (req, res) => {
-  res.json(await db.waresFind(req.query.key || req.params.key, false));
+  res.json(await db.waresFind(req.query.key || req.params.key));
 });
 
 app.get('/whois.json', async (req, res) => {
-  res.json(await db.whoisFind(req.query.key || req.params.key, false));
+  res.json(await db.whoisFind(req.query.key || req.params.key));
+});
+
+app.get('/item.json', async (req, res) => {
+  res.json(await db.roomItemFind(req.query.key || req.params.key));
+});
+
+app.get('/npc.json', async (req, res) => {
+  res.json(await db.denizenFind(req.query.key || req.params.key));
 });
 
 wss.on('connection', function (ws, req) {
@@ -89,6 +98,10 @@ wss.on('connection', function (ws, req) {
     data.textType = 'channelText';
     ws.send(JSON.stringify(data));
   });
+  // GMCP Time.List or Time.Update
+  ee.on('time:update', (data) => {
+    ws.send(JSON.stringify({ ...data, textType: 'timeUpdate' }));
+  });
 
   // send CLI & auto-text (aliases, triggers)
   ee.on('user:text', (text: string) => {
@@ -98,6 +111,10 @@ wss.on('connection', function (ws, req) {
   // It goes to the GUI client and is not persisted
   ee.on('sys:text', (text: string) => {
     ws.send(JSON.stringify({ textType: 'sysText', text }));
+  });
+  // Display HTML, not related to the Telnet output
+  ee.on('sys:html', (text: string) => {
+    ws.send(JSON.stringify({ textType: 'sysHtml', text }));
   });
 
   ee.on('room:update', (data) => {
