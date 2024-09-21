@@ -51,9 +51,13 @@ export var STATE: T.StateType = Object.seal({
     charstats: [],
     afflictions: [],
     defences: [],
-    skills: { list: [] },
+    skills: {} as Record<string, any>,
     wieldedL: {} as T.GmcpItem,
     wieldedR: {} as T.GmcpItem,
+
+    // A display race, eg:
+    // druid morph, Viridian, Chaos Lord...
+    displayRace: '',
   }),
   //
   Room: Object.seal({
@@ -64,7 +68,6 @@ export var STATE: T.StateType = Object.seal({
     name: '',
     desc: '',
     owner: '', // wares proprietor
-    coord: {},
     room: {}, // meta from map
     details: [],
     exits: {},
@@ -122,6 +125,8 @@ export var STATE: T.StateType = Object.seal({
   Queue: Object.seal({ bal: [], eq: [], eb: [] }),
   //
   Custom: {
+    // last X game texts
+    texts: [],
     // user's current input
     input: '',
     autoWalk: [], // auto-walk state
@@ -146,7 +151,7 @@ export function resetDefaultState() {
   STATE.Custom = Object.seal(JSON.parse(JSON.stringify(defaultMUD)));
 }
 
-function addToStateList(key, list, value) {
+function addToStateList(key: string, list, value) {
   if (!STATE[key]) {
     console.error('Wrong STATE key!', key);
     return;
@@ -158,7 +163,7 @@ function addToStateList(key, list, value) {
   STATE[key][list].push(value);
 }
 
-function remFromStateList(key, list, value) {
+function remFromStateList(key: string, list, value) {
   if (!STATE[key]) {
     console.error('Wrong STATE key!', key);
     return;
@@ -239,7 +244,7 @@ export function stateStopBattle() {
 // GMCP processing functions
 //
 
-export function gmcpProcessChar(_type: string, data: T.GmcpChar) {
+export function gmcpProcessChar(_: string, data: T.GmcpChar) {
   if (data.bal) {
     if (data.bal === '1') {
       data.bal = true;
@@ -293,6 +298,7 @@ export function gmcpProcessChar(_type: string, data: T.GmcpChar) {
     data.oldmp = STATE.Me.mp;
     data.mp = parseInt(data.mp as string);
   }
+
   if (data.charstats) {
     for (const cs of data.charstats) {
       if (cs.startsWith('Rage:')) {
@@ -312,7 +318,15 @@ export function gmcpProcessChar(_type: string, data: T.GmcpChar) {
             }
           }
         }
-        break;
+      }
+      //
+      // Special display race for Druid
+      // TODO: more classes
+      else if (cs.startsWith('Morph:')) {
+        const [, r] = cs.split(': ');
+        if (r && r !== 'None') {
+          STATE.Me.displayRace = r;
+        }
       }
     }
   }
@@ -354,7 +368,18 @@ export function gmcpProcessAfflictions(type: string, data) {
   if (type === 'Char.Afflictions.List') {
     updateMyself({ afflictions: data });
   } else if (type === 'Char.Afflictions.Add') {
+    //
+    // (black magic = HACK)
+    // Black magic! Run random action, to try to remove amnesia
+    // Hope this is enough ...
+    // TODO : As the retardation vibration embeds itself, time itself appears to slow.
+    // TODO : aeon / retardation
+    //
     const tsData = data as T.GmcpAffliction;
+    if (tsData.name === 'amnesia') {
+      ee.emit('user:text', 'QUEUE PREPEND EB TOUCH AMNESIA');
+      ee.emit('sys:text', '[SYS] Touching amnesia ...');
+    }
     ee.emit(
       'sys:text',
       ansiToHtml(
@@ -366,8 +391,12 @@ export function gmcpProcessAfflictions(type: string, data) {
   } else if (type === 'Char.Afflictions.Remove') {
     const tsData = data as string[];
     ee.emit('sys:text', ansiToHtml(italic.magenta(`Afflictions -- ${data}`)));
-    for (const item of tsData) {
-      remFromStateList('Me', 'afflictions', item);
+    for (const name of tsData) {
+      remFromStateList('Me', 'afflictions', name);
+      // Hook after removing some aff
+      if (name === 'blackout') {
+        ee.emit('user:text', 'QL');
+      }
     }
   }
   ee.emit('myself:update', STATE.Me);
@@ -473,7 +502,7 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
   }
 }
 
-export function gmcpProcessRift(type: string, data) {
+export function gmcpProcessRift(type: string, data: any) {
   if (type === 'IRE.Rift.List') {
     updateMyself({ rift: data });
   } else if (type === 'IRE.Rift.Add') {
@@ -484,7 +513,7 @@ export function gmcpProcessRift(type: string, data) {
   ee.emit('rift:update', STATE.Me.rift);
 }
 
-export function gmcpProcessSkills(type: string, data) {
+export function gmcpProcessSkills(type: string, data: any) {
   if (type === 'Char.Skills.Groups') {
     const tsData = data as T.GmcpSkill[];
     for (const skill of tsData) {
@@ -501,7 +530,7 @@ export function gmcpProcessSkills(type: string, data) {
 
 export function gmcpProcessRoomInfo(_type: string, data: T.GmcpRoom) {
   // TODO :: navigation history
-  // STATE.Custom.walk.push({ id: data.num, name: data.name });
+  // STATE.Custom.walkHist.push({ id: data.num, name: data.name });
   //
   const mapRoom = MAP.rooms[data.num];
   // Enhance GMCP room info with data from the map JSON
@@ -516,11 +545,24 @@ export function gmcpProcessRoomInfo(_type: string, data: T.GmcpRoom) {
     }
     STATE.Room[k] = data[k];
   }
+  // Process room features/details
+  if (data.name) {
+    const m = data.name.match(/ \([a-z]+?\)/);
+    if (m && m[0]) {
+      const feat = m[0].slice(2, -1);
+      if (!STATE.Room.details?.includes(feat)) STATE.Room.details?.push(feat);
+    }
+    if (data.name.startsWith('Flying above ')) {
+      STATE.Room.details?.push('flying');
+    } else if (data.name.startsWith('You are surrounded by utter darkness, and can see nothing.')) {
+      STATE.Room.details?.push('burrow');
+    }
+  }
   ee.emit('room:update', STATE.Room);
 }
 
 export function gmcpProcessRoomPlayers(type: string, data) {
-  const playerInfo = async (name) => {
+  const playerInfo = async (name: string) => {
     try {
       // IT'S A BAD IDEA TO IMPORT HERE and I feel ashamed
       const { dbGet } = await import('../extra/leveldb.ts');
@@ -603,4 +645,5 @@ export function gmcpProcessTime(type: string, data: T.GmcpTime) {
       STATE.Time[k] = data[k];
     }
   }
+  ee.emit('time:update', STATE.Time);
 }
