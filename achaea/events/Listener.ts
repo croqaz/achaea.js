@@ -25,8 +25,8 @@ export type EventTemplateT = {
 export type ListenerArgsT<Listener> = [Listener] extends [(...args: infer Args) => void]
   ? Args
   : [Listener] extends [void]
-  ? []
-  : [Listener];
+    ? []
+    : [Listener];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ListenerContextT<Listener, DefaultContext> = [Listener] extends [

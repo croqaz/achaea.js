@@ -6,6 +6,7 @@ import * as T from '../types.ts';
 import ee from '../events/index.ts';
 import ansiToHtml from './ansi.ts';
 import { MAP } from '../maps/index.ts';
+import * as util from './util.ts';
 
 /*
  * The STATE tree represents everything we know about the game and is
@@ -102,6 +103,7 @@ export var STATE: T.StateType = Object.seal({
     month: '..',
     year: '100',
     hour: '0',
+    rlhm: 'H:M',
     daynight: '1',
     moonphase: '..',
     time: 'It is deep night in Achaea, before midnight.',
@@ -133,6 +135,7 @@ export var STATE: T.StateType = Object.seal({
     walkHist: [], // walk history
     rats: false, // watching for rats?
     greed: false, // auto-keep greedy
+    filla: false, // catch elixlist trigger
     writhe: false,
     waresDB: false,
     whoisDB: false,
@@ -643,6 +646,14 @@ export function gmcpProcessTime(type: string, data: T.GmcpTime) {
         continue;
       }
       STATE.Time[k] = data[k];
+    }
+    // Add Hour if it doesn't exist
+    if (data.daynight && !data.hour) {
+      STATE.Time.hour = util.dayNightToHour(data.daynight);
+    }
+    // Real-life hour:minute
+    if (STATE.Time.hour) {
+      STATE.Time.rlhm = util.achaeaHourToRLhour(STATE.Time.hour);
     }
   }
   ee.emit('time:update', STATE.Time);

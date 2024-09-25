@@ -6,12 +6,12 @@ export function words(str: string, divider = /\s+/) {
 
 // @ts-ignore: Types
 String.prototype.toTitleCase = function () {
-  return this.charAt(0).toUpperCase() + this.substr(1).toLowerCase();
+  return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
 };
 
 /** Converts a string to title case. */
 export function toTitleCase(str: string): string {
-  return str.charAt(0).toUpperCase() + str.substr(1).toLowerCase();
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
 /** Normalize spaces and newlines. */
@@ -31,7 +31,7 @@ export function isoDate(): string {
 }
 
 /** Date difference, calculated in hours. */
-export function dateDiff(d1, d2): number {
+export function dateDiff(d1: any, d2: any): number {
   const d = Math.abs(new Date(d1).getTime() - new Date(d2).getTime());
   return d / 1000 / 3600;
 }
@@ -39,6 +39,28 @@ export function dateDiff(d1, d2): number {
 /** Returns a promise that resolves after a fixed time. */
 export function sleep(sec: number) {
   return new Promise((r) => setTimeout(r, Math.round(sec * 1000)));
+}
+
+/*
+ * A bit magic &hacky, but it works.
+ * GMCP DayNight to Achaea hour.
+ */
+export function dayNightToHour(dn: number): number {
+  if (dn < 99) return 12 + Math.round(dn / 3);
+  if (dn < 120) return Math.round(dn * 0.32 + 12.7);
+  if (dn < 155) return Math.round(dn * 0.29 + 15.3);
+  return Math.round(dn * 0.267 - 41);
+}
+
+/*
+ * Achaea hour to real-life hour:minute.
+ */
+export function achaeaHourToRLhour(h: number): string {
+  const raw = h / 2.5;
+  const hour = parseInt(raw);
+  const rest = raw - hour;
+  const min = Math.round(rest * 60);
+  return `${String(hour).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
 }
 
 /**
