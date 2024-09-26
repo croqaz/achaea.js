@@ -17,6 +17,7 @@ async function onRoomInfoUpdate(data: Record<string, string>) {
     env: data.environment.toLowerCase(),
     dt,
   } as T.DBRoom;
+  // GMCP details are actually features
   if (data.details && data.details.length) {
     room.features = data.details;
   }
@@ -37,8 +38,7 @@ async function onRoomItemsUpdate(data) {
     // Ignore dead corpses
     if (prop && prop.includes('m') && !prop.includes('d')) {
       await dbSave('denizen', { roomID: room.num, room: room.name, ...item, dt });
-    }
-    //
+    } //
     // Save some items
     else {
       // Ignore normal city items

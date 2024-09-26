@@ -6,7 +6,7 @@ import * as m from '../maps/index.js';
 
 let DB = null;
 
-export function setupDB(player) {
+export function setupDB(player: string) {
   DB = new ClassicLevel(`./DB_${player}`, { valueEncoding: 'json' });
 
   (async function dbCheck() {
@@ -27,20 +27,20 @@ export function setupDB(player) {
   })();
 }
 
-export function dbIter(prefix, limit = Infinity) {
+export function dbIter(prefix: string, limit = Infinity) {
   if (prefix) return DB.iterator({ gte: `${prefix}-0`, lte: `${prefix}-zzz`, limit });
   else return DB.iterator();
 }
 
-export function dbKeys(prefix, limit = Infinity) {
+export function dbKeys(prefix: string, limit = Infinity) {
   return DB.keys({ gte: `${prefix}-0`, lte: `${prefix}-zzz`, limit });
 }
 
-export function dbValues(prefix, limit = Infinity) {
+export function dbValues(prefix: string, limit = Infinity) {
   return DB.values({ gte: `${prefix}-0`, lte: `${prefix}-zzz`, limit });
 }
 
-export async function dbGet(prefix, id) {
+export async function dbGet(prefix: string, id) {
   // Get DB item by ID
   return await DB.get(`${prefix}-${id}`);
 }
@@ -50,7 +50,7 @@ export async function dbDel(id) {
   return await DB.del(id);
 }
 
-export async function dbSave(prefix, item) {
+export async function dbSave(prefix: string, item) {
   // The item MUST have an ID
   if (!item.id) {
     return console.error('Cannot DB save! Item ID is null!', item);
@@ -83,15 +83,16 @@ export async function dbStats() {
 //
 // Utility
 //
-export async function waresFind(key, table = true) {
+export async function waresFind(key: string) {
   const arr = [];
   for await (const item of dbValues('wares')) {
-    if (item.id.startsWith(key) || (item.name && item.name.toLowerCase().includes(key))) {
-      const area = item.area;
+    if (!item.price) continue;
+    const name = (item.name || '').toLowerCase();
+    if (item.id.startsWith(key) || name.includes(key)) {
       let room = item.room.replace(/ \(indoors\)$/, '');
       if (room.length > 20) room = room.slice(0, 20) + '…';
       if (item.id.length > 10) item.id = item.id.slice(0, 10) + '…';
-      const g = item.name.match(/ group of ([0-9]+) /);
+      const g = name.match(/ group of ([0-9]+) /);
       if (g && g[1]) item.pp = parseInt(item.price) / parseInt(g[1]);
       else item.pp = parseInt(item.price);
       arr.push({
@@ -101,31 +102,38 @@ export async function waresFind(key, table = true) {
         pp: Math.round(item.pp),
         price: item.price,
         roomID: item.roomID,
-        room: `${area}: ${room}`,
+        room: `${item.area}: ${room}`,
       });
     }
   }
-  if (!arr.length) return '';
-  arr.sort((a, b) => a.pp - b.pp);
-  if (table) return asciiTable.configure({ delimiter: ' | ' })(arr);
+  if (arr.length) arr.sort((a, b) => a.pp - b.pp);
   return arr;
 }
 
-export async function whoisFind(key, table = true) {
+export async function whoisFind(key: string) {
   const arr = [];
   for await (const who of dbValues('whois')) {
+    if (!who.fullname) continue;
     if (who.id === key || who.fullname.toLowerCase().includes(key)) {
       delete who.player_kills;
       delete who.mob_kills;
       arr.push(who);
     }
   }
-  if (!arr.length) return '';
-  if (table) return asciiTable.configure({ delimiter: ' | ' })(arr);
+  if (arr.length) {
+    arr.sort((a, b) => {
+      if (a.id < b.id) {
+        return -1;
+      } else if (a.id > b.id) {
+        return 1;
+      }
+      return 0;
+    });
+  }
   return arr;
 }
 
-export async function roomFind(key, table = true) {
+export async function roomFind(key: string, table = true) {
   const arr = [];
   for await (const room of dbValues('room')) {
     if (
@@ -143,7 +151,7 @@ export async function roomFind(key, table = true) {
   return arr;
 }
 
-export async function denizenFind(key, table = true) {
+export async function denizenFind(key: string) {
   const re = new RegExp(key, 'i');
   const arr = [];
   for await (const item of dbValues('denizen')) {
@@ -151,16 +159,14 @@ export async function denizenFind(key, table = true) {
       delete item.attrib;
       item.room = (item.room || '').replace(/ \(indoors\)$/, '');
       if (item.room.length > 30) item.room = item.room.slice(0, 30) + '…';
-      if (item.name.length > 30) item.name = item.name.slice(0, 30) + '…';
+      if (item.name.length > 32) item.name = item.name.slice(0, 32) + '…';
       arr.push(item);
     }
   }
-  if (!arr.length) return '';
-  if (table) return asciiTable.configure({ delimiter: ' | ' })(arr);
   return arr;
 }
 
-export async function roomItemFind(key, table = true) {
+export async function roomItemFind(key: string) {
   const re = new RegExp(key, 'i');
   const arr = [];
   for await (const item of dbValues('item')) {
@@ -168,12 +174,10 @@ export async function roomItemFind(key, table = true) {
       delete item.attrib;
       item.room = (item.room || '').replace(/ \(indoors\)$/, '');
       if (item.room.length > 30) item.room = item.room.slice(0, 30) + '…';
-      if (item.name.length > 30) item.name = item.name.slice(0, 30) + '…';
+      if (item.name.length > 32) item.name = item.name.slice(0, 32) + '…';
       arr.push(item);
     }
   }
-  if (!arr.length) return '';
-  if (table) return asciiTable.configure({ delimiter: ' | ' })(arr);
   return arr;
 }
 

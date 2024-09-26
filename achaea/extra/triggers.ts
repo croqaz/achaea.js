@@ -1,5 +1,6 @@
 import ee from '../events/index.ts';
 import { STATE, stateStopBattle } from '../core/state.ts';
+import * as p from '../parsers.ts';
 
 // TODO ::
 // An icewall is here, blocking passage to the up.
@@ -14,7 +15,7 @@ const RE = {
   barrClear: /^([A-Za-z]+)'s prismatic barrier dissolves into nothing\.$/m,
 };
 
-export default function processTriggers(text: string) {
+export default function processTriggers(text: string, normText: string) {
   /*
    * Process game text to enable triggers
    * The first triggers are THE MOST IMPORTANT
@@ -34,21 +35,33 @@ export default function processTriggers(text: string) {
   }
 
   if (
-    text.includes('You must be standing ') ||
-    text.includes('You open your eyes and yawn mightily')
-    // text.includes('You open your eyes and stretch languidly')
+    normText.includes('You must be standing ') ||
+    normText.includes('You open your eyes and yawn mightily')
+    // normText.includes('You open your eyes and stretch languidly')
   ) {
     ee.emit('user:text', 'STAND');
   }
 
   // Auto air-pocket under-water
-  if (STATE.Room.details.includes('underwater') && text.includes('You choke as you inhale water.')) {
+  if (STATE.Room.details.includes('underwater') && normText.includes('You choke as you inhale water.')) {
     ee.emit('user:text', 'CURING PRIORITY DEFENCE AIRPOCKET 25');
   } else if (
     !STATE.Room.details.includes('underwater') &&
-    text.includes('The pocket of air around you dissipates into the atmosphere.')
+    normText.includes('The pocket of air around you dissipates into the atmosphere.')
   ) {
     ee.emit('user:text', 'CURING PRIORITY DEFENCE AIRPOCKET RESET');
+  }
+
+  // Fill all elixirs
+  //
+  if (STATE.Custom.filla && text.includes('------------------------------------------')) {
+    const elixlist = p.parseElixList(text);
+    if (elixlist.length) {
+      STATE.Custom.filla = false;
+      for (const elem of elixlist) {
+        if (elem.sips <= 190) ee.emit('user:text', `FILL ${elem.type} WITH ${elem.type} FROM rift`);
+      }
+    }
   }
 
   // Track room shields & rebounding auras
@@ -149,8 +162,8 @@ export default function processTriggers(text: string) {
     return stateStopBattle();
   } else if (
     STATE.Battle.target &&
-    (text.includes(`You have slain ${STATE.Battle.target}.`) ||
-      text.includes(`You have been slain by ${STATE.Battle.target}.`))
+    (normText.includes(`You have slain ${STATE.Battle.target}.`) ||
+      normText.includes(`You have been slain by ${STATE.Battle.target}.`))
   ) {
     return stateStopBattle();
   }

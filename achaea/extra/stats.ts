@@ -23,7 +23,6 @@ ee.once('game:quit', function () {
   // Session play time in minutes
   if (!Stats.endDt) return;
   const playTime = (Stats.endDt.getTime() - Stats.begDt.getTime()) / 1000 / 60;
-  let msg = '';
 
   if (playTime > 1) {
     emitMsg(`You played for ${Math.round(playTime)} minutes.`);

@@ -22,9 +22,11 @@ export const Config = {
 
   //
   // Ignore some minerals from extract
-  EXCLUDE_MINERALS: ['cinnabar'],
+  EXCLUDE_MINERALS: [],
   //
   // Ignore some herbs from harvest
+  // The kuzu vine of the jungles has thickening properties that make it a necessary ingredient in all salves.
+  // The lady's slipper plant is used in various concoctions.
   EXCLUDE_HERBS: ['kuzu', 'slipper'],
   //
   // Ignore some gathering materials

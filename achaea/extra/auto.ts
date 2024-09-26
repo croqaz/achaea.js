@@ -1,6 +1,5 @@
 import ee from '../events/index.ts';
 import { STATE } from '../core/state.ts';
-// import { Config } from './config.ts';
 
 function procesRound() {
   /*
@@ -15,7 +14,7 @@ function procesRound() {
     ee.emit('battle:update', STATE.Battle);
   }
 
-  // Writhe forever
+  // Writhe forever (until stopped)
   //
   if (STATE.Custom.writhe && userInput === 'www') {
     ee.emit('user:text', 'WRITHE');

@@ -63,12 +63,14 @@ export async function saveQuickWho(text: string) {
         const msg = `Old whois data for "${name}": ${oldWhois.dt}. Refreshing...`;
         ee.emit('sys:text', `<i class="ansi-darkGray"><b>[DB]</b> ${msg}</i>`);
       }
-    } catch {}
+    } catch {
+      /* -- */
+    }
     const data = await fetchWhois(name);
     if (!data) continue;
-    if (!data.level) continue;
-    data.level = parseInt(data.level);
-    if (data.level < 10) continue;
+    // @ts-ignore
+    data.level = parseInt(data.level || '');
+    if (Number.isNaN(data.level) || data.level < 10) continue;
     data.dt = dt;
     await dbSave('whois', mergeWhois(oldWhois, data));
     index++;
@@ -76,13 +78,13 @@ export async function saveQuickWho(text: string) {
   ee.emit('sys:text', `<i class="ansi-darkGray"><b>[DB]</b> ${index} entries saved in WHOIS.</i>`);
 }
 
-export async function saveWhois(user) {
+export async function saveWhois(user: T.DBPlayer) {
   /*
    * Update, or Create one player
    */
   user.id = user.name.toLowerCase();
   user.dt = isoDate();
-  let whois;
+  let whois: T.DBPlayer;
   try {
     const oldWhois = await dbGet('whois', user.id);
     whois = mergeWhois(oldWhois, user);
@@ -90,9 +92,9 @@ export async function saveWhois(user) {
     const newWhois = await fetchWhois(user.id);
     whois = mergeWhois(user, newWhois);
   }
-  if (!whois.level) return;
-  whois.level = parseInt(whois.level);
-  if (whois.level < 10) return;
+  // @ts-ignore
+  whois.level = parseInt(whois.level || '');
+  if (Number.isNaN(whois.level) || whois.level < 10) return;
   await dbSave('whois', whois);
   ee.emit('sys:text', `<i class="ansi-darkGray"><b>[DB]</b> ${user.id} updated in WHOIS.</i>`);
 }

@@ -1,12 +1,29 @@
+import chokidar from 'chokidar';
 import { STATE } from '../core/state.ts';
 
 let customProcessDisplayText;
 try {
   // @ts-ignore: Types
-  customProcessDisplayText = (await import('../../custom/output.ts')).default;
+  customProcessDisplayText = require('../../custom/output.ts').default;
   // console.log('Custom user output function loaded!');
-} catch {
-  // console.error('Custom user output function not found');
+
+  // Watch for changes in this file and live reload
+  const fileWatcher = chokidar.watch('./custom/output.ts', {
+    depth: 1,
+    persistent: true,
+    ignoreInitial: true,
+  });
+  fileWatcher.on('change', async () => {
+    console.log('Custom user output CHANGED!');
+    for (const m of Object.keys(require.cache)) {
+      if (/custom\/output/.test(m)) {
+        delete require.cache[m];
+      }
+    }
+    customProcessDisplayText = require('../../custom/output.ts').default;
+  });
+} catch (err) {
+  console.error('Error loading user output function!', err);
 }
 
 export default function extraProcessDisplayText(text: string): string {
@@ -90,8 +107,9 @@ export default function extraProcessDisplayText(text: string): string {
     if (STATE.Stats.eq) {
       const diff = (dt.getTime() - STATE.Stats.eq.getTime()) / 1000;
       // Ignore big time diffs; Normal times vary.
-      if (diff < 10)
+      if (diff < 10) {
         text = text.replace('recovered equilibrium.', `recovered equilibrium. (${diff.toFixed(2)}s)`);
+      }
     }
     STATE.Stats.eq = dt;
   }
