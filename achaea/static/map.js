@@ -84,12 +84,12 @@ export function drawMap(data) {
   const noRooms = Object.keys(window.AREA.rooms).length;
   console.log('DRAWING MAP::', window.AREA.name, 'Rooms:', noRooms);
 
-  const { Group, Layer, Path, PointText, view, tool } = window.PAPER;
+  const { Group, Layer, Path, PointText, tool } = window.PAPER;
   window.PAPER.project.clear();
 
   const GRID = 40;
   const FONT_SZ = 20;
-  const FONT_FAM = 'IBM Plex Sans';
+  const FONT_FAM = 'MononokiRegular, monospace';
 
   mainLayer = new Layer();
   const pathGroup = new Group();
@@ -132,7 +132,11 @@ export function drawMap(data) {
     }
     group.addChild(rect);
 
-    if (room.features) {
+    if (
+      room.features &&
+      room.features.length > 0 &&
+      !(room.features.length === 1 && room.features[0] === 'indoors')
+    ) {
       let content = '';
       const hasFeat = (x) => room.features.includes(x);
       if (hasFeat('shop')) content = '$';
@@ -147,7 +151,7 @@ export function drawMap(data) {
           content,
           point: [p1, p2 + FONT_SZ / 3],
           justification: 'center',
-          fillColor: COLOR.foreground,
+          fillColor: COLOR.background1,
           fontFamily: FONT_FAM,
           fontSize: FONT_SZ,
         }),
@@ -165,13 +169,13 @@ export function drawMap(data) {
         );
       }
     } else {
-      let content = '';
+      let content = null;
       if (exits.includes('u') && exits.includes('d') && exits.includes('in') && exits.includes('out')) {
         content = '✦';
       } else if (exits.includes('u') && exits.includes('d')) {
-        content = '⬍';
+        content = '↕';
       } else if (exits.includes('in') && exits.includes('out')) {
-        content = '⬌';
+        content = '↔';
       } else if (exits.includes('u')) {
         content = '▲';
       } else if (exits.includes('d')) {
@@ -185,7 +189,7 @@ export function drawMap(data) {
         group.addChild(
           new PointText({
             content,
-            point: [p1, p2 + FONT_SZ / 3],
+            point: [p1, p2 - 1 + FONT_SZ / 3],
             justification: 'center',
             fillColor: COLOR.background2,
             fontFamily: FONT_FAM,
@@ -196,7 +200,7 @@ export function drawMap(data) {
     }
 
     // Display room info on mouse hover
-    group.onMouseEnter = function (_ev) {
+    group.onMouseEnter = function () {
       rect.selected = true;
       const titlePos = this.position.subtract([0, GRID]);
       roomTitle.content = this.data.title;
@@ -213,13 +217,13 @@ export function drawMap(data) {
       // Room info must be on top
       roomTitle.bringToFront();
     };
-    group.onMouseLeave = function (_ev) {
+    group.onMouseLeave = function () {
       rect.selected = false;
       roomTitle.visible = false;
       titleBorder.remove();
     };
     // On room double-click, auto-walk
-    group.onDoubleClick = function (_ev) {
+    group.onDoubleClick = function () {
       this.fillColor = COLOR.amber;
       const userInput = document.getElementById('userInput');
       userInput.focus();

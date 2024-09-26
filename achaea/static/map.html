@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="language" content="english">
+  <meta property="og:locale" content="en_US">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="author" href="https://crlf.link/author/">
+  <meta name="author" content="Cristi Constantin">
+  <meta name="publisher" content="Cristi Constantin">
+  <meta name="copyright" content="Copyright 2023-2024">
+  <title>Achaea map viewer</title>
+  <style>
+    @font-face {
+      font-family: "MononokiRegular";
+      src: url("Mononoki/Mononoki-Regular.otf") format("truetype");
+      font-weight: normal;
+      font-style: normal;
+    }
+    :root {
+      --background: #2E3440;
+      --background1: #3B4252;
+      --background2: #434C5E;
+      --background3: #4C566A;
+      --foreground: #E5E9F0;
+      --dark-foreground: #D8DEE9;
+      --bright-foreground: #ECEFF4;
+    }
+    *,*::before,*::after {
+      box-sizing: border-box;
+    }
+    html, body, canvas, div {
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      height: 99%;
+    }
+    body {
+      min-height: 90vh;
+      margin: 0 auto;
+      font-family: sans-serif;
+      font-size: 14px;
+    }
+    b {
+      font-family: sans-serif;
+      font-size: 15px;
+    }
+    #map {
+      margin: 10px;
+      background: #CCC;
+      width: calc(100vw - 20px);
+      height: calc(90vh - 20px);
+    }
+    #controls {
+      height: 28px;
+      margin-top: 10px;
+      margin-left: 10px;
+    }
+    #area {
+      display: inline-block;
+      border: 1px solid transparent;
+      font-family: sans-serif;
+      font-size: 14px;
+      padding: .5rem;
+    }
+    #level {
+      display: inline-block;
+      padding: .5rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <b>Area:</b>
+    <select id="area"></select>
+    <b>Level:</b>
+    <span id="level">0</span>
+  </div>
+  <canvas id="map"></canvas>
+  <script src="paper.js"></script>
+  <script src="mapView.js" type="module" defer></script>
+</body>
+</html>
