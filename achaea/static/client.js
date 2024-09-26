@@ -166,11 +166,23 @@ async function startWS() {
       return displayChannel(data);
     }
 
+    if (data.textType === 'timeUpdate' && data.day && data.month) {
+      return displayDateTime(data);
+    }
+
     // Reject unknown messages
     if (!text || !data.textType) {
       return console.warn(`Unknown message format:`, data);
     }
 
+    if (data.textType === 'sysHtml') {
+      const div = document.createElement('div');
+      div.classList.add(data.textType);
+      div.innerHTML = text;
+      return gameLog.append(div);
+    }
+
+    // Echo user's input text
     const txt = document.createElement('p');
     if (data.textType === 'userText') {
       text = `> ${text}`;
@@ -241,7 +253,10 @@ function displayRoom(data) {
       a = a.charAt(0).toUpperCase() + a.substr(1);
       loc += `<small class="bold">${a}</small>: `;
     }
-    loc += data.name.replace(/ \(indoors\)$/, '');
+    loc += data.name.replace(/\(indoors\)|\(road\)$/, '');
+    if (data.details && data.details.length) {
+      loc += `<br>( ${data.details.join(', ')} )`;
+    }
     locX.innerHTML = loc;
   }
 
@@ -346,7 +361,8 @@ function displayMyself(data) {
     wpNow.style.borderRight = 'none';
   }
 
-  let html = `<h5>${data.name} (Lvl ${data.level}<span class="thin">+${data.xp}</span> ${data.class})</h5>`;
+  let displayRace = data.displayRace ? `<i>${data.displayRace}</i> ` : '';
+  let html = `<h5>${data.name} (Lvl ${data.level}<span class="thin">+${data.xp}</span> ${displayRace}${data.class})</h5>`;
   if (data.defences.length) {
     html += '<h5>Defences:</h5> - ';
     for (const x of data.defences) {
@@ -370,7 +386,6 @@ function displayBattle(data) {
   if (!data.active) return;
   // Ignore PVP for now
   if (data.combat) return;
-  // console.log('BATTLE !!', data);
   const elem = document.getElementById('battle');
   const wrap = document.getElementById('battleWrap');
   const hpNow = document.getElementById('targetHpnow');
@@ -399,12 +414,57 @@ function displayBattle(data) {
 }
 
 function displayChannel(data) {
-  const commChannel = document.getElementById('rightSide');
+  const elem = document.getElementById('rightSide');
   const cls = data.channel.replace(/[ \t-]+/g, '-');
   const msg = document.createElement('p');
   msg.innerHTML = data.text;
   msg.classList.add(cls);
-  commChannel.append(msg);
+  elem.append(msg);
   // Jump scroll on comm text
-  commChannel.scrollTop = commChannel.scrollHeight;
+  elem.scrollTop = elem.scrollHeight;
+}
+
+function displayDateTime(data) {
+  const elem = document.getElementById('dateTimeWrap');
+  const emoji = {
+    0: '🕛',
+    1: '🕐',
+    2: '🕑',
+    3: '🕒',
+    4: '🕓',
+    5: '🕓',
+    6: '🕕',
+    7: '🕖',
+    8: '🕗',
+    9: '🕘',
+    10: '🕙',
+    11: '🕚',
+    12: '🕛',
+    0.5: '🕧',
+    1.5: '🕜',
+    2.5: '🕝',
+    3.5: '🕞',
+    4.5: '🕟',
+    5.5: '🕠',
+    6.5: '🕡',
+    7.5: '🕢',
+    8.5: '🕣',
+    9.5: '🕤',
+    10.5: '🕥',
+    11.5: '🕦',
+    12.5: '🕧',
+  };
+  let key = data.hour / 2.5;
+  let rest = key - parseInt(key);
+  if (rest <= 0.25) {
+    rest = 0;
+  } else if (rest > 0.25 && rest < 0.75) {
+    rest = 0.5;
+  } else {
+    rest = 1;
+  }
+  key = parseInt(key) + rest;
+  if (key > 12) key -= 12;
+  let html = `${emoji[key]} ${data.rlhm} | ${data.day} ${data.month} ${data.year}`;
+  elem.innerHTML = html;
 }

@@ -1,5 +1,5 @@
 @font-face {
-  font-family: "Monego";
+  font-family: "MonegoRegular";
   src: url("Monego/Monego-Regular.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
@@ -24,25 +24,25 @@
 }
 @font-face {
   font-family: "MononokiRegular";
-  src: url("Mononoki/Mononoki-Regular.ttf") format("truetype");
+  src: url("Mononoki/Mononoki-Regular.otf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: "MononokiBold";
-  src: url("Mononoki/Mononoki-Bold.ttf") format("truetype");
+  src: url("Mononoki/Mononoki-Bold.otf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: "MononokiBoldItalic";
-  src: url("Mononoki/Mononoki-BoldItalic.ttf") format("truetype");
+  src: url("Mononoki/Mononoki-BoldItalic.otf") format("truetype");
   font-weight: bold;
   font-style: italic;
 }
 @font-face {
   font-family: "MononokiItalic";
-  src: url("Mononoki/Mononoki-Italic.ttf") format("truetype");
+  src: url("Mononoki/Mononoki-Italic.otf") format("truetype");
   font-weight: normal;
   font-style: italic;
 }
@@ -68,8 +68,7 @@ html, body {
 
 body > * {
   font-size: 15px;
-  font-family: MononokiRegular, monospace;
-  font-variant-ligatures: contextual;
+  font-family: MonegoRegular, monospace;
   text-rendering: optimizeLegibility;
   font-kerning: normal;
 }
@@ -81,24 +80,25 @@ html, body, canvas, main, aside, div, span, pre, input {
   outline: 0;
   color: #E5E9F0;
   font-size: 15px;
-  font-family: MononokiRegular, monospace;
+  font-family: MonegoRegular, monospace;
 }
 
 p, b, i, small, span, pre, h5 {
   margin: 0;
   line-height: 1.6rem;
-  font-family: MononokiRegular, monospace;
+  font-family: MonegoRegular, monospace;
   font-size: 15px;
+  font-variant-ligatures: contextual common-ligatures;
   text-rendering: optimizeLegibility;
   font-kerning: normal;
 }
 
 i {
-  font-family: MononokiItalic, monospace;
+  font-family: MonegoItalic, monospace;
 }
 
 b, h5 {
-  font-family: MononokiBold, monospace;
+  font-family: MonegoBold, monospace;
   color: #E5E9F0;
 }
 
@@ -107,15 +107,15 @@ small {
 }
 
 .bold {
-  font-family: MononokiBold, monospace;
+  font-family: MonegoBold, monospace;
 }
 
 .italic {
-  font-family: MononokiItalic, monospace;
+  font-family: MonegoItalic, monospace;
 }
 
 .bold.italic {
-  font-family: MononokiBoldItalic, monospace;
+  font-family: MonegoBoldItalic, monospace;
 }
 
 .thin {
@@ -152,6 +152,7 @@ body {
   background: #4C566A;
   overflow-y: scroll;
   position: relative;
+  scrollbar-color: #5E81AC #616e88;
 }
 
 #rightSide.big {
@@ -185,7 +186,7 @@ body {
   position: fixed;
   left: 4rem;
   top: 2rem;
-  width: calc(100% - 10rem);
+  width: calc(100% - 10em);
   height: calc(99vh - 10rem);
   border: 2px solid #E5E9F0;
   z-index: 999;
@@ -215,6 +216,7 @@ body {
   border-top: 1px solid #3B4252;
   border-right: 1px solid #3B4252;
   overflow-y: scroll;
+  scrollbar-color: #5E81AC #616e88;
   padding: 0.5rem;
   background: #454e61;
 }
@@ -224,21 +226,23 @@ body {
   background: #4C566A;
   padding: 0.5rem;
   overflow-y: scroll;
+  scrollbar-color: #5E81AC #616e88;
 }
 
 .roomPlayer:hover, .roomItem:hover {
   cursor: pointer;
-  font-family: MononokiItalic, monospace;
+  font-family: MonegoItalic, monospace;
 }
 
 .playerDef:hover, .playerAff:hover {
-  font-family: MononokiItalic, monospace;
+  font-family: MonegoItalic, monospace;
 }
 
 /* In the middle: game log, user input, status bar */
 #gameLog {
   background: #454e61;
   overflow-y: scroll;
+  scrollbar-color: #5E81AC #616e88;
   padding: 0.5rem;
   height: 18px;
   flex: 1 0;
@@ -266,6 +270,46 @@ body {
 
 .userText, .sysText {
   color: #D8DEE9;
+}
+
+#gameLog table {
+  background: #4C566A;
+  border-collapse: collapse;
+  border-top: 1px solid #3B4252;
+  border-left: 1px solid #3B4252;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  font-size: 13px;
+}
+
+#gameLog table tr {
+  border-bottom: 1px solid #3B4252;
+}
+
+#gameLog table th {
+  font-family: MonegoBold, monospace;
+  font-weight: bold;
+}
+
+#gameLog table th,
+#gameLog table td {
+  padding: 2px 5px 1px 5px;
+  border-right: 1px solid #3B4252;
+}
+
+#dateTimeWrap {
+  display: block;
+  position: fixed;
+  border-radius: 8px;
+  border: 1px solid #3B4252;
+  font-size: 13px;
+  top: 2px;
+  right: 2px;
+  padding: 0.4rem;
+  min-width: 7.5rem;
+  white-space: normal;
+  background: rgba(97, 110, 136, 0.9);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  z-index: 999;
 }
 
 #battleWrap {
@@ -307,7 +351,7 @@ body {
 
 #targetHpnow:hover {
   color: #ECEFF4;
-  font-family: MononokiBold, monospace;
+  font-family: MonegoBold, monospace;
 }
 
 #statBar {
@@ -347,7 +391,7 @@ body {
 #epnow:hover,
 #wpnow:hover {
   color: #ECEFF4;
-  font-family: MononokiBold, monospace;
+  font-family: MonegoBold, monospace;
 }
 
 #hpnow {
@@ -369,7 +413,7 @@ body {
 /* wikipedia.org/wiki/ANSI_escape_code */
 .ansi-black {
   color: #191c22;
-  font-family: MononokiBold, monospace;
+  font-family: MonegoBold, monospace;
   font-weight: bold;
 }
 
@@ -400,22 +444,22 @@ body {
 
 .ansi-darkGray {
   color: #97a7c4;
-  font-family: MononokiBold, monospace;
+  font-family: MonegoBold, monospace;
 }
 
 .ansi-lightGray {
   color: #D8DEE9;
-  font-family: MononokiBold, monospace;
+  font-family: MonegoBold, monospace;
 }
 
 .ansi-white {
   color: #ECEFF4;
-  font-family: MononokiBold, monospace;
+  font-family: MonegoBold, monospace;
 }
 
 /* bright */
 .ansi-bright {
-  font-family: MononokiBold, monospace;
+  font-family: MonegoBold, monospace;
   font-weight: bold;
 }
 
@@ -453,7 +497,7 @@ body {
 
 /* dim */
 .ansi-dim {
-  font-family: MononokiBoldItalic, monospace;
+  font-family: MonegoBoldItalic, monospace;
   font-weight: bold;
 }
 

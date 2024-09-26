@@ -30,6 +30,8 @@
  *
  */
 
+// prettier-ignore-start
+
 var paper = function (self, undefined) {
   self = self || require('./node/self.js');
   var window = self.window,
@@ -17527,3 +17529,5 @@ var paper = function (self, undefined) {
 
   return paper;
 }.call(this, typeof self === 'object' ? self : null);
+
+//prettier-ignore-end

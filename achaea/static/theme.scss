@@ -1,65 +1,65 @@
 @use 'sass:color';
 
 @font-face {
-  font-family: "Monego";
-  src: url("Monego/Monego-Regular.otf") format("opentype");
+  font-family: 'MonegoRegular';
+  src: url('Monego/Monego-Regular.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
-  font-family: "MonegoBold";
-  src: url("Monego/Monego-Bold.otf") format("opentype");
+  font-family: 'MonegoBold';
+  src: url('Monego/Monego-Bold.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
-  font-family: "MonegoBoldItalic";
-  src: url("Monego/Monego-BoldItalic.otf") format("opentype");
+  font-family: 'MonegoBoldItalic';
+  src: url('Monego/Monego-BoldItalic.otf') format('opentype');
   font-weight: normal;
   font-style: italic;
 }
 @font-face {
-  font-family: "MonegoItalic";
-  src: url("Monego/Monego-Italic.otf") format("opentype");
+  font-family: 'MonegoItalic';
+  src: url('Monego/Monego-Italic.otf') format('opentype');
   font-weight: normal;
   font-style: italic;
 }
 
 @font-face {
   font-family: 'MononokiRegular';
-  src: url('Mononoki/Mononoki-Regular.ttf') format('truetype');
+  src: url('Mononoki/Mononoki-Regular.otf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: 'MononokiBold';
-  src: url('Mononoki/Mononoki-Bold.ttf') format('truetype');
+  src: url('Mononoki/Mononoki-Bold.otf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: 'MononokiBoldItalic';
-  src: url('Mononoki/Mononoki-BoldItalic.ttf') format('truetype');
+  src: url('Mononoki/Mononoki-BoldItalic.otf') format('truetype');
   font-weight: bold;
   font-style: italic;
 }
 @font-face {
   font-family: 'MononokiItalic';
-  src: url('Mononoki/Mononoki-Italic.ttf') format('truetype');
+  src: url('Mononoki/Mononoki-Italic.otf') format('truetype');
   font-weight: normal;
   font-style: italic;
 }
 
-@import "../../node_modules/nord/src/sass/nord.scss";
+@import '../../node_modules/nord/src/sass/nord.scss';
 
 $foreground: $nord5;
 $dark-foreground: $nord4;
 $bright-foreground: $nord6;
 
-$font-reg: MononokiRegular, monospace;
-$font-bold: MononokiBold, monospace;
-$font-ital: MononokiItalic, monospace;
-$font-boit: MononokiBoldItalic, monospace;
+$font-reg: MonegoRegular, monospace;
+$font-bold: MonegoBold, monospace;
+$font-ital: MonegoItalic, monospace;
+$font-boit: MonegoBoldItalic, monospace;
 $font-size: 15px;
 
 :root {
@@ -84,7 +84,6 @@ html, body {
 body > * {
   font-size: $font-size;
   font-family: $font-reg;
-  font-variant-ligatures: contextual;
   text-rendering: optimizeLegibility;
   font-kerning: normal;
 }
@@ -102,6 +101,7 @@ p, b, i, small, span, pre, h5 {
   line-height: 1.6rem;
   font-family: $font-reg;
   font-size: $font-size;
+  font-variant-ligatures: contextual common-ligatures;
   text-rendering: optimizeLegibility;
   font-kerning: normal;
 }
@@ -157,6 +157,7 @@ body {
   background: $nord3;
   overflow-y: scroll;
   position: relative;
+  scrollbar-color: $nord10 lighten($nord3, 10);
 }
 #rightSide.big {
   position: fixed;
@@ -213,6 +214,7 @@ body {
   border-top: 1px solid $nord1;
   border-right: 1px solid $nord1;
   overflow-y: scroll;
+  scrollbar-color: $nord10 lighten($nord3, 10);
   padding: 0.5rem;
   background: lighten($nord2, 1%);
 }
@@ -221,6 +223,7 @@ body {
   background: $nord3;
   padding: 0.5rem;
   overflow-y: scroll;
+  scrollbar-color: $nord10 lighten($nord3, 10);
 }
 .roomPlayer:hover, .roomItem:hover {
   cursor: pointer;
@@ -234,6 +237,7 @@ body {
 #gameLog {
   background: lighten($nord2, 1%);
   overflow-y: scroll;
+  scrollbar-color: $nord10 lighten($nord3, 10);
   padding: 0.5rem;
   height: 18px;
   flex: 1 0;
@@ -257,6 +261,42 @@ body {
 }
 .userText, .sysText {
   color: $dark-foreground;
+}
+#gameLog table {
+  background: $nord3;
+  border-collapse: collapse;
+  border-top: 1px solid $nord1;
+  border-left: 1px solid $nord1;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  font-size: $font-size - 2;
+}
+#gameLog table tr {
+  border-bottom: 1px solid $nord1;
+}
+#gameLog table th {
+  font-family: $font-bold;
+  font-weight: bold;
+}
+#gameLog table th,
+#gameLog table td {
+  padding: 2px 5px 1px 5px;
+  border-right: 1px solid $nord1;
+}
+
+#dateTimeWrap {
+  display: block;
+  position: fixed;
+  border-radius: 8px;
+  border: 1px solid $nord1;
+  font-size: $font-size - 2;
+  top: 2px;
+  right: 2px;
+  padding: 0.4rem;
+  min-width: 7.5rem;
+  white-space: normal;
+  background: color.change(lighten($nord3, 10), $alpha: 0.9);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  z-index: 999;
 }
 
 #battleWrap {
@@ -347,6 +387,20 @@ body {
 #wpnow {
   background: #703080;
 }
+
+// *::-webkit-scrollbar {
+//   width: 9px;
+// }
+// *::-webkit-scrollbar-track {
+//   background: lighten($nord3, 10);
+// }
+// *::-webkit-scrollbar-thumb {
+//   background: $nord10;
+//   border-radius: 9px;
+// }
+// *::-webkit-scrollbar-thumb:hover {
+//   background: $nord9;
+// }
 
 /* wikipedia.org/wiki/ANSI_escape_code */
 .ansi-black {
