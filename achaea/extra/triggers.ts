@@ -54,7 +54,7 @@ export default function processTriggers(text: string, normText: string) {
 
   // Fill all elixirs
   //
-  if (STATE.Custom.filla && text.includes('------------------------------------------')) {
+  if (STATE.Custom.filla && text.includes(' vial ')) {
     const elixlist = p.parseElixList(text);
     if (elixlist.length) {
       STATE.Custom.filla = false;

@@ -81,11 +81,12 @@ export var STATE: T.StateType = Object.seal({
     rounds: 0, // battle rounds
     active: false,
     combat: false, // PVP
+    auto: false,
     tgtID: null,
     tgtHP: null,
     target: null, // attack target name
     // battle targets, NPCs & Players
-    // each target has: id, name, defs, affs
+    // each target has: id, name, hp, defs, affs...
     tgts: {},
     bals: {
       a1: true,
@@ -240,6 +241,7 @@ export function stateStopBattle() {
   STATE.Battle.rounds = 0;
   STATE.Battle.active = false;
   STATE.Battle.combat = false;
+  // auto=false deactivated elsewhere
   ee.emit('battle:stop');
 }
 
@@ -311,7 +313,7 @@ export function gmcpProcessChar(_: string, data: T.GmcpChar) {
           STATE.Battle.rage = parseInt(r);
           // Doesn't make sense to emit the event for small rage values
           // or outside of battle
-          if (STATE.Battle.active && STATE.Battle.rage !== oldRage && STATE.Battle.rage >= 14) {
+          if (STATE.Battle.active && STATE.Battle.rage !== oldRage && STATE.Battle.rage > 12) {
             ee.emit('battle:rage', STATE.Battle.rage);
           }
           // Reset all battle-rage balances to be available next time
@@ -345,8 +347,8 @@ export function gmcpProcessTarget(type: string, data) {
     STATE.Battle.tgtID = parseInt(tsData) || tsData.toTitleCase();
   } else if (type === 'IRE.Target.Info') {
     const tsData = data as Record<string, string>;
-    if (tsData.id !== '-1') STATE.Battle.tgtID = parseInt(tsData.id as string);
-    if (tsData.hpperc !== '-1') STATE.Battle.tgtHP = tsData.hpperc;
+    if (tsData.id && tsData.id !== '-1') STATE.Battle.tgtID = parseInt(tsData.id as string);
+    if (tsData.hpperc && tsData.hpperc !== '-1') STATE.Battle.tgtHP = tsData.hpperc;
     if (STATE.Battle.active) ee.emit('battle:update', STATE.Battle);
   }
 }
@@ -487,6 +489,7 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
       // Black magic! Stop battle if the item removed from the room,
       // is the battle target
       // This can happen because the NPC has left the room
+      //
       if (itemID === STATE.Battle.tgtID) {
         STATE.Battle.active = false;
         // Reset the target only if the NPC is dead
@@ -565,58 +568,78 @@ export function gmcpProcessRoomInfo(_type: string, data: T.GmcpRoom) {
 }
 
 export function gmcpProcessRoomPlayers(type: string, data) {
-  const playerInfo = async (name: string) => {
+  // IT'S A BAD IDEA TO IMPORT HERE and I feel ashamed
+  const { dbGet } = require('../extra/leveldb.ts');
+
+  const getPlayer = async (name: string) => {
     try {
-      // IT'S A BAD IDEA TO IMPORT HERE and I feel ashamed
-      const { dbGet } = await import('../extra/leveldb.ts');
-      const p = await dbGet('whois', name);
-      const race = p.race ? p.race.toTitleCase() + ' ' : '';
-      let city = p.city ? p.city.toTitleCase() : 'Rogue';
-      let clr = '';
-      if (city === 'Rogue') clr = 'ansi-yellow';
-      else if (city === 'Ashtan') clr = 'ansi-magenta';
-      else if (city === 'Cyrene') clr = 'ansi-cyan ansi-bright';
-      else if (city === 'Eleusis') clr = 'ansi-green';
-      else if (city === 'Hashan') clr = 'ansi-cyan';
-      else if (city === 'Mhaldor') clr = 'ansi-red';
-      else if (city === 'Targossas') clr = 'ansi-bright ansi-yellow';
-      // Highlight my own city
-      if (city === STATE.Me.city) city = '★ ' + city;
-      return `<span class="${clr}">${p.fullname}, ${race}lvl.${p.level}, <b>${city}</b></span>`;
+      const p = await dbGet('whois', name.toLowerCase());
+      p.name = name;
+      let city = p.city ? p.city.toLowerCase() : 'rogue';
+      if (city === 'rogue') p.cls = 'ansi-yellow';
+      else if (city === 'ashtan') p.cls = 'ansi-magenta';
+      else if (city === 'cyrene') p.cls = 'ansi-cyan ansi-bright';
+      else if (city === 'eleusis') p.cls = 'ansi-green';
+      else if (city === 'hashan') p.cls = 'ansi-cyan';
+      else if (city === 'mhaldor') p.cls = 'ansi-red';
+      else if (city === 'targossas') p.cls = 'ansi-yellow ansi-bright';
+      return p;
     } catch {}
+  };
+  const playerSpan = (obj: Record<string, any>) => {
+    // TODO :: move this from the server side ...
+    //
+    let city = obj.city ? obj.city.toTitleCase() : 'Rogue';
+    // Highlight player's own city
+    if (city === STATE.Me.city) city = '★ ' + city;
+    const race = obj.race ? obj.race.toTitleCase() + ' ' : '';
+    return `<span class="${obj.cls}">${obj.fullname}, ${race}lvl.${obj.level}, <b>${city}</b></span>`;
   };
 
   if (type === 'Room.Players') {
-    STATE.Room.players = data as T.GmcpPlayer[];
-    // remove current player from the list
-    STATE.Room.players = STATE.Room.players.filter((x) => x.name !== STATE.Me.name);
-    // sync battle targets
-    for (const p of STATE.Room.players) {
-      STATE.Battle.tgts[p.name] = { player: true, id: p.name, name: p.name, defs: new Set() };
-    }
+    setTimeout(async () => {
+      const tsData = data as T.GmcpPlayer[];
+      STATE.Room.players = [];
+      for (const x of tsData) {
+        // remove current player from the list
+        if (x.name === STATE.Me.name) continue;
+        const p = await getPlayer(x.name);
+        STATE.Room.players.push(p as T.GmcpPlayer);
+      }
+      // sync battle targets
+      for (const p of STATE.Room.players) {
+        STATE.Battle.tgts[p.name] = { player: true, id: p.name, name: p.name, defs: new Set() };
+      }
+      // call players update here, DB get is slow
+      ee.emit('players:update', STATE.Room.players);
+    }, 0);
   } else if (type === 'Room.AddPlayer') {
     const tsData = data as T.GmcpPlayer;
     setTimeout(async () => {
-      const info = await playerInfo(tsData.name.toLowerCase());
-      if (info) {
-        ee.emit('sys:text', `<b>Players ++</b> ${info}`);
+      const p = await getPlayer(tsData.name);
+      const span = playerSpan(p);
+      if (span) {
+        ee.emit('sys:text', `<b>Players ++</b> ${span}`);
       } else {
         ee.emit('sys:text', `<b>Players ++</b> ${tsData.name}`);
       }
-    }, 1);
-    STATE.Room.players.push(data as T.GmcpPlayer);
-    // sync battle targets
-    STATE.Battle.tgts[tsData.name] = {
-      player: true,
-      id: tsData.name,
-      name: tsData.name,
-      defs: new Set(),
-    };
+      STATE.Room.players.push(p as T.GmcpPlayer);
+      // sync battle targets
+      STATE.Battle.tgts[tsData.name] = {
+        player: true,
+        id: tsData.name,
+        name: tsData.name,
+        defs: new Set(),
+      };
+      // call players update here, DB get is slow
+      ee.emit('players:update', STATE.Room.players);
+    }, 0);
   } else if (type === 'Room.RemovePlayer') {
     setTimeout(async () => {
-      const info = await playerInfo(data.toLowerCase());
-      if (info) {
-        ee.emit('sys:text', `<b>Players -- </b>${info}`);
+      const p = await getPlayer(data);
+      const span = playerSpan(p);
+      if (span) {
+        ee.emit('sys:text', `<b>Players -- </b>${span}`);
       } else {
         ee.emit('sys:text', `<b>Players -- </b>${data}`);
       }
@@ -632,8 +655,8 @@ export function gmcpProcessRoomPlayers(type: string, data) {
     if (data === STATE.Battle.target) {
       STATE.Battle.active = false;
     }
+    ee.emit('players:update', STATE.Room.players);
   }
-  ee.emit('players:update', STATE.Room.players);
 }
 
 export function gmcpProcessTime(type: string, data: T.GmcpTime) {

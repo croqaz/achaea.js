@@ -82,7 +82,7 @@ let currentRoom = null;
 export function drawMap(data) {
   if (!window.AREA.rooms || !window.AREA.name) return;
   const noRooms = Object.keys(window.AREA.rooms).length;
-  console.log('DRAWING MAP::', window.AREA.name, 'Rooms:', noRooms);
+  // console.log('DRAWING MAP::', window.AREA.name, 'Rooms:', noRooms);
 
   const { Group, Layer, Path, PointText, tool } = window.PAPER;
   window.PAPER.project.clear();
@@ -135,7 +135,7 @@ export function drawMap(data) {
     if (
       room.features &&
       room.features.length > 0 &&
-      !(room.features.length === 1 && room.features[0] === 'indoors')
+      !(room.features.length === 1 && (room.features[0] === 'indoors' || room.features[0] === 'road'))
     ) {
       let content = '';
       const hasFeat = (x) => room.features.includes(x);

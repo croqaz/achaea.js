@@ -78,7 +78,7 @@ html, body, canvas, main, aside, div, span, pre, input {
   margin: 0;
   padding: 0;
   outline: 0;
-  color: #E5E9F0;
+  color: var(--foreground);
   font-size: 15px;
   font-family: MonegoRegular, monospace;
 }
@@ -99,7 +99,6 @@ i {
 
 b, h5 {
   font-family: MonegoBold, monospace;
-  color: #E5E9F0;
 }
 
 small {
@@ -354,10 +353,30 @@ body {
   font-family: MonegoBold, monospace;
 }
 
+#rageBar {
+  display: none;
+  height: 0.225rem;
+  background-color: var(--background);
+}
+
+#selfRageMax {
+  flex: 1;
+  display: flex;
+  color: #D8DEE9;
+  border-left: 1px solid #D8DEE9;
+}
+
+#selfRageNow {
+  border-right: 1px solid #D8DEE9;
+  background: #e4b860;
+  transition: width 0.5s;
+}
+
 #statBar {
   height: 1rem;
   display: flex;
   border-top: 1px solid #3B4252;
+  z-index: 99;
 }
 
 #hpmax,

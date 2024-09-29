@@ -92,7 +92,7 @@ html, body, canvas, main, aside, div, span, pre, input {
   margin: 0;
   padding: 0;
   outline: 0;
-  color: $foreground;
+  color: var(--foreground);
   font-size: $font-size;
   font-family: $font-reg;
 }
@@ -111,7 +111,6 @@ i {
 }
 b, h5 {
   font-family: $font-bold;
-  color: $nord5;
 }
 small {
   font-size: $font-size - 2;
@@ -336,11 +335,28 @@ body {
   color: $bright-foreground;
   font-family: $font-bold;
 }
+#rageBar {
+  display: none; // flex
+  height: 0.225rem;
+  background-color: var(--background);
+}
+#selfRageMax {
+  flex: 1;
+  display: flex;
+  color: $dark-foreground;
+  border-left: 1px solid $nord4;
+}
+#selfRageNow {
+  border-right: 1px solid $nord4;
+  background: darken($nord13, 10%);
+  transition: width 0.5s;
+}
 
 #statBar {
   height: 1rem;
   display: flex;
   border-top: 1px solid $nord1;
+  z-index: 99;
 }
 
 #hpmax,

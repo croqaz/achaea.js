@@ -271,7 +271,7 @@ function displayRoom(data) {
     room += `<h5>${window.ROOM.players.length} Players here:</h5>`;
     for (const x of window.ROOM.players) {
       // Level X Race, Color based on city
-      room += `<p data-id="${x.name}" class="roomPlayer" title="${x.fullname}" onclick="whoisPlayer(this)">- ${x.name}</p>`;
+      room += `<p data-id="${x.name}" class="roomPlayer ${x.cls}" title="${x.fullname}" onclick="whoisPlayer(this)">- ${x.name}</p>`;
     }
   }
 
@@ -324,6 +324,12 @@ function displayMyself(data) {
     hpNow.title = `${data.hp} / ${data.maxhp}`;
     hpNow.style.width = `${p}%`;
     hpNow.innerText = `${p}%`;
+    if (data.hp <= data.maxhp / 2) {
+      const p = 0.75 - data.hp / data.maxhp;
+      hpNow.style.boxShadow = `0 0 18px rgba(250, 10, 10, ${p})`;
+    } else {
+      hpNow.style.boxShadow = '';
+    }
   } else {
     hpNow.title = '';
     hpNow.innerText = '';
@@ -334,6 +340,12 @@ function displayMyself(data) {
     mpNow.title = `${data.mp} / ${data.maxmp}`;
     mpNow.style.width = `${p}%`;
     mpNow.innerText = `${p}%`;
+    if (data.mp <= data.maxmp / 2) {
+      const p = 0.75 - data.mp / data.maxmp;
+      mpNow.style.boxShadow = `0 0 18px rgba(10, 10, 250, ${p})`;
+    } else {
+      mpNow.style.boxShadow = '';
+    }
   } else {
     mpNow.title = '';
     mpNow.innerText = '';
@@ -389,6 +401,8 @@ function displayBattle(data) {
   const elem = document.getElementById('battle');
   const wrap = document.getElementById('battleWrap');
   const hpNow = document.getElementById('targetHpnow');
+  const rageBar = document.getElementById('rageBar');
+  const rageNow = document.getElementById('selfRageNow');
   let html = '';
   let round = '';
   if (data.rounds) {
@@ -401,6 +415,14 @@ function displayBattle(data) {
     if (npcElem) npcElem.classList.add('ansi-red');
   } else if (data.target) {
     html += `<h5>Hunting: <i>${data.target}</i> !${round}</h5>`;
+  }
+  if (data.rage && data.rage > 1) {
+    if (data.rage > 100) data.rage = 100;
+    rageBar.style.display = 'flex';
+    rageNow.title = `Rage: ${data.rage}`;
+    rageNow.style.width = `${data.rage}%`;
+  } else {
+    rageBar.style.display = 'none';
   }
   if (data.tgtHP) {
     hpNow.title = `HP: ${data.tgtHP}`;
