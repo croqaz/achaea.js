@@ -430,100 +430,156 @@ body {
 }
 
 /* wikipedia.org/wiki/ANSI_escape_code */
-.ansi-black {
+.c-black {
   color: #191c22;
   font-family: MonegoBold, monospace;
   font-weight: bold;
 }
 
-.ansi-red {
+.c-red {
   color: #BF616A;
 }
 
-.ansi-green {
+.c-green {
   color: #A3BE8C;
 }
 
-.ansi-yellow {
+.c-yellow {
   color: #D08770;
 }
 
-.ansi-blue {
+.c-blue {
   /* blue1: $nord8; blue2: $nord9; blue3: $nord10; */
   color: #5E81AC;
 }
 
-.ansi-magenta {
+.c-magenta {
   color: #B48EAD;
 }
 
-.ansi-cyan {
+.c-cyan {
   color: #8FBCBB;
 }
 
-.ansi-darkGray {
+.c-darkGray {
   color: #97a7c4;
   font-family: MonegoBold, monospace;
 }
 
-.ansi-lightGray {
+.c-lightGray {
   color: #D8DEE9;
   font-family: MonegoBold, monospace;
 }
 
-.ansi-white {
+.c-white {
   color: #ECEFF4;
   font-family: MonegoBold, monospace;
 }
 
 /* bright */
-.ansi-bright {
+.c-bright {
   font-family: MonegoBold, monospace;
   font-weight: bold;
 }
 
-.ansi-bright.ansi-black {
+.c-bright.c-black {
   color: #97a7c4;
 }
 
-.ansi-bright.ansi-red {
+.c-bright.c-red {
   color: #c6737b;
 }
 
-.ansi-bright.ansi-green {
+.c-bright.c-green {
   color: #A3BE8C;
 }
 
-.ansi-bright.ansi-yellow {
+.c-bright.c-yellow {
   color: #EBCB8B;
 }
 
-.ansi-bright.ansi-blue {
+.c-bright.c-blue {
   color: #81A1C1;
 }
 
-.ansi-bright.ansi-magenta {
+.c-bright.c-magenta {
   color: #B48EAD;
 }
 
-.ansi-bright.ansi-cyan {
+.c-bright.c-cyan {
   color: #88C0D0;
 }
 
-.ansi-bright.ansi-lightGray {
+.c-bright.c-lightGray {
   color: #E5E9F0;
 }
 
 /* dim */
-.ansi-dim {
+.c-dim {
   font-family: MonegoBoldItalic, monospace;
   font-weight: bold;
 }
 
-.ansi-dim.ansi-red {
+.c-dim.c-red {
   color: #b84f59;
 }
 
-.ansi-dim.ansi-blue {
+.c-dim.c-blue {
   color: #5f88b0;
+}
+
+/* backgrounds */
+.bg-black {
+  background-color: rgba(25, 28, 34, 0.5);
+}
+
+.bg-red {
+  background-color: rgba(191, 97, 106, 0.5);
+}
+
+.bg-green {
+  background-color: rgba(163, 190, 140, 0.5);
+}
+
+.bg-yellow {
+  background-color: rgba(208, 135, 112, 0.5);
+}
+
+.bg-blue {
+  background-color: rgba(94, 129, 172, 0.5);
+}
+
+.bg-magenta {
+  background-color: rgba(180, 142, 173, 0.5);
+}
+
+.bg-cyan {
+  background-color: rgba(143, 188, 187, 0.5);
+}
+
+.bg-darkGray {
+  background-color: rgba(151, 167, 196, 0.5);
+}
+
+.bg-lightGray {
+  background-color: rgba(216, 222, 233, 0.5);
+}
+
+.bg-white {
+  background-color: rgba(236, 239, 244, 0.5);
+}
+
+/* bright */
+.bg-bright {
+  font-family: MonegoBold, monospace;
+  font-weight: bold;
+}
+
+/* dim */
+.bg-dim.bg-red {
+  color: rgba(184, 79, 89, 0.5);
+}
+
+.bg-dim.bg-blue {
+  color: rgba(95, 136, 176, 0.5);
 }

@@ -19,7 +19,7 @@ export async function saveWares(text: string) {
     await dbSave('wares', item);
     index++;
   }
-  ee.emit('sys:text', `<i class="ansi-darkGray"><b>[DB]</b> ${index} entries saved in WARES.</i>`);
+  ee.emit('sys:text', `<i class="c-darkGray"><b>[DB]</b> ${index} entries saved in WARES.</i>`);
 }
 
 export function waresTriggers(origText: string, normText: string) {
@@ -57,7 +57,7 @@ if (process.env.NODE_ENV !== 'test') {
       waresTriggers.apply(null, arguments);
     } catch (err) {
       const msg = `[SYS] WARES trigger CRASHED: ${err} !`;
-      ee.emit('sys:text', `<i class="ansi-dim ansi-red">${msg}</i>`);
+      ee.emit('sys:text', `<i class="c-dim c-red">${msg}</i>`);
       logWrite('\n' + msg + '\n');
     }
   });

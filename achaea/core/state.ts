@@ -576,17 +576,21 @@ export function gmcpProcessRoomPlayers(type: string, data) {
       const p = await dbGet('whois', name.toLowerCase());
       p.name = name;
       let city = p.city ? p.city.toLowerCase() : 'rogue';
-      if (city === 'rogue') p.cls = 'ansi-yellow';
-      else if (city === 'ashtan') p.cls = 'ansi-magenta';
-      else if (city === 'cyrene') p.cls = 'ansi-cyan ansi-bright';
-      else if (city === 'eleusis') p.cls = 'ansi-green';
-      else if (city === 'hashan') p.cls = 'ansi-cyan';
-      else if (city === 'mhaldor') p.cls = 'ansi-red';
-      else if (city === 'targossas') p.cls = 'ansi-yellow ansi-bright';
+      if (city === 'rogue') p.cls = 'c-yellow';
+      else if (city === 'ashtan') p.cls = 'c-magenta';
+      else if (city === 'cyrene') p.cls = 'c-cyan c-bright';
+      else if (city === 'eleusis') p.cls = 'c-green';
+      else if (city === 'hashan') p.cls = 'c-cyan';
+      else if (city === 'mhaldor') p.cls = 'c-red';
+      else if (city === 'targossas') p.cls = 'c-yellow c-bright';
       return p;
-    } catch {}
+    } catch {
+      return data;
+    }
   };
   const playerSpan = (obj: Record<string, any>) => {
+    if (!obj) return;
+    //
     // TODO :: move this from the server side ...
     //
     let city = obj.city ? obj.city.toTitleCase() : 'Rogue';

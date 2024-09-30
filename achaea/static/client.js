@@ -292,7 +292,7 @@ function displayRoom(data) {
     room += `<h5>${denizen.length} Denizens here:</h5>`;
     for (const x of denizen) {
       let cls = 'denizen roomItem';
-      if (x.id === battleTgtID) cls += ' ansi-red';
+      if (x.id === battleTgtID) cls += ' c-red';
       // On-click, probe denizen
       room += `<p data-id="${x.id}" class="${cls}" title="[${x.id}] ${x.name}" onclick="probeItem(event,this)">- ${x.name}</p>`;
     }
@@ -412,7 +412,7 @@ function displayBattle(data) {
     const tgt = data.tgts[data.tgtID];
     html += `<h5>Hunting: <i>${tgt.name}</i> !${round}</h5>`;
     const npcElem = document.querySelector(`.roomItem[data-id="${data.tgtID}"]`);
-    if (npcElem) npcElem.classList.add('ansi-red');
+    if (npcElem) npcElem.classList.add('c-red');
   } else if (data.target) {
     html += `<h5>Hunting: <i>${data.target}</i> !${round}</h5>`;
   }

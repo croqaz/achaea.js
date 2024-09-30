@@ -56,13 +56,13 @@ export default function processDisplayText(text: string): string {
     if (p) {
       let extra = '';
       if (STATE.Battle.active && STATE.Battle.tgtHP) {
-        extra += ` <i class="ansi-yellow">tgt=${STATE.Battle.tgtHP}</i>`;
+        extra += ` <i class="c-yellow">tgt=${STATE.Battle.tgtHP}</i>`;
       }
       if (STATE.Me.hp < STATE.Me.oldhp) {
-        extra += ` <i class="ansi-dim ansi-red">-${STATE.Me.oldhp - STATE.Me.hp}HP</i>`;
+        extra += ` <i class="c-dim c-red">-${STATE.Me.oldhp - STATE.Me.hp}HP</i>`;
       }
       if (STATE.Me.mp < STATE.Me.oldmp) {
-        extra += ` <i class="ansi-dim ansi-blue">-${STATE.Me.oldmp - STATE.Me.mp}MP</i>`;
+        extra += ` <i class="c-dim c-blue">-${STATE.Me.oldmp - STATE.Me.mp}MP</i>`;
       }
       if (!extra) {
         extra = ' <b>●</b>';

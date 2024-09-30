@@ -419,79 +419,123 @@ body {
 // }
 
 /* wikipedia.org/wiki/ANSI_escape_code */
-.ansi-black {
+.c-black {
   color: darken($nord0, 10%);
   font-family: $font-bold;
   font-weight: bold;
 }
-.ansi-red {
+.c-red {
   color: $nord11;
 }
-.ansi-green {
+.c-green {
   color: $nord14;
 }
-.ansi-yellow {
+.c-yellow {
   color: $nord12;
 }
-.ansi-blue {
+.c-blue {
   /* blue1: $nord8; blue2: $nord9; blue3: $nord10; */
   color: $nord10;
 }
-.ansi-magenta {
+.c-magenta {
   color: $nord15;
 }
-.ansi-cyan {
+.c-cyan {
   color: $nord7;
 }
-.ansi-darkGray {
+.c-darkGray {
   color: darken($nord4, 20%);
   font-family: $font-bold;
 }
-.ansi-lightGray {
+.c-lightGray {
   color: $dark-foreground;
   font-family: $font-bold;
 }
-.ansi-white {
+.c-white {
   color: $bright-foreground;
   font-family: $font-bold;
 }
 /* bright */
-.ansi-bright {
+.c-bright {
   font-family: $font-bold;
   font-weight: bold;
 }
-.ansi-bright.ansi-black {
+.c-bright.c-black {
   color: darken($nord4, 20%);
 }
-.ansi-bright.ansi-red {
+.c-bright.c-red {
   color: lighten($nord11, 5%);
 }
-.ansi-bright.ansi-green {
+.c-bright.c-green {
   color: $nord14;
 }
-.ansi-bright.ansi-yellow {
+.c-bright.c-yellow {
   color: $nord13;
 }
-.ansi-bright.ansi-blue {
+.c-bright.c-blue {
   color: $nord9;
 }
-.ansi-bright.ansi-magenta {
+.c-bright.c-magenta {
   color: $nord15;
 }
-.ansi-bright.ansi-cyan {
+.c-bright.c-cyan {
   color: $nord8;
 }
-.ansi-bright.ansi-lightGray {
+.c-bright.c-lightGray {
   color: $foreground;
 }
 /* dim */
-.ansi-dim {
+.c-dim {
   font-family: $font-boit;
   font-weight: bold;
 }
-.ansi-dim.ansi-red {
+.c-dim.c-red {
   color: darken($nord11, 5%);
 }
-.ansi-dim.ansi-blue {
+.c-dim.c-blue {
   color: darken($nord9, 10%);
+}
+
+/* backgrounds */
+.bg-black {
+  background-color: rgba(darken($nord0, 10%), 0.5);
+}
+.bg-red {
+  background-color: rgba($nord11, 0.5);
+}
+.bg-green {
+  background-color: rgba($nord14, 0.5);
+}
+.bg-yellow {
+  background-color: rgba($nord12, 0.5);
+}
+.bg-blue {
+  background-color: rgba($nord10, 0.5);
+}
+.bg-magenta {
+  background-color: rgba($nord15, 0.5);
+}
+.bg-cyan {
+  background-color: rgba($nord7, 0.5);
+}
+.bg-darkGray {
+  background-color: rgba(darken($nord4, 20%), 0.5);
+}
+.bg-lightGray {
+  background-color: rgba($dark-foreground, 0.5);
+}
+.bg-white {
+  background-color: rgba($bright-foreground, 0.5);
+}
+/* bright */
+.bg-bright {
+  font-family: $font-bold;
+  font-weight: bold;
+}
+/* dim */
+.bg-dim.bg-red {
+  color: rgba(darken($nord11, 5%), 0.5);
+}
+.bg-dim.bg-blue {
+  color: rgba(darken($nord9, 10%), 0.5);
 }

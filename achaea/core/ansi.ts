@@ -9,13 +9,13 @@ export default function ansiToHtml(text: string): string {
     const cls = [];
     if (el.color) {
       if (el.color.name) {
-        cls.push(`ansi-${el.color.name}`);
+        cls.push(`c-${el.color.name}`);
       }
       if (el.color.bright) {
-        cls.push('ansi-bright');
+        cls.push('c-bright');
       }
       if (el.color.dim) {
-        cls.push('ansi-dim');
+        cls.push('c-dim');
       }
       if (el.italic) {
         cls.push('italic');
@@ -29,7 +29,18 @@ export default function ansiToHtml(text: string): string {
         cls.push('inverse');
       }
     }
-    parts.push(el.color ? `<span class="${cls.join(' ')}">${el.text}</span>` : el.text);
+    if (el.bgColor) {
+      if (el.bgColor.name) {
+        cls.push(`bg-${el.bgColor.name}`);
+      }
+      if (el.bgColor.bright) {
+        cls.push('bg-bright');
+      }
+      if (el.bgColor.dim) {
+        cls.push('bg-dim');
+      }
+    }
+    parts.push(el.color || el.bgColor ? `<span class="${cls.join(' ')}">${el.text}</span>` : el.text);
   }
   return parts.join('');
 }

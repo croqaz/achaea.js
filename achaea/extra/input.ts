@@ -157,11 +157,11 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
           } else {
             ee.emit(
               'sys:text',
-              '<i class="ansi-dim ansi-red"><b>[Path]</b>: Direction not defined!</i>',
+              '<i class="c-dim c-red"><b>[Path]</b>: Direction not defined!</i>',
             );
           }
         } else {
-          ee.emit('sys:text', '<i class="ansi-dim ansi-red"><b>[Path]</b>: Walk not defined!</i>');
+          ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Walk not defined!</i>');
         }
       } else if (secondWord === 'pause' || secondWord === 'start') {
         const walk = STATE.Custom.autoWalk ? STATE.Custom.autoWalk.walk : null;
@@ -169,7 +169,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
           ee.emit('sys:text', `<b>[Path]</b>: Walk ${secondWord}!`);
           STATE.Custom.autoWalk[secondWord]();
         } else {
-          ee.emit('sys:text', '<i class="ansi-dim ansi-red"><b>[Path]</b>: Walk not defined!</i>');
+          ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Walk not defined!</i>');
         }
       } //
       // JS hack to check if param is numeric
@@ -184,7 +184,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
           }
         }, 1);
       } else {
-        ee.emit('sys:text', '<i class="ansi-dim ansi-red"><b>[Path]</b>: Unknown GOTO command!</i>');
+        ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Unknown GOTO command!</i>');
       }
       return;
       // End of GoTo
@@ -193,7 +193,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
        * Query MAP info in game
        */
       if (parts.length < 3) {
-        ee.emit('sys:text', '<i class="ansi-dim ansi-red"><b>[MAP]</b>: Query must specify 3 args!</i>');
+        ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Query must specify 3 args!</i>');
         return;
       }
       // Map find room
@@ -211,14 +211,14 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
           };
         });
         if (!arr.length)
-          ee.emit('sys:text', '<i class="ansi-dim ansi-red"><b>[MAP]</b>: Room not found!</i>');
+          ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Room not found!</i>');
         else ee.emit('sys:html', htmlTable(arr));
       } //
       // Map find area
       else if (secondWord === 'area') {
         const arr = m.findAreas(otherWords);
         if (!arr.length)
-          ee.emit('sys:text', '<i class="ansi-dim ansi-red"><b>[MAP]</b>: Area not found!</i>');
+          ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Area not found!</i>');
         else ee.emit('sys:html', htmlTable(arr));
       } //
       // Map find the middle of an area
@@ -227,7 +227,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
         const x = JSON.stringify(room, null, 2);
         ee.emit('sys:text', `Middle of Area: ${x}`);
       } else {
-        ee.emit('sys:text', '<i class="ansi-dim ansi-red"><b>[MAP]</b>: Unknown MAP command!</i>');
+        ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Unknown MAP command!</i>');
       }
       return;
       // End of Map command
@@ -242,7 +242,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
       const lower = otherWords.toLowerCase();
       const toTable = (arr) => {
         if (!arr.length) {
-          ee.emit('sys:text', '<i class="ansi-dim ansi-red"><b>[MAP]</b>: Nothing found!</i>');
+          ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Nothing found!</i>');
         } else ee.emit('sys:html', htmlTable(arr));
       };
       //

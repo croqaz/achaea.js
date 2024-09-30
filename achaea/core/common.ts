@@ -661,6 +661,8 @@ export function weaponType(text: string): string {
     text.includes(` Stonesmith's `)
   ) {
     return 'warhammer';
+  } else if (text.endsWith(' spear')) {
+    return 'spear';
   } else if (text.includes(' Orcsplitter ') || text.includes('Logosian Battleaxe')) {
     return 'battleaxe';
   } else if (text.includes('Scimitar of ')) {

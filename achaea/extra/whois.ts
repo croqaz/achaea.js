@@ -47,7 +47,7 @@ export async function saveQuickWho(text: string) {
    */
   const names = parseQuickWho(text);
   if (!names || names.length === 0) {
-    return ee.emit('sys:text', '<i class="ansi-red"><b>[DB]</b> Cannot parse text as QWHO!</i>');
+    return ee.emit('sys:text', '<i class="c-red"><b>[DB]</b> Cannot parse text as QWHO!</i>');
   }
   const dt = isoDate();
   let index = 0;
@@ -61,7 +61,7 @@ export async function saveQuickWho(text: string) {
         continue;
       } else if (oldWhois) {
         const msg = `Old whois data for "${name}": ${oldWhois.dt}. Refreshing...`;
-        ee.emit('sys:text', `<i class="ansi-darkGray"><b>[DB]</b> ${msg}</i>`);
+        ee.emit('sys:text', `<i class="c-darkGray"><b>[DB]</b> ${msg}</i>`);
       }
     } catch {
       /* -- */
@@ -75,7 +75,7 @@ export async function saveQuickWho(text: string) {
     await dbSave('whois', mergeWhois(oldWhois, data));
     index++;
   }
-  ee.emit('sys:text', `<i class="ansi-darkGray"><b>[DB]</b> ${index} entries saved in WHOIS.</i>`);
+  ee.emit('sys:text', `<i class="c-darkGray"><b>[DB]</b> ${index} entries saved in WHOIS.</i>`);
 }
 
 export async function saveWhois(user: T.DBPlayer) {
@@ -96,7 +96,7 @@ export async function saveWhois(user: T.DBPlayer) {
   whois.level = parseInt(whois.level || '');
   if (Number.isNaN(whois.level) || whois.level < 10) return;
   await dbSave('whois', whois);
-  ee.emit('sys:text', `<i class="ansi-darkGray"><b>[DB]</b> ${user.id} updated in WHOIS.</i>`);
+  ee.emit('sys:text', `<i class="c-darkGray"><b>[DB]</b> ${user.id} updated in WHOIS.</i>`);
 }
 
 export async function fetchWhois(name: string): Promise<T.DBPlayer> {
@@ -108,7 +108,7 @@ export async function fetchWhois(name: string): Promise<T.DBPlayer> {
     user.id = name;
     return user;
   } catch {
-    ee.emit('sys:text', `<i class="ansi-red"><b>[DB]</b> Fetch WHOIS failed for: ${name}!</i>`);
+    ee.emit('sys:text', `<i class="c-red"><b>[DB]</b> Fetch WHOIS failed for: ${name}!</i>`);
   }
 }
 
@@ -141,7 +141,7 @@ if (process.env.NODE_ENV !== 'test') {
       whoisTriggers.apply(null, arguments);
     } catch (err) {
       const msg = `[SYS] WHOIS trigger CRASHED: ${err} !`;
-      ee.emit('sys:text', `<i class="ansi-dim ansi-red">${msg}</i>`);
+      ee.emit('sys:text', `<i class="c-dim c-red">${msg}</i>`);
       logWrite('\n' + msg + '\n');
     }
   });
