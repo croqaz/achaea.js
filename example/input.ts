@@ -5,12 +5,14 @@
 import ee from '../events/index.ts';
 import { STATE } from '../core/state.ts';
 
-export default function processUserInput(text: string, parts: string[]): string | void {
+export default function processUserInput(args): string | void {
   /*
    * Proces user text input, eg: aliases, custom commands
    * This function HAS TO BE SUPER FAST !!
    * The text returned from this function is sent to Achaea.
    */
+
+  let { text, parts, firstWord, secondWord } = args;
 
   // Example alias: gg
   //
