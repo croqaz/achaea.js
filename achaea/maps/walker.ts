@@ -2,6 +2,7 @@ import Heap from 'qheap';
 
 import * as m from './maps.ts';
 import * as mi from './index.ts';
+import * as ex from './explore.ts';
 import * as T from './types.ts';
 import { STATE } from '../core/state.ts';
 import { userText, displayText, sleep } from '../core/index.ts';
@@ -47,10 +48,10 @@ const WALK_DELAY = 0.5;
 export async function autoWalker(
   fromID: string,
   toID: string,
-  { autoStart = true, type = '', interval = INTERVAL, walkDelay = WALK_DELAY } = {},
+  { autoStart = true, type = '', explore = false, interval = INTERVAL, walkDelay = WALK_DELAY } = {},
 ) {
-  let walk = await innerWalker(fromID, toID, type);
-  if (!walk) return displayText('<i class="ansi-dim ansi-red"><b>[Path]</b>: No path was found!</i>');
+  let walk = await innerWalker(fromID, toID, type, explore);
+  if (!walk) return displayText('<i class="c-dim c-red"><b>[Path]</b>: No path was found!</i>');
 
   const MAX_TIME = 5000 / INTERVAL; // 5 seconds
   let intID: ReturnType<typeof setTimeout> | null = null;
@@ -81,14 +82,14 @@ export async function autoWalker(
         await sleep(walkDelay);
         return userText(nextRoom.dir);
       } else {
-        displayText('<i class="ansi-dim ansi-red"><b>[Path]</b>: Cannot move!</i>');
+        displayText('<i class="c-dim c-red"><b>[Path]</b>: Cannot move!</i>');
         return pause();
       }
     }
     // If we cannot move for a long time, abandon
     //
     if (timer >= MAX_TIME) {
-      displayText('<i class="ansi-dim ansi-red"><b>[Path]</b>: I\'m stuck! Walk aborted!</i>');
+      displayText('<i class="c-dim c-red"><b>[Path]</b>: I\'m stuck! Walk aborted!</i>');
       return pause();
     }
   };
@@ -116,7 +117,7 @@ export async function autoWalker(
       start();
     } else {
       displayText(
-        '<i class="ansi-dim ansi-red"><b>[Path]</b>: Cannot move! No path to destination!</i>',
+        '<i class="c-dim c-red"><b>[Path]</b>: Cannot move! No path to destination!</i>',
       );
       walk = null;
     }
@@ -135,6 +136,7 @@ export async function innerWalker(
   fromID: string,
   targetID: string,
   type: string = '',
+  explore: boolean = false,
 ) {
   // Local area graph
   const room = m.MAP.rooms[fromID];
@@ -145,11 +147,20 @@ export async function innerWalker(
   // Else, use a small graph of the local area
   const gr = type === 'global' ? m.GRAPH : m.localGraph(area);
   let path = null;
-  try {
-    path = walkDirections(gr, fromID, targetID);
-  } catch (err) {
-    console.warn('Inner-walker error:', err);
-    return null;
+  if (explore) {
+    try {
+      path = ex.exploreDirections(gr, fromID);
+    } catch (err) {
+      console.warn('Explore-walker error:', err);
+      return null;
+    }
+  } else {
+    try {
+      path = walkDirections(gr, fromID, targetID);
+    } catch (err) {
+      console.warn('Inner-walker error:', err);
+      return null;
+    }
   }
   if (!path || !path.length) return null;
 

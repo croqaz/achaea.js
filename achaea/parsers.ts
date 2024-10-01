@@ -29,6 +29,12 @@ export function parseSurvey(text: string) {
   return { area, environment, plane };
 }
 
+// export function parseRoom(text: string) {
+//   // WIP ... hacky
+//   if (!text.includes('You see exits leading') && !text.includes('here are no obvious exits')) return;
+//   const parts = text.split('\n').filter((x) => !!x);
+// }
+
 export function isWaresHeader(text: string): boolean {
   if (
     text.includes('Proprietor:') &&
@@ -78,6 +84,39 @@ function parseWaresLine(line: string): T.DBWares {
   const price = parseInt(parts.at(-1));
   const name = parts.slice(1, -2).join(' ');
   return { id, stock, price, name, owner: '' };
+}
+
+export function parseElixList(text: string) {
+  const lines = text.split('\n').filter((x) => !!x);
+  if (!lines.length || !lines[1].includes('-------')) return [];
+  const head1 = /Vial[ ]+Fluid[ ]+Sips[ ]+Months$/;
+  if (!head1.test(lines[0])) return [];
+
+  const elixlist = [];
+  for (const line of lines) {
+    const m = line.match(/^([a-z0-9' -]+?)[ ]+(an? [a-z0-9 ]+?)[ ]+(\d+)/i);
+    if (m && m[1] && m[2] && m[3]) {
+      const fluid = m[2];
+      let m2 = fluid.match(/^an? (?:elixir|salve) of ([a-z]+)/);
+      let type = null;
+      if (m2 && m2[1]) {
+        type = m2[1];
+      }
+      if (!type) {
+        m2 = fluid.match(/^an? ([a-z]+) salve/);
+        if (m2 && m2[1]) {
+          type = m2[1];
+        }
+      }
+      elixlist.push({
+        vial: m[1],
+        fluid,
+        type,
+        sips: parseInt(m[3]),
+      });
+    }
+  }
+  return elixlist;
 }
 
 export function parseQuickWho(text: string) {

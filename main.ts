@@ -22,7 +22,12 @@ const options = {
   const args = mri(process.argv.slice(2), options);
 
   if (args._.length !== 1) {
-    return console.error('Must specify a player name!');
+    console.error('Must specify a player name!');
+    process.exit(1);
+  }
+  if (args.fake && args.telnet) {
+    console.error('FAKE and TELNET cannot be used together!');
+    process.exit(1);
   }
 
   const player = args._[0].trim();

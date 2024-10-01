@@ -69,6 +69,8 @@ export interface StateBattle {
   rounds: number;
   active: boolean;
   combat: boolean;
+  // continue hunting?
+  auto: boolean;
   tgtID?: number;
   tgtHP?: string;
   // local target name
@@ -198,6 +200,7 @@ export interface GmcpTime {
   month: string;
   year: string;
   hour: string;
+  rlhm?: string;
   daynight: string;
   moonphase: string;
   time: string;
