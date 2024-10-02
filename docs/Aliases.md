@@ -39,7 +39,7 @@ if (text === 'pp') {
 For these super-basic aliases, I would recommend defining server-side aliases, with the ALIAS command. It's not that Achaea.js is uncapable of handling basic aliases, it's more about latency. A server-side alias should run a few milliseconds faster and when you launch lots of commands, the delay adds up.
 
 A slightly more complex alias uses multiple words and joins them together, eg:
-( this assumes you defined `&&` as a command separator in CONFIG )
+( this assumes you defined `&&` as a command separator in CONFIG CommandSeparator )
 
 ```ts
 /*
