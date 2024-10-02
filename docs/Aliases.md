@@ -1,10 +1,10 @@
 # Aliases
 
-An alias basically a command, or a series of commands.
+An alias is basically a command, or a series of commands.
 
 Technically, there are no "aliases" in Achaea.js, but you have something better: user input processing.
 
-You can do this in 'custom/input.ts'. This is the basic template:
+You can do this in `custom/input.ts`. This is the basic template:
 
 ```ts
 import ee from '../achaea/events/index.ts';
