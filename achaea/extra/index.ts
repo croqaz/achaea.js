@@ -2,10 +2,12 @@
  * Extra features.
  */
 import './auto.ts';
+import './gold.ts';
 import './wares.ts';
 import './whois.ts';
 import './rooms.ts';
 import './triggers.ts';
+import './stats.ts';
 
 try {
   // @ts-ignore: Types

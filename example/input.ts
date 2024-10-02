@@ -7,12 +7,12 @@ import { STATE } from '../core/state.ts';
 
 export default function processUserInput(args): string | void {
   /*
-   * Proces user text input, eg: aliases, custom commands
+   * Proces user text input, eg: aliases, custom commands.
    * This function HAS TO BE SUPER FAST !!
    * The text returned from this function is sent to Achaea.
    */
 
-  let { text, parts, firstWord, secondWord } = args;
+  let { text, parts, firstWord, secondWord, otherWords } = args;
 
   // Example alias: gg
   //
