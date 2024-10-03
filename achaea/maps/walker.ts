@@ -7,6 +7,7 @@ import * as T from './types.ts';
 import { STATE } from '../core/state.ts';
 import { userText, displayText, sleep } from '../core/index.ts';
 
+// Reversed exits
 export const REV_EXITS = Object.freeze({
   n: 's',
   s: 'n',
@@ -26,6 +27,8 @@ export const REV_EXITS = Object.freeze({
   southeast: 'nw',
   southwest: 'ne',
   //
+  up: 'down',
+  down: 'up',
   in: 'out',
   out: 'in',
 });
@@ -35,8 +38,9 @@ export const REV_EXITS = Object.freeze({
 // "Now now, don't be so hasty!"
 // You slip and fall on the ice as you try to leave ??
 // You stumble through the fog, attempting to find a way out.
-// Some fast river washing you away
+// Some crazy fast river washing you away
 // Special exits, need to twist/push/pull, or Say something
+// Jumping over stone/ ice walls
 // You sweep your trained eye across your surroundings, searching for hidden exits.
 // You spot a hidden exit to the in.
 //
@@ -116,9 +120,7 @@ export async function autoWalker(
       userText(nextRoom.dir);
       start();
     } else {
-      displayText(
-        '<i class="c-dim c-red"><b>[Path]</b>: Cannot move! No path to destination!</i>',
-      );
+      displayText('<i class="c-dim c-red"><b>[Path]</b>: Cannot move! No path to destination!</i>');
       walk = null;
     }
   }

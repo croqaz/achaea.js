@@ -460,7 +460,6 @@ function displayChannel(data) {
 
 function displayDateTime() {
   const elem = document.getElementById('dateTimeWrap');
-  elem.title = window.TIME.time;
   if (elem.dataset['human']) {
     elem.innerHTML = `${window.TIME.hhour} | ${window.TIME.season}`;
     return;

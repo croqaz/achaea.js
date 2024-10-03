@@ -51,7 +51,10 @@ export async function getRoom(uid: string, enhance = false): Promise<T.MapRoom> 
   }
   if (room.environment && ENVS[room.environment as string]) {
     // @ts-ignore: Types
-    room.environment = { id: parseInt(room.environment), ...ENVS[room.environment] };
+    room.environment = {
+      id: parseInt(room.environment),
+      ...ENVS[room.environment],
+    };
   }
   // The Room from DB, to check if it's visited
   if (enhance) {
@@ -114,7 +117,12 @@ export function calcAreaMiddle(uid: string) {
     if (room.area === uid) {
       // Prefer the rooms with more exits
       const e = room.exits ? room.exits.length : 1;
-      rooms.push({ W: roomWeight(room.coord, e), id, name: room.title, coord: room.coord });
+      rooms.push({
+        W: roomWeight(room.coord, e),
+        id,
+        name: room.title,
+        coord: room.coord,
+      });
       // 0,0,0 is the lowest value, so just break the cycle now
       if (room.coord.x === 0 && room.coord.y === 0 && room.coord.z === 0) {
         break;

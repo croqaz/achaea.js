@@ -37,6 +37,12 @@ export function connect(player: string) {
     if (process.env[e]) {
       ee.emit('user:text', process.env[e]);
     }
+    // "config ScreenWidth 0"
+    // "config ShowqueueAlerts on"
+    // "config KillWarning off" ??
+    // "config AutoOpenDoors on"
+    // "config AdvancedCuring on"
+    // "config UniversalAfflictionMessages on"
   }, 1000);
 
   // negociate connection options

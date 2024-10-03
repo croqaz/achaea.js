@@ -14,13 +14,13 @@ export const EXITS = Object.freeze({
   northwest: 'nw',
   southeast: 'se',
   southwest: 'sw',
+  down: 'd',
+  up: 'u',
 });
 
 const __dirName = dirname(fileURLToPath(import.meta.url));
 // @ts-ignore: Types
-export const MAP: T.MapType = Object.freeze(
-  JSON.parse(fs.readFileSync(__dirName + '/official-map.json')),
-);
+export const MAP: T.MapType = Object.freeze(JSON.parse(fs.readFileSync(__dirName + '/official-map.json')));
 
 // Pre-populate map environments
 // for faster later access
@@ -45,7 +45,10 @@ for (const [uid, room] of Object.entries(MAP.rooms)) {
   const copy = { id: 0, ...room };
   copy.id = parseInt(uid);
   // @ts-ignore: Types
-  copy.environment = { id: parseInt(copy.environment), ...ENVS[copy.environment as string] };
+  copy.environment = {
+    id: parseInt(copy.environment),
+    ...ENVS[copy.environment as string],
+  };
   __areas[areaID].push(copy);
 }
 export const AREAS = Object.freeze(__areas);

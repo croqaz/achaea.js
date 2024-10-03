@@ -2,7 +2,7 @@ export interface StateType {
   Me: StateMe;
   Room: StateRoom;
   Battle: StateBattle;
-  Time: GmcpTime;
+  Time: StateTime;
   Stats: StateStats;
   Custom: Record<string, any>;
   Queue: Record<string, string[]>;
@@ -46,7 +46,7 @@ export interface StateMe {
   defences: GmcpDefence[];
   skills: GmcpSkillList;
 
-  displayRace: number;
+  displayRace: string;
 }
 
 export interface StateRoom {
@@ -199,11 +199,16 @@ export interface GmcpTime {
   mon: string;
   month: string;
   year: string;
-  hour: string;
-  rlhm?: string;
+  hour: string | number;
   daynight: string;
   moonphase: string;
   time: string;
+}
+
+export interface StateTime extends GmcpTime {
+  season: string;
+  hhour: string;
+  rlhm: string;
 }
 
 export interface DBPlayer {

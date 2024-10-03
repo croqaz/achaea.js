@@ -686,18 +686,17 @@ export function gmcpProcessTime(type: string, data: T.GmcpTime) {
       }
       STATE.Time[k] = data[k];
     }
+    if (data.daynight) {
+      // Calculate Hour
+      STATE.Time.hour = t.dayNightToHour(parseInt(data.daynight));
+      // Human hour names
+      STATE.Time.hhour = t.hourToHuman(STATE.Time.hour);
+      // Real-life hour:minute
+      STATE.Time.rlhm = t.achaeaHourToRLhour(STATE.Time.hour);
+    }
   }
-  if (data.mon) {
     // Add Season
     STATE.Time.season = t.monthToSeason(data.mon);
-  }
-  if (data.daynight) {
-    // Calculate Hour
-    STATE.Time.hour = t.dayNightToHour(parseInt(data.daynight));
-    // Human hour names
-    STATE.Time.hhour = t.hourToHuman(STATE.Time.hour);
-    // Real-life hour:minute
-    STATE.Time.rlhm = t.achaeaHourToRLhour(STATE.Time.hour);
-  }
+    // Push event
   ee.emit('time:update', STATE.Time);
 }
