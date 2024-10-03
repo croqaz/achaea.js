@@ -55,6 +55,8 @@ if (firstWord === 'og' && secondWord && parts[2] && parts[3]) {
 }
 ```
 
+-----
+
 Other aliases don't send anything to the game. These can be used for setup, debug, or searching in the DB.
 For example:
 ( please don't re-implement this command, it is already available )
@@ -133,3 +135,11 @@ if (
     return saveWares(origText);
 }
 ```
+
+## Geeky boy say 🤓
+
+Important WARNING: the input processing function MUST BE FAST, because it runs for every single command you're typing. This means, no HTTP requests or DB queries or reading files from the disk. Now, if you just check some State flags and compare some strings, you can easily have tens of thousands of aliases with less that 1 millisecond delay.
+
+Technically, the user input processing starts as a hook on the input text field in the GUI and then runs in `core/input.ts`, which calls `extra/input.ts`, which calls `custom/input.ts` (if this exists).
+
+You could import extra input processing functions in `custom/input.ts` if you have lots of aliases.

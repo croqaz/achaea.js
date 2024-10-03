@@ -1,8 +1,8 @@
 # Triggers
 
-Triggers are hooks on the game text with the purpose of updating some internal state, or sending some commands back to the game.
+Triggers/ reflexes are hooks on the game text with the purpose of updating some internal state, or sending some commands back to the game.
 
-You don't need a special file to start triggers, any imported file will work.
+There is no special file to start triggers, any imported file will work. You should import your trigger files from `custom/index.ts`.
 
 Example:
 

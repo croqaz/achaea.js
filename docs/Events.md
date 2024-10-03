@@ -1,12 +1,13 @@
 # Events
 
-How to listen for events, from the `custom` folder:
+How to listen for events, from the `custom/` folder:
 
 ```js
 import ee from '../achaea/events/index.ts';
 
-ee.on('game:start', function () {
+ee.once('game:start', function () {
   // Run some logic in game start...
+  // Notice this is called only ONCE
 });
 
 ee.on('game:text', function (origText, normText) {
@@ -24,13 +25,13 @@ This is useful to separate the triggers in different files, organized by type, e
 
 ### game:start
 
-Emitted after a successful login, and after the initial GMCP Core.Supports.
-You can use this, eg: to call your defences-up.
+Emitted after a successful login, and after the initial `GMCP Core.Supports`.
+You can use this once, eg: to call your defences-up.
 
 ### game:quit
 
-Emitted after you typed "quit" and after you "begin to silently pray for preservation of your soul".
-You can use this to save some game states for next time, or stop any running background tasks.
+Emitted after you typed "quit" and after you "*begin to silently pray for preservation of your soul*".
+You can use this to save some game states for next time, or stop any running background tasks to prepare for a clean shutdown.
 
 ### game:text
 
@@ -69,7 +70,7 @@ It is used by the interface to refresh the current map room.
 
 ### items:update
 
-Emitted when the room items are updated, eg: someone drops or picks up something.
+Emitted when the room items are updated, eg: someone drops or picks up something, but ALSO when a denizen/NPC enters or leaves the room. (yes, denizens are items when it comes to GMCP)
 
 It is used by the interface to display the room items.
 
@@ -82,4 +83,4 @@ It is used by the interface to display the room players.
 ### have:eb
 
 Emitted when you have both physical balance & mental equilibrium, and you recovered either one of them.
-This is considered a new round.
+This is considered a "new round".

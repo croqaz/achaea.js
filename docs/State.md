@@ -48,3 +48,9 @@ It's a client queue, similar to the server-side queue. You can push events that 
 ## STATE.Custom
 
 This is where you can go crazy. Feel free to create your own variables and sync them between aliases & triggers.
+
+## Geeky boy say 🤓
+
+Technically, the STATE is not read-only, OK? It's just sealed. But you should try really hard to stay away from changing the core state with code from the `custom/` folder.
+
+Another thing is that you don't really need to use the STATE object for custom state management, you could have a CUSTOMSTATE object, perhaps in `custom/state.ts`. You could initialize this state on startup and change it from aliases and triggers, but I would recommend you keep your state in STATE.Custom.
