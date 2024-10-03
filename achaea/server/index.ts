@@ -65,7 +65,7 @@ app.get('/npc.json', async (req, res) => {
 
 wss.on('connection', function (ws, req) {
   const ip = req.socket.remoteAddress;
-  console.log('[WS] Client connected from:', ip);
+  console.log('[WS] Client connected', ip ? `from: ${ip}` : '');
   ws.on('close', function () {
     console.log('[WS] Client disconnected');
   });

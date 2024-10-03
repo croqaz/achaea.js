@@ -1,4 +1,5 @@
 import { black, blue, darkGray, green, lightGray, red, white } from 'ansicolor';
+import { bgRed, bgGreen, bgBlue, bgBlack, bgWhite } from 'ansicolor';
 
 import ee from '../events/index.ts';
 import ansiToHtml from '../core/ansi.ts';
@@ -17,15 +18,22 @@ export default async function fakeEvents() {
   ee.emit('game:html', ansiToHtml(green('This is color green.')));
   ee.emit('game:html', ansiToHtml(blue('This is color blue.')));
 
-  await sleep(0.1);
   ee.emit('game:html', ansiToHtml(black('This is color black.')));
   ee.emit('game:html', ansiToHtml(white('This is color white.')));
   ee.emit('game:html', ansiToHtml(lightGray('This is light gray.')));
   ee.emit('game:html', ansiToHtml(darkGray('This is dark gray.')));
 
+  await sleep(0.2);
+  ee.emit('game:html', ansiToHtml(bgRed('This is background red.')));
+  ee.emit('game:html', ansiToHtml(bgGreen('This is background green.')));
+  ee.emit('game:html', ansiToHtml(bgBlue('This is background blue.')));
+
+  ee.emit('game:html', ansiToHtml(bgBlack('This is background black.')));
+  ee.emit('game:html', ansiToHtml(bgWhite('This is background white.')));
+
   await sleep(0.1);
-  ee.emit('sys:text', `<i class="ansi-darkGray"><b>[DB]</b> 6789 entries saved in WARES.</i>`);
-  ee.emit('sys:text', `<i class="ansi-darkGray"><b>[DB]</b> 0123 entries saved in WHOIS.</i>`);
+  ee.emit('sys:text', `<i class="c-darkGray"><b>[DB]</b> 6789 entries saved in WARES.</i>`);
+  ee.emit('sys:text', `<i class="c-darkGray"><b>[DB]</b> 0123 entries saved in WHOIS.</i>`);
 
   await sleep(0.5);
   ee.emit('user:text', 'User text');
@@ -279,6 +287,27 @@ To restore the defaults, enter CONFIG COLOUR DEFAULT
       } }`,
     );
   }, 7250);
+
+  // add & remove more players
+  setInterval(async () => {
+    ee.emit(
+      'game:gmcp',
+      `Room.AddPlayer {
+        "name": "Argwin", "fullname": "Rowan Argwin Meraki, the Gaian Devil"
+      }`,
+    );
+    await sleep(2);
+    ee.emit(
+      'game:gmcp',
+      `Room.AddPlayer {
+        "name": "Faerum", "fullname": "Challenger Faerum"
+      }`,
+    );
+    await sleep(4);
+    ee.emit('game:gmcp', `Room.RemovePlayer "Argwin"`);
+    await sleep(2);
+    ee.emit('game:gmcp', `Room.RemovePlayer "Faerum"`);
+  }, 8500);
 
   await sleep(0.25);
   ee.emit(

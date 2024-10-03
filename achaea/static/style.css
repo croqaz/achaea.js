@@ -151,7 +151,7 @@ body {
   background: #4C566A;
   overflow-y: scroll;
   position: relative;
-  scrollbar-color: #5E81AC #616e88;
+  scrollbar-color: #5E81AC rgb(97.2967032967, 110.0989010989, 135.7032967033);
 }
 
 #rightSide.big {
@@ -176,7 +176,7 @@ body {
 /* Left side: map, room, player */
 #map {
   margin: 1px;
-  background: #616e88;
+  background: rgb(97.2967032967, 110.0989010989, 135.7032967033);
   width: calc(100% - 2px);
   height: calc(100% - 2px);
 }
@@ -215,9 +215,9 @@ body {
   border-top: 1px solid #3B4252;
   border-right: 1px solid #3B4252;
   overflow-y: scroll;
-  scrollbar-color: #5E81AC #616e88;
+  scrollbar-color: #5E81AC rgb(97.2967032967, 110.0989010989, 135.7032967033);
   padding: 0.5rem;
-  background: #454e61;
+  background: rgb(69.1223602484, 78.4074534161, 96.9776397516);
 }
 
 #player {
@@ -225,7 +225,7 @@ body {
   background: #4C566A;
   padding: 0.5rem;
   overflow-y: scroll;
-  scrollbar-color: #5E81AC #616e88;
+  scrollbar-color: #5E81AC rgb(97.2967032967, 110.0989010989, 135.7032967033);
 }
 
 .roomPlayer:hover, .roomItem:hover {
@@ -239,9 +239,9 @@ body {
 
 /* In the middle: game log, user input, status bar */
 #gameLog {
-  background: #454e61;
+  background: rgb(69.1223602484, 78.4074534161, 96.9776397516);
   overflow-y: scroll;
-  scrollbar-color: #5E81AC #616e88;
+  scrollbar-color: #5E81AC rgb(97.2967032967, 110.0989010989, 135.7032967033);
   padding: 0.5rem;
   height: 18px;
   flex: 1 0;
@@ -306,9 +306,13 @@ body {
   padding: 0.4rem;
   min-width: 7.5rem;
   white-space: normal;
-  background: rgba(97, 110, 136, 0.9);
+  background: rgba(97.2967032967, 110.0989010989, 135.7032967033, 0.9);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   z-index: 999;
+}
+
+#dateTimeWrap:hover {
+  cursor: pointer;
 }
 
 #battleWrap {
@@ -344,7 +348,7 @@ body {
   text-align: center;
   font-size: 13px;
   border-right: 1px solid #D8DEE9;
-  background: #84363d;
+  background: rgb(132.3783783784, 53.6216216216, 61.1621621622);
   transition: width 0.5s;
 }
 
@@ -368,7 +372,7 @@ body {
 
 #selfRageNow {
   border-right: 1px solid #D8DEE9;
-  background: #e4b860;
+  background: rgb(227.5, 183.5, 95.5);
   transition: width 0.5s;
 }
 
@@ -414,7 +418,7 @@ body {
 }
 
 #hpnow {
-  background: #84363d;
+  background: rgb(132.3783783784, 53.6216216216, 61.1621621622);
 }
 
 #mpnow {
@@ -431,7 +435,7 @@ body {
 
 /* wikipedia.org/wiki/ANSI_escape_code */
 .c-black {
-  color: #191c22;
+  color: rgb(24.6727272727, 27.8909090909, 34.3272727273);
   font-family: MonegoBold, monospace;
   font-weight: bold;
 }
@@ -462,7 +466,7 @@ body {
 }
 
 .c-darkGray {
-  color: #97a7c4;
+  color: rgb(150.7868852459, 166.8196721311, 196.2131147541);
   font-family: MonegoBold, monospace;
 }
 
@@ -483,11 +487,11 @@ body {
 }
 
 .c-bright.c-black {
-  color: #97a7c4;
+  color: rgb(150.7868852459, 166.8196721311, 196.2131147541);
 }
 
 .c-bright.c-red {
-  color: #c6737b;
+  color: rgb(198.3513513514, 115.1486486486, 123.1148648649);
 }
 
 .c-bright.c-green {
@@ -521,16 +525,16 @@ body {
 }
 
 .c-dim.c-red {
-  color: #b84f59;
+  color: rgb(183.6486486486, 78.8513513514, 88.8851351351);
 }
 
 .c-dim.c-blue {
-  color: #5f88b0;
+  color: rgb(94.8191489362, 135.5, 176.1808510638);
 }
 
 /* backgrounds */
 .bg-black {
-  background-color: rgba(25, 28, 34, 0.5);
+  background-color: rgba(24.6727272727, 27.8909090909, 34.3272727273, 0.5);
 }
 
 .bg-red {
@@ -558,7 +562,7 @@ body {
 }
 
 .bg-darkGray {
-  background-color: rgba(151, 167, 196, 0.5);
+  background-color: rgba(150.7868852459, 166.8196721311, 196.2131147541, 0.5);
 }
 
 .bg-lightGray {
@@ -577,9 +581,9 @@ body {
 
 /* dim */
 .bg-dim.bg-red {
-  color: rgba(184, 79, 89, 0.5);
+  color: rgba(183.6486486486, 78.8513513514, 88.8851351351, 0.5);
 }
 
 .bg-dim.bg-blue {
-  color: rgba(95, 136, 176, 0.5);
+  color: rgba(94.8191489362, 135.5, 176.1808510638, 0.5);
 }

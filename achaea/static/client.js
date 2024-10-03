@@ -1,4 +1,5 @@
 import * as map from './map.js';
+window.TIME = {};
 window.BATTLE = { tgtID: null };
 const ASCII_INPUT = /^[/'"0-9a-z]$/i;
 
@@ -107,6 +108,16 @@ window.addEventListener('load', function () {
       }
     }
   };
+
+  const dateTime = document.getElementById('dateTimeWrap');
+  dateTime.onclick = function switchTimeDisplay() {
+    if (dateTime.dataset['human']) {
+      delete dateTime.dataset['human'];
+    } else {
+      dateTime.dataset['human'] = 't';
+    }
+    displayDateTime();
+  };
 });
 
 async function startWS() {
@@ -167,7 +178,8 @@ async function startWS() {
     }
 
     if (data.textType === 'timeUpdate' && data.day && data.month) {
-      return displayDateTime(data);
+      window.TIME = data;
+      return displayDateTime();
     }
 
     // Reject unknown messages
@@ -446,8 +458,14 @@ function displayChannel(data) {
   elem.scrollTop = elem.scrollHeight;
 }
 
-function displayDateTime(data) {
+function displayDateTime() {
   const elem = document.getElementById('dateTimeWrap');
+  elem.title = window.TIME.time;
+  if (elem.dataset['human']) {
+    elem.innerHTML = `${window.TIME.hhour} | ${window.TIME.season}`;
+    return;
+  }
+
   const emoji = {
     0: '🕛',
     1: '🕐',
@@ -476,7 +494,7 @@ function displayDateTime(data) {
     11.5: '🕦',
     12.5: '🕧',
   };
-  let key = data.hour / 2.5;
+  let key = window.TIME.hour / 2.5;
   let rest = key - parseInt(key);
   if (rest <= 0.25) {
     rest = 0;
@@ -487,6 +505,6 @@ function displayDateTime(data) {
   }
   key = parseInt(key) + rest;
   if (key > 12) key -= 12;
-  let html = `${emoji[key]} ${data.rlhm} | ${data.day} ${data.month} ${data.year}`;
+  let html = `${emoji[key]} ${window.TIME.rlhm} | ${window.TIME.day} ${window.TIME.month} ${window.TIME.year}`;
   elem.innerHTML = html;
 }

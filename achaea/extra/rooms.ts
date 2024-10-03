@@ -37,7 +37,12 @@ async function onRoomItemsUpdate(data) {
     // Save denizens
     // Ignore dead corpses
     if (prop && prop.includes('m') && !prop.includes('d')) {
-      await dbSave('denizen', { roomID: room.num, room: room.name, ...item, dt });
+      await dbSave('denizen', {
+        roomID: room.num,
+        room: room.name,
+        ...item,
+        dt,
+      });
     } //
     // Save some items
     else {

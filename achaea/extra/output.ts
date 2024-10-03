@@ -118,10 +118,7 @@ export default function extraProcessDisplayText(text: string): string {
       const diff = (dt.getTime() - STATE.Stats.eat.getTime()) / 1000;
       // Ignore big time diffs; Normal time should be 1.5-ish sec?
       if (diff < 10) {
-        text = text.replace(
-          'another plant or mineral.',
-          `another plant or mineral. (${diff.toFixed(2)}s)`,
-        );
+        text = text.replace('another plant or mineral.', `another plant or mineral. (${diff.toFixed(2)}s)`);
       }
     }
     STATE.Stats.eat = dt;

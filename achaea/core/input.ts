@@ -16,6 +16,17 @@ export default function processUserInput(text: string): string | void {
   text = text.trim();
   const parts = text.split(' ').filter((x) => !!x);
 
+  // Thief protection
+  //
+  if (text === 'greed') {
+    STATE.Custom.greed = !STATE.Custom.greed;
+    if (STATE.Custom.greed) {
+      return 'selfishness';
+    } else {
+      return 'generosity';
+    }
+  }
+
   // Special commands
   //
   if (text.startsWith('//')) {
@@ -26,16 +37,6 @@ export default function processUserInput(text: string): string | void {
       state.resetDefaultState();
       ee.emit('sys:text', '[SYS] PANIC!!');
       return;
-    }
-
-    // Thief protection
-    else if (cmd === 'greed') {
-      STATE.Custom.greed = !STATE.Custom.greed;
-      if (STATE.Custom.greed) {
-        return 'selfishness';
-      } else {
-        return 'generosity';
-      }
     }
 
     // Debug commands

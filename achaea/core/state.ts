@@ -7,6 +7,7 @@ import ee from '../events/index.ts';
 import ansiToHtml from './ansi.ts';
 import { MAP } from '../maps/index.ts';
 import * as util from './util.ts';
+import * as t from './time.ts';
 
 /*
  * The STATE tree represents everything we know about the game and is
@@ -102,8 +103,10 @@ export var STATE: T.StateType = Object.seal({
     day: '0',
     mon: '0',
     month: '..',
+    season: '..',
     year: '100',
     hour: '0',
+    hhour: '..',
     rlhm: 'H:M',
     daynight: '1',
     moonphase: '..',
@@ -542,7 +545,11 @@ export function gmcpProcessRoomInfo(_type: string, data: T.GmcpRoom) {
   // Enhance GMCP room info with data from the map JSON
   if (mapRoom && mapRoom.title) {
     // This contains the real area ID & real map coords
-    data.room = { area: mapRoom.area, environment: mapRoom.environment, coord: mapRoom.coord };
+    data.room = {
+      area: mapRoom.area,
+      environment: mapRoom.environment,
+      coord: mapRoom.coord,
+    };
   }
   for (const k of Object.keys(data)) {
     // Ignore inexistent fields so the Room object doesn't explode
@@ -612,7 +619,12 @@ export function gmcpProcessRoomPlayers(type: string, data) {
       }
       // sync battle targets
       for (const p of STATE.Room.players) {
-        STATE.Battle.tgts[p.name] = { player: true, id: p.name, name: p.name, defs: new Set() };
+        STATE.Battle.tgts[p.name] = {
+          player: true,
+          id: p.name,
+          name: p.name,
+          defs: new Set(),
+        };
       }
       // call players update here, DB get is slow
       ee.emit('players:update', STATE.Room.players);
@@ -674,14 +686,18 @@ export function gmcpProcessTime(type: string, data: T.GmcpTime) {
       }
       STATE.Time[k] = data[k];
     }
-    // Add Hour if it doesn't exist
-    if (data.daynight && !data.hour) {
-      STATE.Time.hour = util.dayNightToHour(data.daynight);
-    }
+  }
+  if (data.mon) {
+    // Add Season
+    STATE.Time.season = t.monthToSeason(data.mon);
+  }
+  if (data.daynight) {
+    // Calculate Hour
+    STATE.Time.hour = t.dayNightToHour(parseInt(data.daynight));
+    // Human hour names
+    STATE.Time.hhour = t.hourToHuman(STATE.Time.hour);
     // Real-life hour:minute
-    if (STATE.Time.hour) {
-      STATE.Time.rlhm = util.achaeaHourToRLhour(STATE.Time.hour);
-    }
+    STATE.Time.rlhm = t.achaeaHourToRLhour(STATE.Time.hour);
   }
   ee.emit('time:update', STATE.Time);
 }

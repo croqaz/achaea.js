@@ -41,28 +41,6 @@ export function sleep(sec: number) {
   return new Promise((r) => setTimeout(r, Math.round(sec * 1000)));
 }
 
-/*
- * A bit magic &hacky, but it works.
- * GMCP DayNight to Achaea hour.
- */
-export function dayNightToHour(dn: number): number {
-  if (dn < 99) return 12 + Math.round(dn / 3);
-  if (dn < 120) return Math.round(dn * 0.32 + 12.7);
-  if (dn < 155) return Math.round(dn * 0.29 + 15.3);
-  return Math.round(dn * 0.267 - 41);
-}
-
-/*
- * Achaea hour to real-life hour:minute.
- */
-export function achaeaHourToRLhour(h: number): string {
-  const raw = h / 2.5;
-  const hour = parseInt(raw);
-  const rest = raw - hour;
-  const min = Math.round(rest * 60);
-  return `${String(hour).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
-}
-
 /**
  * Function wrapper that prevents a function from being executed more than once
  * every t ms. This is particularly useful for optimising callbacks for
@@ -70,6 +48,7 @@ export function achaeaHourToRLhour(h: number): string {
  * to `true` means that even the first function call is after the minimum
  * timout, rather than instantly.
  * https://github.com/mathigon/core.js/blob/master/src/utilities.ts
+ * (C) Philipp Legner & contributors
  */
 export function throttle<Args extends unknown[]>(
   fn: (...args: Args) => void,
