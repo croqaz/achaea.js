@@ -47,7 +47,7 @@ It's a client queue, similar to the server-side queue. You can push events that 
 
 ## STATE.Misc
 
-This is a group of variables used by "core" and "extra" to keep track of different states. This is exactly what you should do in "STATE.Custom", but ideally you don't need to touch anything here.
+This is a group of internal variables used by "core" and "extra" to keep track of different states. These are not coming from the game. This is exactly what you should do in "STATE.Custom", but ideally you don't need to touch anything here.
 
 ## STATE.Custom
 

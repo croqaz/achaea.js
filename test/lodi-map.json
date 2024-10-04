@@ -1,0 +1,4220 @@
+{
+  "name": "Lodi, the Valley of",
+  "id": "9",
+  "rooms": {
+    "3660": {
+      "coord": {
+        "x": 6,
+        "y": 13,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "9944"
+        },
+        {
+          "direction": "east",
+          "target": "15118"
+        },
+        {
+          "direction": "west",
+          "target": "9932"
+        }
+      ],
+      "title": "Travelling through the near-endless fields",
+      "id": 3660
+    },
+    "3882": {
+      "coord": {
+        "x": 4,
+        "y": 2,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "2453",
+          "tgarea": "26"
+        },
+        {
+          "direction": "west",
+          "target": "3883"
+        }
+      ],
+      "title": "Narrow entrance to the Valley of Lodi",
+      "id": 3882
+    },
+    "3883": {
+      "coord": {
+        "x": 2,
+        "y": 2,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "3882"
+        },
+        {
+          "direction": "west",
+          "target": "3884"
+        }
+      ],
+      "title": "Valley within the Putoran hills",
+      "id": 3883
+    },
+    "3884": {
+      "coord": {
+        "x": 0,
+        "y": 2,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "3901"
+        },
+        {
+          "direction": "northeast",
+          "target": "4178"
+        },
+        {
+          "direction": "east",
+          "target": "3883"
+        },
+        {
+          "direction": "south",
+          "target": "6181"
+        }
+      ],
+      "title": "Widening valley in the Putoran hills",
+      "id": 3884
+    },
+    "3901": {
+      "coord": {
+        "x": 0,
+        "y": 3,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "3966"
+        },
+        {
+          "direction": "south",
+          "target": "3884"
+        }
+      ],
+      "title": "Valley deep in the Putoran hills",
+      "id": 3901
+    },
+    "3966": {
+      "coord": {
+        "x": 0,
+        "y": 4,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "3971"
+        },
+        {
+          "direction": "south",
+          "target": "3901"
+        },
+        {
+          "direction": "northwest",
+          "target": "3967"
+        }
+      ],
+      "title": "Before a struggling farm",
+      "id": 3966
+    },
+    "3967": {
+      "coord": {
+        "x": -1,
+        "y": 5,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "3966"
+        },
+        {
+          "direction": "west",
+          "door": "1",
+          "target": "3968"
+        },
+        {
+          "direction": "northwest",
+          "target": "7606"
+        }
+      ],
+      "title": "Outside a ramshackle farmhouse",
+      "id": 3967
+    },
+    "3968": {
+      "coord": {
+        "x": -2,
+        "y": 5,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "door": "1",
+          "target": "3967"
+        }
+      ],
+      "title": "Inside a poorly constructed farm building",
+      "id": 3968
+    },
+    "3971": {
+      "coord": {
+        "x": 0,
+        "y": 5,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "3972"
+        },
+        {
+          "direction": "south",
+          "target": "3966"
+        }
+      ],
+      "title": "A small and almost barren field",
+      "id": 3971
+    },
+    "3972": {
+      "coord": {
+        "x": 0,
+        "y": 6,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "3973"
+        },
+        {
+          "direction": "south",
+          "target": "3971"
+        },
+        {
+          "direction": "northwest",
+          "target": "3974"
+        }
+      ],
+      "title": "In a windswept field of corn",
+      "id": 3972
+    },
+    "3973": {
+      "coord": {
+        "x": 1,
+        "y": 7,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "3975"
+        },
+        {
+          "direction": "southwest",
+          "target": "3972"
+        }
+      ],
+      "title": "On a low hill",
+      "id": 3973
+    },
+    "3974": {
+      "coord": {
+        "x": -1,
+        "y": 7,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "3972"
+        },
+        {
+          "direction": "west",
+          "target": "3982"
+        }
+      ],
+      "title": "On a low hill",
+      "id": 3974
+    },
+    "3975": {
+      "coord": {
+        "x": 1,
+        "y": 8,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "south",
+          "target": "3973"
+        },
+        {
+          "direction": "northwest",
+          "target": "3976"
+        }
+      ],
+      "title": "Upon the rolling hills of the Putoran range",
+      "id": 3975
+    },
+    "3976": {
+      "coord": {
+        "x": 0,
+        "y": 9,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "18337"
+        },
+        {
+          "direction": "southeast",
+          "target": "3975"
+        },
+        {
+          "direction": "south",
+          "target": "3977"
+        },
+        {
+          "direction": "northwest",
+          "target": "3978"
+        }
+      ],
+      "title": "Upon the rolling hills of the Putoran range",
+      "id": 3976
+    },
+    "3977": {
+      "coord": {
+        "x": 0,
+        "y": 8,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "3976"
+        },
+        {
+          "direction": "south",
+          "target": "3980"
+        },
+        {
+          "direction": "northwest",
+          "target": "3979"
+        }
+      ],
+      "title": "Wandering over the hills",
+      "id": 3977
+    },
+    "3978": {
+      "coord": {
+        "x": -1,
+        "y": 10,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "3976"
+        },
+        {
+          "direction": "south",
+          "target": "3979"
+        }
+      ],
+      "title": "Up on the barren hills",
+      "id": 3978
+    },
+    "3979": {
+      "coord": {
+        "x": -1,
+        "y": 9,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "3978"
+        },
+        {
+          "direction": "southeast",
+          "target": "3977"
+        },
+        {
+          "direction": "southwest",
+          "target": "3983"
+        },
+        {
+          "direction": "northwest",
+          "target": "3985"
+        }
+      ],
+      "title": "Wandering over the hills",
+      "id": 3979
+    },
+    "3980": {
+      "coord": {
+        "x": 0,
+        "y": 7,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "3977"
+        },
+        {
+          "direction": "northwest",
+          "target": "3981"
+        }
+      ],
+      "title": "Wandering over the hills",
+      "id": 3980
+    },
+    "3981": {
+      "coord": {
+        "x": -1,
+        "y": 8,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "3980"
+        },
+        {
+          "direction": "southwest",
+          "target": "3982"
+        }
+      ],
+      "title": "Wandering over the hills",
+      "id": 3981
+    },
+    "3982": {
+      "coord": {
+        "x": -2,
+        "y": 7,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "3983"
+        },
+        {
+          "direction": "northeast",
+          "target": "3981"
+        },
+        {
+          "direction": "east",
+          "target": "3974"
+        }
+      ],
+      "title": "Upon a hilly grazing land",
+      "id": 3982
+    },
+    "3983": {
+      "coord": {
+        "x": -2,
+        "y": 8,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "3984"
+        },
+        {
+          "direction": "northeast",
+          "target": "3979"
+        },
+        {
+          "direction": "south",
+          "target": "3982"
+        }
+      ],
+      "title": "Upon a hilly grazing land",
+      "id": 3983
+    },
+    "3984": {
+      "coord": {
+        "x": -2,
+        "y": 9,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "3985"
+        },
+        {
+          "direction": "south",
+          "target": "3983"
+        }
+      ],
+      "title": "Where the hills rise steeply",
+      "id": 3984
+    },
+    "3985": {
+      "coord": {
+        "x": -2,
+        "y": 10,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "3979"
+        },
+        {
+          "direction": "south",
+          "target": "3984"
+        },
+        {
+          "direction": "west",
+          "target": "3986"
+        }
+      ],
+      "title": "Outside a dark lair in the cliff-like hillside",
+      "id": 3985
+    },
+    "3986": {
+      "coord": {
+        "x": -3,
+        "y": 10,
+        "z": 0
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "3985"
+        },
+        {
+          "direction": "southwest",
+          "target": "4092"
+        }
+      ],
+      "title": "Just inside an animal's lair",
+      "id": 3986
+    },
+    "4092": {
+      "coord": {
+        "x": -4,
+        "y": 9,
+        "z": 0
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "3986"
+        },
+        {
+          "direction": "west",
+          "target": "4093"
+        }
+      ],
+      "title": "A low, narrow tunnel through the hillside",
+      "id": 4092
+    },
+    "4093": {
+      "coord": {
+        "x": -5,
+        "y": 9,
+        "z": 0
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "4092"
+        },
+        {
+          "direction": "northwest",
+          "target": "4094"
+        }
+      ],
+      "title": "A low, narrow tunnel through the hillside",
+      "id": 4093
+    },
+    "4094": {
+      "coord": {
+        "x": -6,
+        "y": 10,
+        "z": 0
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "4095"
+        },
+        {
+          "direction": "southeast",
+          "target": "4093"
+        }
+      ],
+      "title": "Crawling through a low tunnel",
+      "id": 4094
+    },
+    "4095": {
+      "coord": {
+        "x": -6,
+        "y": 12,
+        "z": 0
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "4096"
+        },
+        {
+          "direction": "south",
+          "target": "4094"
+        }
+      ],
+      "title": "Crawling through a low tunnel",
+      "id": 4095
+    },
+    "4096": {
+      "coord": {
+        "x": -6,
+        "y": 13,
+        "z": 0
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "4097"
+        },
+        {
+          "direction": "south",
+          "target": "4095"
+        }
+      ],
+      "title": "Deep in the wildcats' lair",
+      "id": 4096
+    },
+    "4097": {
+      "coord": {
+        "x": -5,
+        "y": 14,
+        "z": 0
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "4098"
+        },
+        {
+          "direction": "southwest",
+          "target": "4096"
+        }
+      ],
+      "title": "Approaching the heart of the wildcats' lair",
+      "id": 4097
+    },
+    "4098": {
+      "coord": {
+        "x": -4,
+        "y": 14,
+        "z": 0
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "4099"
+        },
+        {
+          "direction": "west",
+          "target": "4097"
+        }
+      ],
+      "title": "Dark, warm tunnel outside the centre of the lair",
+      "id": 4098
+    },
+    "4099": {
+      "coord": {
+        "x": -3,
+        "y": 14,
+        "z": 0
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "southwest",
+          "target": "9877"
+        },
+        {
+          "direction": "west",
+          "target": "4098"
+        }
+      ],
+      "title": "In the heart of the wildcats' lair",
+      "id": 4099
+    },
+    "4178": {
+      "coord": {
+        "x": 2,
+        "y": 4,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "southwest",
+          "target": "3884"
+        },
+        {
+          "direction": "up",
+          "target": "4179"
+        }
+      ],
+      "title": "At the base of a tall hill",
+      "id": 4178
+    },
+    "4179": {
+      "coord": {
+        "x": 2,
+        "y": 5,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "4180"
+        },
+        {
+          "direction": "down",
+          "target": "4178"
+        }
+      ],
+      "title": "At the top of the hill",
+      "id": 4179
+    },
+    "4180": {
+      "coord": {
+        "x": 3,
+        "y": 5,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "west",
+          "target": "4179"
+        },
+        {
+          "direction": "in",
+          "target": "4181"
+        }
+      ],
+      "title": "Outside the entrance to the mine",
+      "id": 4180
+    },
+    "4181": {
+      "coord": {
+        "x": 4,
+        "y": 5,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "down",
+          "target": "4182"
+        },
+        {
+          "direction": "out",
+          "target": "4180"
+        }
+      ],
+      "title": "Inside the miners' hut at the top of the shaft",
+      "id": 4181
+    },
+    "4182": {
+      "coord": {
+        "x": 3,
+        "y": 4,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "up",
+          "target": "4181"
+        },
+        {
+          "direction": "down",
+          "target": "4183"
+        }
+      ],
+      "title": "Where the mineshaft widens",
+      "id": 4182
+    },
+    "4183": {
+      "coord": {
+        "x": 3,
+        "y": 3,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "4184"
+        },
+        {
+          "direction": "up",
+          "target": "4182"
+        }
+      ],
+      "title": "Bottom of the narrow mine shaft",
+      "id": 4183
+    },
+    "4184": {
+      "coord": {
+        "x": 4,
+        "y": 3,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "4185"
+        },
+        {
+          "direction": "west",
+          "target": "4183"
+        }
+      ],
+      "title": "In a low and narrow mine passage",
+      "id": 4184
+    },
+    "4185": {
+      "coord": {
+        "x": 5,
+        "y": 3,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "4186"
+        },
+        {
+          "direction": "west",
+          "target": "4184"
+        }
+      ],
+      "title": "Approaching the mine's main junction",
+      "id": 4185
+    },
+    "4186": {
+      "coord": {
+        "x": 6,
+        "y": 3,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "4199"
+        },
+        {
+          "direction": "east",
+          "target": "4187"
+        },
+        {
+          "direction": "south",
+          "target": "4192"
+        },
+        {
+          "direction": "west",
+          "target": "4185"
+        }
+      ],
+      "title": "The main junction in the mine",
+      "id": 4186
+    },
+    "4187": {
+      "coord": {
+        "x": 7,
+        "y": 3,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "4188"
+        },
+        {
+          "direction": "southeast",
+          "target": "4190"
+        },
+        {
+          "direction": "west",
+          "target": "4186"
+        }
+      ],
+      "title": "Approaching the mine's main junction",
+      "id": 4187
+    },
+    "4188": {
+      "coord": {
+        "x": 8,
+        "y": 4,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "4189"
+        },
+        {
+          "direction": "southwest",
+          "target": "4187"
+        }
+      ],
+      "title": "A claustrophobic passage through the mine",
+      "id": 4188
+    },
+    "4189": {
+      "coord": {
+        "x": 9,
+        "y": 4,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "west",
+          "target": "4188"
+        }
+      ],
+      "title": "By an iron ore vein",
+      "id": 4189
+    },
+    "4190": {
+      "coord": {
+        "x": 8,
+        "y": 2,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "4191"
+        },
+        {
+          "direction": "northwest",
+          "target": "4187"
+        }
+      ],
+      "title": "A claustrophobic passage through the mine",
+      "id": 4190
+    },
+    "4191": {
+      "coord": {
+        "x": 9,
+        "y": 2,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "west",
+          "target": "4190"
+        }
+      ],
+      "title": "By an iron ore vein",
+      "id": 4191
+    },
+    "4192": {
+      "coord": {
+        "x": 6,
+        "y": 2,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "4186"
+        },
+        {
+          "direction": "southeast",
+          "target": "4193"
+        }
+      ],
+      "title": "Approaching the mine's main junction",
+      "id": 4192
+    },
+    "4193": {
+      "coord": {
+        "x": 7,
+        "y": 1,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "4196"
+        },
+        {
+          "direction": "south",
+          "target": "4194"
+        },
+        {
+          "direction": "northwest",
+          "target": "4192"
+        }
+      ],
+      "title": "A claustrophobic passage through the mine",
+      "id": 4193
+    },
+    "4194": {
+      "coord": {
+        "x": 7,
+        "y": 0,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "4193"
+        },
+        {
+          "direction": "south",
+          "target": "4195"
+        }
+      ],
+      "title": "A claustrophobic passage through the mine",
+      "id": 4194
+    },
+    "4195": {
+      "coord": {
+        "x": 7,
+        "y": -1,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "4194"
+        }
+      ],
+      "title": "A coal vein in the mine",
+      "id": 4195
+    },
+    "4196": {
+      "coord": {
+        "x": 9,
+        "y": -1,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "4197"
+        },
+        {
+          "direction": "southwest",
+          "target": "4198"
+        },
+        {
+          "direction": "northwest",
+          "target": "4193"
+        }
+      ],
+      "title": "A claustrophobic passage through the mine",
+      "id": 4196
+    },
+    "4197": {
+      "coord": {
+        "x": 10,
+        "y": -1,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "17080"
+        },
+        {
+          "direction": "west",
+          "target": "4196"
+        }
+      ],
+      "title": "A claustrophobic passage through the mine",
+      "id": 4197
+    },
+    "4198": {
+      "coord": {
+        "x": 8,
+        "y": -2,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "4196"
+        }
+      ],
+      "title": "A coal vein in the mine",
+      "id": 4198
+    },
+    "4199": {
+      "coord": {
+        "x": 6,
+        "y": 4,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "4200"
+        },
+        {
+          "direction": "south",
+          "target": "4186"
+        }
+      ],
+      "title": "Dark passage approaching the mine's main junction",
+      "id": 4199
+    },
+    "4200": {
+      "coord": {
+        "x": 7,
+        "y": 5,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "4203"
+        },
+        {
+          "direction": "east",
+          "target": "4201"
+        },
+        {
+          "direction": "southwest",
+          "target": "4199"
+        }
+      ],
+      "title": "A dark and claustrophobic passage through the mine",
+      "id": 4200
+    },
+    "4201": {
+      "coord": {
+        "x": 8,
+        "y": 5,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "west",
+          "target": "4200"
+        }
+      ],
+      "title": "At an exhausted iron ore vein",
+      "id": 4201
+    },
+    "4202": {
+      "coord": {
+        "x": 9,
+        "y": 6,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "4203"
+        }
+      ],
+      "title": "A dark and claustrophobic passage through the mine",
+      "id": 4202
+    },
+    "4203": {
+      "coord": {
+        "x": 9,
+        "y": 7,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "4204"
+        },
+        {
+          "direction": "south",
+          "target": "4202"
+        },
+        {
+          "direction": "southwest",
+          "target": "4200"
+        },
+        {
+          "direction": "northwest",
+          "target": "16986"
+        }
+      ],
+      "title": "A dark and claustrophobic passage through the mine",
+      "id": 4203
+    },
+    "4204": {
+      "coord": {
+        "x": 9,
+        "y": 8,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "hidden": "1",
+          "target": "4205"
+        },
+        {
+          "direction": "south",
+          "target": "4203"
+        }
+      ],
+      "title": "Abrupt end to the passageway",
+      "id": 4204
+    },
+    "4205": {
+      "coord": {
+        "x": 10,
+        "y": 7,
+        "z": -1
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "4206"
+        },
+        {
+          "direction": "northwest",
+          "target": "4204"
+        }
+      ],
+      "title": "A hidden passage",
+      "id": 4205
+    },
+    "4206": {
+      "coord": {
+        "x": 11,
+        "y": 7,
+        "z": -1
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "west",
+          "target": "4205"
+        }
+      ],
+      "title": "An illuminated cavern",
+      "id": 4206
+    },
+    "6181": {
+      "coord": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "environment": {
+        "id": "11",
+        "color": "6",
+        "htmlcolor": "#837766",
+        "name": "Path"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "3884"
+        },
+        {
+          "direction": "south",
+          "target": "6224"
+        }
+      ],
+      "title": "North gate",
+      "id": 6181
+    },
+    "6182": {
+      "coord": {
+        "x": -2,
+        "y": -12,
+        "z": 0
+      },
+      "environment": {
+        "id": "11",
+        "color": "6",
+        "htmlcolor": "#837766",
+        "name": "Path"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "6218"
+        },
+        {
+          "direction": "south",
+          "target": "7661"
+        }
+      ],
+      "title": "South gate",
+      "id": 6182
+    },
+    "6183": {
+      "coord": {
+        "x": 0,
+        "y": -5,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "6184"
+        },
+        {
+          "direction": "northeast",
+          "target": "6220"
+        },
+        {
+          "direction": "east",
+          "target": "6187"
+        },
+        {
+          "direction": "southeast",
+          "target": "6221"
+        },
+        {
+          "direction": "south",
+          "target": "6185"
+        },
+        {
+          "direction": "southwest",
+          "target": "6222"
+        },
+        {
+          "direction": "west",
+          "target": "6186"
+        },
+        {
+          "direction": "northwest",
+          "target": "6219"
+        }
+      ],
+      "title": "Well square",
+      "id": 6183
+    },
+    "6184": {
+      "coord": {
+        "x": 0,
+        "y": -4,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "south",
+          "target": "6183"
+        }
+      ],
+      "title": "Food stall",
+      "id": 6184
+    },
+    "6185": {
+      "coord": {
+        "x": 0,
+        "y": -6,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "6183"
+        }
+      ],
+      "title": "Clothing stall",
+      "id": 6185
+    },
+    "6186": {
+      "coord": {
+        "x": -1,
+        "y": -5,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "6183"
+        }
+      ],
+      "title": "General stall",
+      "id": 6186
+    },
+    "6187": {
+      "coord": {
+        "x": 1,
+        "y": -5,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "west",
+          "target": "6183"
+        }
+      ],
+      "title": "Arenard's Apothecary",
+      "id": 6187
+    },
+    "6188": {
+      "coord": {
+        "x": 2,
+        "y": -7,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "6203"
+        },
+        {
+          "direction": "southwest",
+          "target": "6232"
+        },
+        {
+          "direction": "northwest",
+          "target": "6221"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "7605"
+        }
+      ],
+      "title": "Outside the Hammer 'N' Forge smithy",
+      "id": 6188
+    },
+    "6189": {
+      "coord": {
+        "x": -3,
+        "y": -3,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "6226"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "6190"
+        }
+      ],
+      "title": "Outside Tenobob's Hut",
+      "id": 6189
+    },
+    "6190": {
+      "coord": {
+        "x": -4,
+        "y": -3,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "6189"
+        }
+      ],
+      "title": "Inside a hut",
+      "id": 6190
+    },
+    "6191": {
+      "coord": {
+        "x": 3,
+        "y": 0,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "southwest",
+          "target": "6227"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "6192"
+        }
+      ],
+      "title": "Before the Northeast Tower of Gorshire",
+      "id": 6191
+    },
+    "6192": {
+      "coord": {
+        "x": 4,
+        "y": 0,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "up",
+          "target": "6193"
+        },
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "6191"
+        }
+      ],
+      "title": "Tower",
+      "id": 6192
+    },
+    "6193": {
+      "coord": {
+        "x": 4,
+        "y": 1,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "down",
+          "target": "6192"
+        }
+      ],
+      "title": "Sentry's Post",
+      "id": 6193
+    },
+    "6194": {
+      "coord": {
+        "x": -3,
+        "y": 0,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "6228"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "6195"
+        }
+      ],
+      "title": "Before the northwest tower of Gorshire",
+      "id": 6194
+    },
+    "6195": {
+      "coord": {
+        "x": -4,
+        "y": 0,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "up",
+          "target": "6196"
+        },
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "6194"
+        }
+      ],
+      "title": "Tower",
+      "id": 6195
+    },
+    "6196": {
+      "coord": {
+        "x": -4,
+        "y": 1,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "down",
+          "target": "6195"
+        }
+      ],
+      "title": "Sentry's Post",
+      "id": 6196
+    },
+    "6197": {
+      "coord": {
+        "x": -4,
+        "y": -13,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "6229"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "6198"
+        }
+      ],
+      "title": "Before the southwest tower of Gorshire",
+      "id": 6197
+    },
+    "6198": {
+      "coord": {
+        "x": -5,
+        "y": -13,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "up",
+          "target": "6199"
+        },
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "6197"
+        }
+      ],
+      "title": "Tower",
+      "id": 6198
+    },
+    "6199": {
+      "coord": {
+        "x": -5,
+        "y": -12,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "down",
+          "target": "6198"
+        }
+      ],
+      "title": "Sentry's Post",
+      "id": 6199
+    },
+    "6200": {
+      "coord": {
+        "x": 0,
+        "y": -13,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "northwest",
+          "target": "6230"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "6201"
+        }
+      ],
+      "title": "Before the Southeast Tower",
+      "id": 6200
+    },
+    "6201": {
+      "coord": {
+        "x": 1,
+        "y": -13,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "up",
+          "target": "6202"
+        },
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "6200"
+        }
+      ],
+      "title": "Tower",
+      "id": 6201
+    },
+    "6202": {
+      "coord": {
+        "x": 1,
+        "y": -12,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "down",
+          "target": "6201"
+        }
+      ],
+      "title": "Sentry's Post",
+      "id": 6202
+    },
+    "6203": {
+      "coord": {
+        "x": 3,
+        "y": -8,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "northwest",
+          "target": "6188"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "6204"
+        }
+      ],
+      "title": "Before Bruer's Factory",
+      "id": 6203
+    },
+    "6204": {
+      "coord": {
+        "x": 2,
+        "y": -8,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "6203"
+        }
+      ],
+      "title": "Millhouse",
+      "id": 6204
+    },
+    "6205": {
+      "coord": {
+        "x": -2,
+        "y": -9,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "6232"
+        },
+        {
+          "direction": "west",
+          "target": "6231"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "6206"
+        }
+      ],
+      "title": "Outside the Sel Sor Tavern",
+      "id": 6205
+    },
+    "6206": {
+      "coord": {
+        "x": -2,
+        "y": -10,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "6205"
+        }
+      ],
+      "title": "The Sel Sor Tavern",
+      "id": 6206
+    },
+    "6207": {
+      "coord": {
+        "x": 4,
+        "y": -3,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "west",
+          "target": "6208"
+        }
+      ],
+      "title": "Barracks",
+      "id": 6207
+    },
+    "6208": {
+      "coord": {
+        "x": 3,
+        "y": -3,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "6207"
+        },
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "6225"
+        }
+      ],
+      "title": "Constable's Office",
+      "id": 6208
+    },
+    "6209": {
+      "coord": {
+        "x": -2,
+        "y": -4,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "southwest",
+          "target": "6211"
+        },
+        {
+          "direction": "west",
+          "target": "6210"
+        },
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "6219"
+        }
+      ],
+      "title": "Residence",
+      "id": 6209
+    },
+    "6210": {
+      "coord": {
+        "x": -3,
+        "y": -4,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "6209"
+        }
+      ],
+      "title": "Bedroom",
+      "id": 6210
+    },
+    "6211": {
+      "coord": {
+        "x": -3,
+        "y": -5,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "6209"
+        }
+      ],
+      "title": "Bedroom",
+      "id": 6211
+    },
+    "6212": {
+      "coord": {
+        "x": -4,
+        "y": -8,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "6222"
+        }
+      ],
+      "title": "Residence",
+      "id": 6212
+    },
+    "6213": {
+      "coord": {
+        "x": -2,
+        "y": -2,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "6234"
+        }
+      ],
+      "title": "Residence",
+      "id": 6213
+    },
+    "6214": {
+      "coord": {
+        "x": -3,
+        "y": -16,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "south",
+          "target": "6215"
+        }
+      ],
+      "title": "Goose corral",
+      "id": 6214
+    },
+    "6215": {
+      "coord": {
+        "x": -3,
+        "y": -17,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "6214"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "6216"
+        }
+      ],
+      "title": "Goose pen",
+      "id": 6215
+    },
+    "6216": {
+      "coord": {
+        "x": -4,
+        "y": -17,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "door": "1",
+          "target": "7664"
+        },
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "6215"
+        }
+      ],
+      "title": "Inside Fergil's small house",
+      "id": 6216
+    },
+    "6217": {
+      "coord": {
+        "x": -5,
+        "y": -9,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "6231"
+        }
+      ],
+      "title": "Weaver",
+      "id": 6217
+    },
+    "6218": {
+      "coord": {
+        "x": -2,
+        "y": -11,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "6232"
+        },
+        {
+          "direction": "southeast",
+          "target": "6230"
+        },
+        {
+          "direction": "south",
+          "target": "6182"
+        },
+        {
+          "direction": "southwest",
+          "target": "6229"
+        },
+        {
+          "direction": "northwest",
+          "target": "6231"
+        }
+      ],
+      "title": "Traders' Gate",
+      "id": 6218
+    },
+    "6219": {
+      "coord": {
+        "x": -1,
+        "y": -4,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "6183"
+        },
+        {
+          "direction": "northwest",
+          "target": "6226"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "6209"
+        }
+      ],
+      "title": "Arin'dale Lane",
+      "id": 6219
+    },
+    "6220": {
+      "coord": {
+        "x": 1,
+        "y": -4,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "6225"
+        },
+        {
+          "direction": "southwest",
+          "target": "6183"
+        }
+      ],
+      "title": "Justice Lane",
+      "id": 6220
+    },
+    "6221": {
+      "coord": {
+        "x": 1,
+        "y": -6,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "6188"
+        },
+        {
+          "direction": "northwest",
+          "target": "6183"
+        }
+      ],
+      "title": "Blacksmith's Lane",
+      "id": 6221
+    },
+    "6222": {
+      "coord": {
+        "x": -3,
+        "y": -8,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "6183"
+        },
+        {
+          "direction": "southwest",
+          "target": "6231"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "6212"
+        }
+      ],
+      "title": "Gallup Lane",
+      "id": 6222
+    },
+    "6223": {
+      "coord": {
+        "x": 2,
+        "y": -2,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "6233"
+        }
+      ],
+      "title": "Mayor's Office",
+      "id": 6223
+    },
+    "6224": {
+      "coord": {
+        "x": 0,
+        "y": -2,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "6181"
+        },
+        {
+          "direction": "east",
+          "target": "6233"
+        },
+        {
+          "direction": "west",
+          "target": "6234"
+        }
+      ],
+      "title": "Inventor's Square",
+      "id": 6224
+    },
+    "6225": {
+      "coord": {
+        "x": 2,
+        "y": -3,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "southwest",
+          "target": "6220"
+        },
+        {
+          "direction": "northwest",
+          "target": "6233"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "6208"
+        }
+      ],
+      "title": "Turn on Justice Lane",
+      "id": 6225
+    },
+    "6226": {
+      "coord": {
+        "x": -2,
+        "y": -3,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "6234"
+        },
+        {
+          "direction": "east",
+          "target": "58350"
+        },
+        {
+          "direction": "southeast",
+          "target": "6219"
+        },
+        {
+          "direction": "west",
+          "target": "6189"
+        }
+      ],
+      "title": "Arin'dale Lane",
+      "id": 6226
+    },
+    "6227": {
+      "coord": {
+        "x": 2,
+        "y": -1,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "6191"
+        },
+        {
+          "direction": "southwest",
+          "target": "6233"
+        }
+      ],
+      "title": "Tower Road",
+      "id": 6227
+    },
+    "6228": {
+      "coord": {
+        "x": -2,
+        "y": -1,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "6234"
+        },
+        {
+          "direction": "northwest",
+          "target": "6194"
+        }
+      ],
+      "title": "Tower Road",
+      "id": 6228
+    },
+    "6229": {
+      "coord": {
+        "x": -3,
+        "y": -12,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "6218"
+        },
+        {
+          "direction": "southwest",
+          "target": "6197"
+        }
+      ],
+      "title": "Tower Road",
+      "id": 6229
+    },
+    "6230": {
+      "coord": {
+        "x": -1,
+        "y": -12,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "6200"
+        },
+        {
+          "direction": "northwest",
+          "target": "6218"
+        }
+      ],
+      "title": "Tower Road",
+      "id": 6230
+    },
+    "6231": {
+      "coord": {
+        "x": -4,
+        "y": -9,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "6222"
+        },
+        {
+          "direction": "east",
+          "target": "6205"
+        },
+        {
+          "direction": "southeast",
+          "target": "6218"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "6217"
+        }
+      ],
+      "title": "Trader's Walk",
+      "id": 6231
+    },
+    "6232": {
+      "coord": {
+        "x": 0,
+        "y": -9,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "6188"
+        },
+        {
+          "direction": "southwest",
+          "target": "6218"
+        },
+        {
+          "direction": "west",
+          "target": "6205"
+        }
+      ],
+      "title": "Trader's Walk",
+      "id": 6232
+    },
+    "6233": {
+      "coord": {
+        "x": 1,
+        "y": -2,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "6227"
+        },
+        {
+          "direction": "southeast",
+          "target": "6225"
+        },
+        {
+          "direction": "west",
+          "target": "6224"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "6223"
+        }
+      ],
+      "title": "Outside a stately building",
+      "id": 6233
+    },
+    "6234": {
+      "coord": {
+        "x": -1,
+        "y": -2,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "6224"
+        },
+        {
+          "direction": "southwest",
+          "target": "6226"
+        },
+        {
+          "direction": "northwest",
+          "target": "6228"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "6213"
+        }
+      ],
+      "title": "Path leading up to a small modest home",
+      "id": 6234
+    },
+    "7605": {
+      "coord": {
+        "x": 1,
+        "y": -7,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "6188"
+        }
+      ],
+      "title": "Inside the smithy",
+      "id": 7605
+    },
+    "7606": {
+      "coord": {
+        "x": -2,
+        "y": 6,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "3967"
+        }
+      ],
+      "title": "Outside a smokehouse",
+      "id": 7606
+    },
+    "7661": {
+      "coord": {
+        "x": -2,
+        "y": -13,
+        "z": 0
+      },
+      "environment": {
+        "id": "11",
+        "color": "6",
+        "htmlcolor": "#837766",
+        "name": "Path"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "6182"
+        },
+        {
+          "direction": "southwest",
+          "target": "7662"
+        }
+      ],
+      "title": "Path outside of Gorshire",
+      "id": 7661
+    },
+    "7662": {
+      "coord": {
+        "x": -3,
+        "y": -14,
+        "z": 0
+      },
+      "environment": {
+        "id": "11",
+        "color": "6",
+        "htmlcolor": "#837766",
+        "name": "Path"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "7661"
+        },
+        {
+          "direction": "south",
+          "target": "7663"
+        }
+      ],
+      "title": "Path outside of Fergil's goose ranch",
+      "id": 7662
+    },
+    "7663": {
+      "coord": {
+        "x": -3,
+        "y": -15,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "7662"
+        },
+        {
+          "direction": "southwest",
+          "target": "7664"
+        }
+      ],
+      "title": "Field outside Fergil's ranch",
+      "id": 7663
+    },
+    "7664": {
+      "coord": {
+        "x": -4,
+        "y": -16,
+        "z": 0
+      },
+      "environment": {
+        "id": "9",
+        "color": "3",
+        "htmlcolor": "#2d7720",
+        "name": "Hills"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "7663"
+        },
+        {
+          "direction": "south",
+          "door": "1",
+          "target": "6216"
+        }
+      ],
+      "title": "Field outside Fergil's Ranch",
+      "id": 7664
+    },
+    "9761": {
+      "coord": {
+        "x": 2,
+        "y": 12,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "18583"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "9824"
+        }
+      ],
+      "title": "Before a sturdy and simple farmhouse",
+      "id": 9761
+    },
+    "9780": {
+      "coord": {
+        "x": 6,
+        "y": 11,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "west",
+          "door": "1",
+          "target": "9855"
+        }
+      ],
+      "title": "A fenced vegetable patch",
+      "id": 9780
+    },
+    "9824": {
+      "coord": {
+        "x": 1,
+        "y": 12,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "9761"
+        }
+      ],
+      "title": "Inside a small and cluttered farmhouse",
+      "id": 9824
+    },
+    "9848": {
+      "coord": {
+        "x": 4,
+        "y": 11,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "west",
+          "target": "18583"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "9855"
+        }
+      ],
+      "title": "The front yard of a pristine farmhouse",
+      "id": 9848
+    },
+    "9855": {
+      "coord": {
+        "x": 5,
+        "y": 11,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "door": "1",
+          "target": "9780"
+        },
+        {
+          "direction": "up",
+          "target": "9866"
+        },
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "9848"
+        }
+      ],
+      "title": "Inside a neat and tidy farmhouse",
+      "id": 9855
+    },
+    "9866": {
+      "coord": {
+        "x": 5,
+        "y": 10,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "down",
+          "target": "9855"
+        }
+      ],
+      "title": "A small and comfortable bedroom",
+      "id": 9866
+    },
+    "9877": {
+      "coord": {
+        "x": -4,
+        "y": 13,
+        "z": 0
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "4099"
+        },
+        {
+          "direction": "east",
+          "target": "18349"
+        },
+        {
+          "direction": "southeast",
+          "target": "18303"
+        },
+        {
+          "direction": "southwest",
+          "target": "18279"
+        }
+      ],
+      "title": "Further into a low tunnel",
+      "id": 9877
+    },
+    "9932": {
+      "coord": {
+        "x": 5,
+        "y": 13,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "9945"
+        },
+        {
+          "direction": "east",
+          "target": "3660"
+        },
+        {
+          "direction": "southwest",
+          "target": "18583"
+        },
+        {
+          "direction": "west",
+          "target": "18761"
+        }
+      ],
+      "title": "Where the path ends and the fields begin",
+      "id": 9932
+    },
+    "9944": {
+      "coord": {
+        "x": 7,
+        "y": 14,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "southwest",
+          "target": "3660"
+        },
+        {
+          "direction": "west",
+          "target": "10341"
+        }
+      ],
+      "title": "Wandering amidst the waves of grain",
+      "id": 9944
+    },
+    "9945": {
+      "coord": {
+        "x": 5,
+        "y": 14,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "south",
+          "target": "9932"
+        },
+        {
+          "direction": "in",
+          "door": "1",
+          "target": "18757"
+        }
+      ],
+      "title": "Just outside a simple silo",
+      "id": 9945
+    },
+    "10341": {
+      "coord": {
+        "x": 6,
+        "y": 14,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "15068"
+        },
+        {
+          "direction": "east",
+          "target": "9944"
+        }
+      ],
+      "title": "Travelling through the near-endless fields",
+      "id": 10341
+    },
+    "15068": {
+      "coord": {
+        "x": 6,
+        "y": 15,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "south",
+          "target": "10341"
+        }
+      ],
+      "title": "A small meadow at the edge the fields",
+      "id": 15068
+    },
+    "15118": {
+      "coord": {
+        "x": 8,
+        "y": 13,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "16665"
+        },
+        {
+          "direction": "southwest",
+          "target": "15179"
+        },
+        {
+          "direction": "west",
+          "target": "3660"
+        }
+      ],
+      "title": "A field of slightly soggy grains",
+      "id": 15118
+    },
+    "15179": {
+      "coord": {
+        "x": 7,
+        "y": 12,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "15118"
+        },
+        {
+          "direction": "south",
+          "target": "15562"
+        }
+      ],
+      "title": "Lost in the brilliant golden fields",
+      "id": 15179
+    },
+    "15562": {
+      "coord": {
+        "x": 7,
+        "y": 11,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "15179"
+        },
+        {
+          "direction": "east",
+          "target": "15876"
+        }
+      ],
+      "title": "Wandering amidst the waves of grain",
+      "id": 15562
+    },
+    "15876": {
+      "coord": {
+        "x": 8,
+        "y": 11,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "west",
+          "target": "15562"
+        },
+        {
+          "direction": "in",
+          "target": "16614"
+        }
+      ],
+      "title": "Outside of a pleasant gazebo",
+      "id": 15876
+    },
+    "16614": {
+      "coord": {
+        "x": 9,
+        "y": 11,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "out",
+          "target": "15876"
+        }
+      ],
+      "title": "Within a charming, rustic gazebo",
+      "id": 16614
+    },
+    "16665": {
+      "coord": {
+        "x": 9,
+        "y": 14,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "16736"
+        },
+        {
+          "direction": "southwest",
+          "target": "15118"
+        }
+      ],
+      "title": "At the source of the irrigation ditches",
+      "id": 16665
+    },
+    "16736": {
+      "coord": {
+        "x": 10,
+        "y": 13,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "17367"
+        },
+        {
+          "direction": "south",
+          "target": "16806"
+        },
+        {
+          "direction": "northwest",
+          "target": "16665"
+        }
+      ],
+      "title": "On the shore of a small pond",
+      "id": 16736
+    },
+    "16806": {
+      "coord": {
+        "x": 10,
+        "y": 12,
+        "z": 0
+      },
+      "environment": {
+        "id": "22",
+        "color": "4",
+        "htmlcolor": "#5ff0f0",
+        "name": "Freshwater"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "16736"
+        },
+        {
+          "direction": "east",
+          "target": "17367"
+        },
+        {
+          "direction": "south",
+          "target": "17734"
+        }
+      ],
+      "title": "A sparkling pond reflecting the skyline",
+      "id": 16806
+    },
+    "16986": {
+      "coord": {
+        "x": 8,
+        "y": 8,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "17042"
+        },
+        {
+          "direction": "southeast",
+          "target": "4203"
+        }
+      ],
+      "title": "Further along a dark mine shaft",
+      "id": 16986
+    },
+    "17042": {
+      "coord": {
+        "x": 8,
+        "y": 9,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "17048"
+        },
+        {
+          "direction": "east",
+          "target": "17051"
+        },
+        {
+          "direction": "south",
+          "target": "16986"
+        }
+      ],
+      "title": "A triple junction",
+      "id": 17042
+    },
+    "17048": {
+      "coord": {
+        "x": 8,
+        "y": 10,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "south",
+          "target": "17042"
+        }
+      ],
+      "title": "Termination of a mine shaft",
+      "id": 17048
+    },
+    "17051": {
+      "coord": {
+        "x": 9,
+        "y": 9,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "west",
+          "target": "17042"
+        }
+      ],
+      "title": "Abrupt end to a passageway",
+      "id": 17051
+    },
+    "17080": {
+      "coord": {
+        "x": 11,
+        "y": 0,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "17086"
+        },
+        {
+          "direction": "southwest",
+          "target": "4197"
+        }
+      ],
+      "title": "Along a crumbling passageway",
+      "id": 17080
+    },
+    "17086": {
+      "coord": {
+        "x": 11,
+        "y": 1,
+        "z": -1
+      },
+      "environment": {
+        "id": "2",
+        "color": "8",
+        "htmlcolor": "#80735f",
+        "name": "Constructed underground"
+      },
+      "exits": [
+        {
+          "direction": "south",
+          "target": "17080"
+        }
+      ],
+      "title": "Dead-end along a mine shaft",
+      "id": 17086
+    },
+    "17367": {
+      "coord": {
+        "x": 11,
+        "y": 12,
+        "z": 0
+      },
+      "environment": {
+        "id": "7",
+        "color": "10",
+        "htmlcolor": "#1dc713",
+        "name": "Grasslands"
+      },
+      "exits": [
+        {
+          "direction": "southwest",
+          "target": "17734"
+        },
+        {
+          "direction": "west",
+          "target": "16806"
+        },
+        {
+          "direction": "northwest",
+          "target": "16736"
+        }
+      ],
+      "title": "At the edge of a fishing hole",
+      "id": 17367
+    },
+    "17734": {
+      "coord": {
+        "x": 10,
+        "y": 11,
+        "z": 0
+      },
+      "environment": {
+        "id": "22",
+        "color": "4",
+        "htmlcolor": "#5ff0f0",
+        "name": "Freshwater"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "16806"
+        },
+        {
+          "direction": "northeast",
+          "target": "17367"
+        }
+      ],
+      "title": "Shallows of a sparkling pond",
+      "id": 17734
+    },
+    "18057": {
+      "coord": {
+        "x": -3,
+        "y": 11,
+        "z": 0
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "door": "1",
+          "target": "18361"
+        }
+      ],
+      "title": "The royal chambers",
+      "id": 18057
+    },
+    "18279": {
+      "coord": {
+        "x": -5,
+        "y": 12,
+        "z": 0
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "9877"
+        },
+        {
+          "direction": "southeast",
+          "target": "18356"
+        }
+      ],
+      "title": "A crudely constructed hallway",
+      "id": 18279
+    },
+    "18303": {
+      "coord": {
+        "x": -3,
+        "y": 12,
+        "z": 0
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "northwest",
+          "target": "9877"
+        }
+      ],
+      "title": "Abrupt end to the underground passageway",
+      "id": 18303
+    },
+    "18337": {
+      "coord": {
+        "x": 1,
+        "y": 10,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "18587"
+        },
+        {
+          "direction": "southwest",
+          "target": "3976"
+        }
+      ],
+      "title": "Entering an abundant valley",
+      "id": 18337
+    },
+    "18349": {
+      "coord": {
+        "x": -3,
+        "y": 13,
+        "z": 0
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "southeast",
+          "target": "18361"
+        },
+        {
+          "direction": "west",
+          "target": "9877"
+        }
+      ],
+      "title": "Along a widening hallway",
+      "id": 18349
+    },
+    "18356": {
+      "coord": {
+        "x": -4,
+        "y": 11,
+        "z": 0
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "northwest",
+          "target": "18279"
+        }
+      ],
+      "title": "An immense dining hall",
+      "id": 18356
+    },
+    "18361": {
+      "coord": {
+        "x": -2,
+        "y": 12,
+        "z": 0
+      },
+      "environment": {
+        "id": "3",
+        "color": "8",
+        "htmlcolor": "#765116",
+        "name": "Natural underground"
+      },
+      "exits": [
+        {
+          "direction": "southwest",
+          "door": "1",
+          "target": "18057"
+        },
+        {
+          "direction": "northwest",
+          "target": "18349"
+        }
+      ],
+      "title": "Approaching the royal chambers",
+      "id": 18361
+    },
+    "18583": {
+      "coord": {
+        "x": 3,
+        "y": 11,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "9932"
+        },
+        {
+          "direction": "east",
+          "target": "9848"
+        },
+        {
+          "direction": "southwest",
+          "target": "18587"
+        },
+        {
+          "direction": "northwest",
+          "target": "9761"
+        }
+      ],
+      "title": "At a convergence of paths",
+      "id": 18583
+    },
+    "18587": {
+      "coord": {
+        "x": 2,
+        "y": 10,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "northeast",
+          "target": "18583"
+        },
+        {
+          "direction": "west",
+          "target": "18337"
+        }
+      ],
+      "title": "Along the trodden pathway",
+      "id": 18587
+    },
+    "18757": {
+      "coord": {
+        "x": 5,
+        "y": 15,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "up",
+          "target": "18759"
+        },
+        {
+          "direction": "out",
+          "door": "1",
+          "target": "9945"
+        }
+      ],
+      "title": "Inside the bright red silo",
+      "id": 18757
+    },
+    "18759": {
+      "coord": {
+        "x": 5,
+        "y": 16,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "down",
+          "target": "18757"
+        }
+      ],
+      "title": "Loft at the top of the silo",
+      "id": 18759
+    },
+    "18761": {
+      "coord": {
+        "x": 4,
+        "y": 13,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "north",
+          "target": "18766"
+        },
+        {
+          "direction": "east",
+          "target": "9932"
+        }
+      ],
+      "title": "Wandering amidst the waves of grain",
+      "id": 18761
+    },
+    "18766": {
+      "coord": {
+        "x": 4,
+        "y": 14,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "south",
+          "target": "18761"
+        },
+        {
+          "direction": "west",
+          "target": "18769"
+        }
+      ],
+      "title": "Lost in the brilliant, golden fields",
+      "id": 18766
+    },
+    "18769": {
+      "coord": {
+        "x": 3,
+        "y": 14,
+        "z": 0
+      },
+      "environment": {
+        "id": "13",
+        "color": "5",
+        "htmlcolor": "#41ab2f",
+        "name": "Valley"
+      },
+      "exits": [
+        {
+          "direction": "east",
+          "target": "18766"
+        }
+      ],
+      "title": "A small meadow at the edge the fields",
+      "id": 18769
+    },
+    "58350": {
+      "coord": {
+        "x": -1,
+        "y": -3,
+        "z": 0
+      },
+      "environment": {
+        "id": "8",
+        "color": "13",
+        "htmlcolor": "#bda0cb",
+        "name": "Urban"
+      },
+      "exits": [
+        {
+          "direction": "west",
+          "target": "6226"
+        }
+      ],
+      "title": "Treacletart's Confectionery",
+      "id": 58350
+    }
+  }
+}

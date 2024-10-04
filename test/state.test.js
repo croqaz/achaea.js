@@ -1,8 +1,7 @@
 import { expect, test } from 'bun:test';
 import * as g from '../achaea/core/gmcp.js';
 import * as s from '../achaea/core/state.js';
-
-const sleep = (s) => new Promise((r) => setTimeout(r, s * 1000));
+import { sleep } from '../achaea/core/util.js';
 
 test('char status & vitals', () => {
   g.processGMCP(`Char.Status {
