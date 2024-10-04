@@ -50,11 +50,7 @@ export function sleep(sec: number) {
  * https://github.com/mathigon/core.js/blob/master/src/utilities.ts
  * (C) Philipp Legner & contributors
  */
-export function throttle<Args extends unknown[]>(
-  fn: (...args: Args) => void,
-  t = 1,
-  forceDelay = false,
-) {
+export function throttle<Args extends unknown[]>(fn: (...args: Args) => void, t = 1, forceDelay = false) {
   let delay = false;
   let repeat = false;
   return (...args: Args) => {

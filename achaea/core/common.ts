@@ -519,9 +519,7 @@ Stannum       When eaten, cures various afflictions relating to your sanity.
     return [name.toLowerCase(), { long }];
   });
 
-export const MINERALS = u.freeze(
-  u(Object.fromEntries(_minerals_short), Object.fromEntries(_minerals_long)),
-);
+export const MINERALS = u.freeze(u(Object.fromEntries(_minerals_short), Object.fromEntries(_minerals_long)));
 // Release memory
 _minerals_short = null;
 _minerals_long = null;
@@ -613,12 +611,7 @@ export function findVenom(name: string) {
   const result = [];
   name = name.toLowerCase();
   for (const [n, info] of Object.entries(VENOMS)) {
-    if (
-      name === n ||
-      info.aff.startsWith(name) ||
-      info.short.includes(name) ||
-      info.long.includes(name)
-    ) {
+    if (name === n || info.aff.startsWith(name) || info.short.includes(name) || info.long.includes(name)) {
       result.push({ name: n, ...info });
     }
   }
@@ -635,12 +628,7 @@ export function findRune(name: string) {
   const result = [];
   name = name.toLowerCase();
   for (const [n, info] of Object.entries(RUNES)) {
-    if (
-      name === n ||
-      info.symbol.includes(name) ||
-      info.effect.includes(name) ||
-      info.short.includes(name)
-    ) {
+    if (name === n || info.symbol.includes(name) || info.effect.includes(name) || info.short.includes(name)) {
       result.push({ name: n, ...info });
     }
   }

@@ -413,8 +413,6 @@ function displayBattle(data) {
   const elem = document.getElementById('battle');
   const wrap = document.getElementById('battleWrap');
   const hpNow = document.getElementById('targetHpnow');
-  const rageBar = document.getElementById('rageBar');
-  const rageNow = document.getElementById('selfRageNow');
   let html = '';
   let round = '';
   if (data.rounds) {
@@ -427,14 +425,6 @@ function displayBattle(data) {
     if (npcElem) npcElem.classList.add('c-red');
   } else if (data.target) {
     html += `<h5>Hunting: <i>${data.target}</i> !${round}</h5>`;
-  }
-  if (data.rage && data.rage > 1) {
-    if (data.rage > 100) data.rage = 100;
-    rageBar.style.display = 'flex';
-    rageNow.title = `Rage: ${data.rage}`;
-    rageNow.style.width = `${data.rage}%`;
-  } else {
-    rageBar.style.display = 'none';
   }
   if (data.tgtHP) {
     hpNow.title = `HP: ${data.tgtHP}`;

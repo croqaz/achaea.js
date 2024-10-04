@@ -45,12 +45,16 @@ Also tracks the times of different balance, to get a feeling of how long each on
 
 It's a client queue, similar to the server-side queue. You can push events that will run when you have balance, equilibrium, or both.
 
+## STATE.Misc
+
+This is a group of variables used by "core" and "extra" to keep track of different states. This is exactly what you should do in "STATE.Custom", but ideally you don't need to touch anything here.
+
 ## STATE.Custom
 
-This is where you can go crazy. Feel free to create your own variables and sync them between aliases & triggers.
+This is where you can go absolutely crazy. Feel free to create your own variables and sync them between your aliases & triggers.
 
 ## Geeky boy say 🤓
 
-Technically, the STATE is not read-only, OK? It's just sealed. But you should try really hard to stay away from changing the core state with code from the `custom/` folder.
+Technically, the STATE is not read-only, OK? It's just sealed. But you should try really hard to stay away from changing the state with code from the `custom/` folder.
 
 Another thing is that you don't really need to use the STATE object for custom state management, you could have a CUSTOMSTATE object, perhaps in `custom/state.ts`. You could initialize this state on startup and change it from aliases and triggers, but I would recommend you keep your state in STATE.Custom.

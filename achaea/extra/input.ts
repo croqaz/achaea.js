@@ -51,12 +51,12 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
       send = false;
       stateStopBattle();
     }
-    if (STATE.Custom.autoWalk && STATE.Custom.autoWalk.walk) {
+    if (STATE.Misc.autoWalk && STATE.Misc.autoWalk.walk) {
       send = false;
-      STATE.Custom.autoWalk.pause();
-      STATE.Custom.autoWalk.walk = null;
+      STATE.Misc.autoWalk.pause();
+      STATE.Misc.autoWalk.walk = null;
     }
-    STATE.Custom.writhe = false;
+    STATE.Misc.writhe = false;
     return send ? 'stop' : '';
   }
 
@@ -64,29 +64,40 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
   // WXX = writhe stop
   // You begin to writhe helplessly, throwing your body off balance
   if (text === 'www') {
-    STATE.Custom.writhe = true;
+    STATE.Misc.writhe = true;
     return 'WRITHE';
   } else if (text === 'wwx' || text === 'wxx') {
-    STATE.Custom.writhe = false;
+    STATE.Misc.writhe = false;
     return '';
   }
 
   // Fill all vials that are not yet full
   //
   if (text === 'filla') {
-    STATE.Custom.filla = true;
+    STATE.Misc.filla = true;
     return 'ELIXLIST';
+  }
+
+  /*
+   * Get X things from rift and give them to Y
+   * Example: og 10 myrrh Romeo
+   */
+  if (firstWord === 'og' && secondWord && parts[2] && parts[3]) {
+    const quantity = secondWord;
+    const riftItem = parts[2];
+    const somebody = parts[3];
+    return `OUTR ${quantity} ${riftItem} && GIVE ${quantity} ${riftItem} TO ${somebody}`;
   }
 
   // Collect wares DB
   //
   if (firstWord === 'wares' || (firstWord === 'cart' && secondWord === 'wares')) {
-    STATE.Custom.waresDB = true;
+    STATE.Misc.waresDB = true;
     return text;
   } //
   // Collect whois DB
   else if (firstWord === 'bw' || firstWord === 'qwho') {
-    STATE.Custom.whoisDB = true;
+    STATE.Misc.whoisDB = true;
     return text;
   } else if (text === 'll') {
     /*
@@ -141,33 +152,30 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
        * Auto mapper/ walking...
        * GOTO 1234 | START | PAUSE | STOP | NEXT | PREV
        */
-      if (secondWord === 'stop' && STATE.Custom.autoWalk && STATE.Custom.autoWalk.walk) {
+      if (secondWord === 'stop' && STATE.Misc.autoWalk && STATE.Misc.autoWalk.walk) {
         ee.emit('sys:text', `<b>[Path]</b>: Stopping!`);
-        STATE.Custom.autoWalk.pause();
-        STATE.Custom.autoWalk.walk = null;
+        STATE.Misc.autoWalk.pause();
+        STATE.Misc.autoWalk.walk = null;
         return;
       }
 
       if (secondWord === 'next' || secondWord === 'prev') {
-        const walk = STATE.Custom.autoWalk ? STATE.Custom.autoWalk.walk : null;
+        const walk = STATE.Misc.autoWalk ? STATE.Misc.autoWalk.walk : null;
         if (walk) {
           const n = walk[secondWord]();
           if (n && n.dir) {
             ee.emit('user:text', n.dir);
           } else {
-            ee.emit(
-              'sys:text',
-              '<i class="c-dim c-red"><b>[Path]</b>: Direction not defined!</i>',
-            );
+            ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Direction not defined!</i>');
           }
         } else {
           ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Walk not defined!</i>');
         }
       } else if (secondWord === 'pause' || secondWord === 'start') {
-        const walk = STATE.Custom.autoWalk ? STATE.Custom.autoWalk.walk : null;
+        const walk = STATE.Misc.autoWalk ? STATE.Misc.autoWalk.walk : null;
         if (walk) {
           ee.emit('sys:text', `<b>[Path]</b>: Walk ${secondWord}!`);
-          STATE.Custom.autoWalk[secondWord]();
+          STATE.Misc.autoWalk[secondWord]();
         } else {
           ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Walk not defined!</i>');
         }
@@ -176,9 +184,11 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
       else if (+secondWord) {
         setTimeout(async function () {
           const fromID = STATE.Room.num.toString();
-          STATE.Custom.autoWalk = await w.autoWalker(fromID, secondWord, { type: otherWords });
-          if (STATE.Custom.autoWalk && STATE.Custom.autoWalk.walk) {
-            const len = STATE.Custom.autoWalk.walk.path.length;
+          STATE.Misc.autoWalk = await w.autoWalker(fromID, secondWord, {
+            type: otherWords,
+          });
+          if (STATE.Misc.autoWalk && STATE.Misc.autoWalk.walk) {
+            const len = STATE.Misc.autoWalk.walk.path.length;
             const m = `<b>[Path]</b>: Walk from: ${fromID} to: ${secondWord} is <b>${len} rooms</b> distance.`;
             ee.emit('sys:text', m);
           }
@@ -210,15 +220,13 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
             env: x.environment,
           };
         });
-        if (!arr.length)
-          ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Room not found!</i>');
+        if (!arr.length) ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Room not found!</i>');
         else ee.emit('sys:html', htmlTable(arr));
       } //
       // Map find area
       else if (secondWord === 'area') {
         const arr = m.findAreas(otherWords);
-        if (!arr.length)
-          ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Area not found!</i>');
+        if (!arr.length) ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Area not found!</i>');
         else ee.emit('sys:html', htmlTable(arr));
       } //
       // Map find the middle of an area
@@ -313,7 +321,13 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
 
   // Run custom function
   if (customProcessUserInput) {
-    text = customProcessUserInput({ text, parts, firstWord, secondWord, otherWords });
+    text = customProcessUserInput({
+      text,
+      parts,
+      firstWord,
+      secondWord,
+      otherWords,
+    });
   }
 
   return text;

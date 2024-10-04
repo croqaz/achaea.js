@@ -30,7 +30,7 @@ export default function processTriggers(text: string, normText: string) {
   }
 
   // Thief protection
-  if (STATE.Custom.greed && text.includes('A feeling of generosity spreads throughout you.')) {
+  if (STATE.Misc.greed && text.includes('A feeling of generosity spreads throughout you.')) {
     ee.emit('user:text', 'QUEUE PREPEND e SELFISHNESS');
   }
 
@@ -54,13 +54,21 @@ export default function processTriggers(text: string, normText: string) {
 
   // Fill all elixirs
   //
-  if (STATE.Custom.filla && text.includes(' vial ')) {
+  if (STATE.Misc.filla && text.includes('  Fluid  ')) {
     const elixlist = p.parseElixList(text);
     if (elixlist.length) {
-      STATE.Custom.filla = false;
+      let toFill = 0;
+      STATE.Misc.filla = false;
       for (const elem of elixlist) {
-        if (elem.sips <= 190) ee.emit('user:text', `FILL ${elem.type} WITH ${elem.type} FROM rift`);
+        if (elem.sips < 190) {
+          toFill++;
+          ee.emit('user:text', `FILL ${elem.type} WITH ${elem.type} FROM rift`);
+        }
       }
+      if (toFill)
+        setTimeout(() => {
+          ee.emit('sys:text', `Tried to fill ${toFill} vials.`);
+        }, 1000);
     }
   }
 
@@ -130,10 +138,10 @@ export default function processTriggers(text: string, normText: string) {
   // Enable/ disable hunting rats
   //
   if (text.includes('You will now notice the movement of rats. Happy hunting!')) {
-    STATE.Custom.rats = true;
+    STATE.Misc.rats = true;
     return;
   } else if (text.includes('You will no longer take notice of the movement of rats.')) {
-    STATE.Custom.rats = false;
+    STATE.Misc.rats = false;
     return;
   }
 

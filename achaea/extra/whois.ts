@@ -113,7 +113,7 @@ export async function fetchWhois(name: string): Promise<T.DBPlayer> {
 }
 
 export function whoisTriggers(origText: string, normText: string) {
-  const userInput = STATE.Custom.input.trim();
+  const userInput = STATE.Misc.input.trim();
 
   // try to parse Honours/ Whois, to enhance whois DB
   //
@@ -128,8 +128,8 @@ export function whoisTriggers(origText: string, normText: string) {
 
   // auto whois DB
   //
-  if (STATE.Custom.whoisDB && (userInput === 'bw' || userInput === 'qwho')) {
-    STATE.Custom.whoisDB = false;
+  if (STATE.Misc.whoisDB && (userInput === 'bw' || userInput === 'qwho')) {
+    STATE.Misc.whoisDB = false;
     return saveQuickWho(origText);
   }
 }

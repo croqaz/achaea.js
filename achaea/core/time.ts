@@ -1,5 +1,6 @@
 /*
  * A bit magic &hacky, but it works.
+ * This is NOT a linear function, I tried...
  * GMCP DayNight to Achaea hour.
  */
 export function dayNightToHour(dn: number): number {
@@ -37,7 +38,7 @@ export function hourToHuman(h: number): string {
   if (h < 50) return 'dusk';
   if (h < 55) return 'twilight';
   if (h < 60) return 'before midnight';
-  if (h === 60) return 'midnight';
+  if (h >= 60) return 'midnight';
   else return '';
 }
 

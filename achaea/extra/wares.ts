@@ -23,12 +23,12 @@ export async function saveWares(text: string) {
 }
 
 export function waresTriggers(origText: string, normText: string) {
-  const userInput = STATE.Custom.input.trim();
+  const userInput = STATE.Misc.input.trim();
 
   // auto wares DB
   //
   if (
-    STATE.Custom.waresDB &&
+    STATE.Misc.waresDB &&
     (userInput === 'wares' || userInput === 'cart wares') &&
     (normText.includes('Proprietor:') || normText.includes('[File continued via MORE]'))
   ) {
@@ -44,7 +44,7 @@ export function waresTriggers(origText: string, normText: string) {
     if (normText.includes('[Type MORE if you wish to continue reading.')) {
       ee.emit('user:text', 'more');
     } else {
-      STATE.Custom.waresDB = false;
+      STATE.Misc.waresDB = false;
     }
     return saveWares(origText);
   }

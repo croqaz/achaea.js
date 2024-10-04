@@ -5,7 +5,7 @@ function procesRound() {
   /*
    * Run automation on a new round
    */
-  const userInput: string = STATE.Custom.input;
+  const userInput: string = STATE.Misc.input;
 
   // Count battle rounds
   //
@@ -16,7 +16,7 @@ function procesRound() {
 
   // Writhe forever (until stopped)
   //
-  if (STATE.Custom.writhe && userInput === 'www') {
+  if (STATE.Misc.writhe && userInput === 'www') {
     ee.emit('user:text', 'WRITHE');
   }
 

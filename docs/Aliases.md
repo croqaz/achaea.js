@@ -81,8 +81,8 @@ Another example that sends a command to the game and waits for a trigger to do s
 //
 if (text === 'greed') {
     // toggle boolean value
-    STATE.Custom.greed = !STATE.Custom.greed;
-    if (STATE.Custom.greed) {
+    STATE.Misc.greed = !STATE.Misc.greed;
+    if (STATE.Misc.greed) {
         return 'selfishness';
     } else {
         return 'generosity';
@@ -95,7 +95,7 @@ With this new state, this is what happens in the triggers:
 ```ts
 // Thief protection trigger
 //
-if (STATE.Custom.greed && text.includes('A feeling of generosity spreads throughout you.')) {
+if (STATE.Misc.greed && text.includes('A feeling of generosity spreads throughout you.')) {
     ee.emit('user:text', 'QUEUE PREPEND e SELFISHNESS');
 }
 ```
@@ -108,7 +108,7 @@ Another complex alias with a command and a trigger:
 //
 if (firstWord === 'wares' || (firstWord === 'cart' && secondWord === 'wares')) {
     // prepare a state for triggers
-    STATE.Custom.waresDB = true;
+    STATE.Misc.waresDB = true;
     // send back the same text to the game
     return text;
 }
@@ -120,7 +120,7 @@ With this new state, this is what happens in the triggers:
 // Collect wares DB trigger
 //
 if (
-    STATE.Custom.waresDB &&
+    STATE.Misc.waresDB &&
     (userInput === 'wares' || userInput === 'cart wares') &&
     (normText.includes('Proprietor:') || normText.includes('[File continued via MORE]'))
 ) {
@@ -129,7 +129,7 @@ if (
     if (normText.includes('[Type MORE if you wish to continue reading.')) {
       ee.emit('user:text', 'more');
     } else {
-      STATE.Custom.waresDB = false;
+      STATE.Misc.waresDB = false;
     }
     // parse the text and save
     return saveWares(origText);

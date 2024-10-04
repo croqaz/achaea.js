@@ -1,6 +1,7 @@
 import ee from '../events/index.ts';
 import * as state from './state.ts';
 import { STATE } from './state.ts';
+import { queueCmd } from './queue.ts';
 import extraProcessUserInput from '../extra/input.ts';
 
 // let count = 1;
@@ -18,13 +19,30 @@ export default function processUserInput(text: string): string | void {
 
   // Thief protection
   //
-  if (text === 'greed') {
-    STATE.Custom.greed = !STATE.Custom.greed;
-    if (STATE.Custom.greed) {
+  if (text === 'greedy') {
+    STATE.Misc.greed = !STATE.Misc.greed;
+    if (STATE.Misc.greed) {
       return 'selfishness';
     } else {
       return 'generosity';
     }
+  } //
+  // Hacked "generosity" command, when greediness is enabled
+  else if (STATE.Misc.greed && text === 'generosity') {
+    STATE.Misc.greed = false;
+    return text;
+  } //
+  // Hacked "give" command, when greediness is enabled
+  else if (STATE.Misc.greed && parts[0] === 'give' && parts.length > 3) {
+    STATE.Misc.greed = false;
+    // generosity & selfishness require equilibrium
+    queueCmd('eq', 'generosity');
+    queueCmd('eq', text);
+    queueCmd('eq', 'selfishness');
+    setTimeout(() => {
+      STATE.Misc.greed = true;
+    }, 1000);
+    return '';
   }
 
   // Special commands
@@ -40,7 +58,15 @@ export default function processUserInput(text: string): string | void {
     }
 
     // Debug commands
-    else if (cmd === 'me') {
+    else if (cmd === 'setup') {
+      ee.emit('user:text', 'config AdvancedCuring on');
+      ee.emit('user:text', 'config AutoOpenDoors on');
+      ee.emit('user:text', 'config CommandSeparator &&');
+      ee.emit('user:text', 'config ScreenWidth 0');
+      ee.emit('user:text', 'config ShowQueueAlerts on');
+      ee.emit('user:text', 'config UniversalAfflictionMessages on');
+      return;
+    } else if (cmd === 'me') {
       const x = JSON.stringify(STATE.Me, null, 2);
       ee.emit('sys:text', `ME: ${x}`);
       return;
@@ -63,7 +89,7 @@ export default function processUserInput(text: string): string | void {
 
   // The user will quit
   if (text === 'quit') {
-    STATE.Custom.quitting = true;
+    STATE.Misc.quitting = true;
   }
 
   const extra = extraProcessUserInput(text, parts);

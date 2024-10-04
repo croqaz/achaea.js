@@ -6,7 +6,6 @@ import * as T from '../types.ts';
 import ee from '../events/index.ts';
 import ansiToHtml from './ansi.ts';
 import { MAP } from '../maps/index.ts';
-import * as util from './util.ts';
 import * as t from './time.ts';
 
 /*
@@ -103,13 +102,13 @@ export var STATE: T.StateType = Object.seal({
     day: '0',
     mon: '0',
     month: '..',
-    season: '..',
+    season: '',
     year: '100',
     hour: '0',
-    hhour: '..',
-    rlhm: 'H:M',
+    hhour: '',
+    rlhm: '', // HH:MM
     daynight: '1',
-    moonphase: '..',
+    moonphase: 'New Moon',
     time: 'It is deep night in Achaea, before midnight.',
   }),
   //
@@ -130,7 +129,7 @@ export var STATE: T.StateType = Object.seal({
   //
   Queue: Object.seal({ bal: [], eq: [], eb: [] }),
   //
-  Custom: {
+  Misc: {
     // last X game texts
     texts: [],
     // user's current input
@@ -146,19 +145,23 @@ export var STATE: T.StateType = Object.seal({
     getPlants: false, // gather/ harvest?
     getMinerals: false,
     quitting: false,
-    //
+  },
+  //
+  Custom: {
+    // user's config
+    // ...
   },
 });
 
-// Hack to keep a frozen clone clone of the initial custom state
-const defaultMUD: Record<string, any> = Object.freeze(JSON.parse(JSON.stringify(STATE.Custom)));
+// Hack to keep a frozen clone clone of the initial misc state
+const defaultMUD: Record<string, any> = Object.freeze(JSON.parse(JSON.stringify(STATE.Misc)));
 // Reset to default state
 export function resetDefaultState() {
-  // Seal & clone the default object, to re-use it later
-  STATE.Custom = Object.seal(JSON.parse(JSON.stringify(defaultMUD)));
+  // Seal & clone the misc object, to re-use it later
+  STATE.Misc = Object.seal(JSON.parse(JSON.stringify(defaultMUD)));
 }
 
-function addToStateList(key: string, list, value) {
+function addToStateList(key: string, list: any[], value: any) {
   if (!STATE[key]) {
     console.error('Wrong STATE key!', key);
     return;
@@ -170,7 +173,7 @@ function addToStateList(key: string, list, value) {
   STATE[key][list].push(value);
 }
 
-function remFromStateList(key: string, list, value) {
+function remFromStateList(key: string, list: any[], value: any) {
   if (!STATE[key]) {
     console.error('Wrong STATE key!', key);
     return;
@@ -189,7 +192,7 @@ function remFromStateList(key: string, list, value) {
   }
 }
 
-function updateMyself(meta) {
+function updateMyself(meta: Record<string, any>) {
   for (const k of Object.keys(meta)) {
     // Ignore inexistent fields
     if (STATE.Me[k] === undefined) {
@@ -328,7 +331,7 @@ export function gmcpProcessChar(_: string, data: T.GmcpChar) {
         }
       }
       //
-      // Special display race for Druid
+      // Special display race for Metamorphs
       // TODO: more classes
       else if (cs.startsWith('Morph:')) {
         const [, r] = cs.split(': ');
@@ -539,7 +542,7 @@ export function gmcpProcessSkills(type: string, data: any) {
 
 export function gmcpProcessRoomInfo(_type: string, data: T.GmcpRoom) {
   // TODO :: navigation history
-  // STATE.Custom.walkHist.push({ id: data.num, name: data.name });
+  // STATE.Misc.walkHist.push({ id: data.num, name: data.name });
   //
   const mapRoom = MAP.rooms[data.num];
   // Enhance GMCP room info with data from the map JSON
@@ -604,7 +607,8 @@ export function gmcpProcessRoomPlayers(type: string, data) {
     // Highlight player's own city
     if (city === STATE.Me.city) city = '★ ' + city;
     const race = obj.race ? obj.race.toTitleCase() + ' ' : '';
-    return `<span class="${obj.cls}">${obj.fullname}, ${race}lvl.${obj.level}, <b>${city}</b></span>`;
+    const lvl = obj.level ? `lvl.${obj.level},` : '';
+    return `<span class="${obj.cls}">${obj.fullname}, ${race}${lvl} <b>${city}</b></span>`;
   };
 
   if (type === 'Room.Players') {
@@ -655,9 +659,9 @@ export function gmcpProcessRoomPlayers(type: string, data) {
       const p = await getPlayer(data);
       const span = playerSpan(p);
       if (span) {
-        ee.emit('sys:text', `<b>Players -- </b>${span}`);
+        ee.emit('sys:text', `<b>Players --</b>${span}`);
       } else {
-        ee.emit('sys:text', `<b>Players -- </b>${data}`);
+        ee.emit('sys:text', `<b>Players --</b>${data}`);
       }
     }, 1);
     STATE.Room.players = STATE.Room.players.filter((x) => x.name !== (data as string));
@@ -677,8 +681,11 @@ export function gmcpProcessRoomPlayers(type: string, data) {
 
 export function gmcpProcessTime(type: string, data: T.GmcpTime) {
   if (type === 'IRE.Time.List') {
+    // This contains: day, mon, month, year, hour, time, moonphase & daynight
     STATE.Time = data;
   } else if (type === 'IRE.Time.Update') {
+    // This usually contains only DayNight,
+    // but sometimes contains all fields
     for (const k of Object.keys(data)) {
       // Ignore inexistent fields so the Time object doesn't explode
       if (STATE.Time[k] === undefined) {
@@ -686,17 +693,19 @@ export function gmcpProcessTime(type: string, data: T.GmcpTime) {
       }
       STATE.Time[k] = data[k];
     }
-    if (data.daynight) {
-      // Calculate Hour
-      STATE.Time.hour = t.dayNightToHour(parseInt(data.daynight));
-      // Human hour names
-      STATE.Time.hhour = t.hourToHuman(STATE.Time.hour);
-      // Real-life hour:minute
-      STATE.Time.rlhm = t.achaeaHourToRLhour(STATE.Time.hour);
-    }
   }
+  if (!data.hour) {
+    // Calculate Hour
+    STATE.Time.hour = t.dayNightToHour(parseInt(data.daynight));
+  }
+  // Human hour names
+  STATE.Time.hhour = t.hourToHuman(STATE.Time.hour as number);
+  // Real-life hour:minute
+  STATE.Time.rlhm = t.achaeaHourToRLhour(STATE.Time.hour as number);
+  if (data.mon) {
     // Add Season
     STATE.Time.season = t.monthToSeason(data.mon);
-    // Push event
+  }
+  // Push event
   ee.emit('time:update', STATE.Time);
 }

@@ -10,8 +10,8 @@ export default function processTriggers(text: string, normText: string) {
   // History of last X game texts,
   // can be used by advanced triggers
   //
-  // STATE.Custom.texts.push(text);
-  // if (STATE.Custom.texts.length > 3) STATE.Custom.texts.shift();
+  // STATE.Misc.texts.push(text);
+  // if (STATE.Misc.texts.length > 3) STATE.Misc.texts.shift();
 
   // First thing after correct login
   //
@@ -24,7 +24,7 @@ export default function processTriggers(text: string, normText: string) {
   // Make sure the user is really quitting
   //
   if (
-    STATE.Custom.quitting &&
+    STATE.Misc.quitting &&
     normText.includes('You grow still and begin to silently pray for preservation of your soul')
   ) {
     // Session finish time
