@@ -3,6 +3,7 @@
  */
 import './auto.ts';
 import './gold.ts';
+import './gather.ts';
 import './wares.ts';
 import './whois.ts';
 import './rooms.ts';

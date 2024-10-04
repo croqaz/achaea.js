@@ -147,6 +147,29 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
       // ee.emit('user:text', `SAY TO ${npc} errand`);
       ee.emit('user:text', `SAY TO ${npc} quest`);
       ee.emit('user:text', `SAY TO ${npc} job`);
+    } else if (fullCmd === 'ea') {
+      /*
+       * Extract all minerals
+       * ea = extract all (Transmutation skill)
+       */
+      STATE.Misc.getMinerals = true;
+      return 'MINERALS';
+    } else if (fullCmd === 'ha' || fullCmd === 'ga' || fullCmd === 'gh') {
+      /*
+       * Harvest plants
+       * Gather materials & butcher for reagents
+       */
+      STATE.Misc.getPlants = true;
+      return 'PLANTS';
+    } else if (fullCmd === 'ggg') {
+      /*
+       * Harvest & gather & extract
+       * ha = harvest all (Harvesting skill)
+       * ga = gather all (Gathering skill)
+       */
+      STATE.Misc.getPlants = true;
+      STATE.Misc.getMinerals = true;
+      return 'PLANTS && MINERALS';
     } else if (firstWord === '//goto') {
       /*
        * Auto mapper/ walking...
