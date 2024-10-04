@@ -2,6 +2,8 @@ import { expect, test } from 'bun:test';
 import * as g from '../achaea/core/gmcp.js';
 import * as s from '../achaea/core/state.js';
 
+const sleep = (s) => new Promise((r) => setTimeout(r, s * 1000));
+
 test('char status & vitals', () => {
   g.processGMCP(`Char.Status {
       "name": "X", "fullname": "X Abc", "age": "18", "race": "Mhun", "specialisation": "",
@@ -170,10 +172,11 @@ test('char wielded state', () => {
   expect(s.STATE.Me.items.length).toBeFalsy();
 });
 
-test('room players state', () => {
+test('room players state', async () => {
   expect(s.STATE.Room.players.length).toBeFalsy();
 
   g.processGMCP('Room.AddPlayer { "name": "Abc", "fullname": "The Abc" }');
+  await sleep(0.1);
   expect(s.STATE.Room.players[0].name).toBe('Abc');
 
   // try to remove inexistent player
