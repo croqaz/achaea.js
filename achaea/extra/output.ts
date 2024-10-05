@@ -5,7 +5,6 @@ let customProcessDisplayText;
 try {
   // @ts-ignore: Types
   customProcessDisplayText = require('../../custom/output.ts').default;
-  // console.log('Custom user output function loaded!');
 
   // Watch for changes in this file and live reload
   const fileWatcher = chokidar.watch('./custom/output.ts', {

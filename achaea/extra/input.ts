@@ -12,7 +12,6 @@ let customProcessUserInput;
 try {
   // @ts-ignore: Types
   customProcessUserInput = require('../../custom/input.ts').default;
-  // console.log('Custom user input function loaded!');
 
   // Watch for changes in this file and live reload
   const fileWatcher = chokidar.watch('./custom/input.ts', {
@@ -50,6 +49,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
     if (STATE.Battle.active || STATE.Battle.combat) {
       send = false;
       stateStopBattle();
+      STATE.Battle.auto = false;
     }
     if (STATE.Misc.autoWalk && STATE.Misc.autoWalk.walk) {
       send = false;
@@ -147,6 +147,13 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
       // ee.emit('user:text', `SAY TO ${npc} errand`);
       ee.emit('user:text', `SAY TO ${npc} quest`);
       ee.emit('user:text', `SAY TO ${npc} job`);
+    } else if (fullCmd === 'gold') {
+      /*
+       * Gold pickup toggle
+       */
+      STATE.Misc.gold = !STATE.Misc.gold;
+      ee.emit('sys:text', `<b>[Gold]</b>: Pickup is ${STATE.Misc.gold ? 'on' : 'off'}.`);
+      return;
     } else if (fullCmd === 'ea') {
       /*
        * Extract all minerals

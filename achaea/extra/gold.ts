@@ -1,4 +1,5 @@
 import ee from '../events/index.ts';
+import { STATE } from '../core/state.ts';
 
 const gold1 = /sovereigns?[ \n\r]+spills?[ \n\r]+from[ \n\r]+the[ \n\r]+corpse\./;
 const gold2 = /of[ \n\r]+golden[ \n\r]+sovereigns[ \n\r]+twinkles[ \n\r]+and[ \n\r]+gleams\./;
@@ -10,10 +11,11 @@ export function handleGold(text: string) {
    * Prosperian Attractor artefact: 200 credits
    */
   if (
-    text.includes('drops some golden sovereigns onto the ground.') ||
-    gold1.test(text) ||
-    gold2.test(text) ||
-    gold3.test(text)
+    STATE.Misc.gold &&
+    (text.includes('drops some golden sovereigns onto the ground.') ||
+      gold1.test(text) ||
+      gold2.test(text) ||
+      gold3.test(text))
   ) {
     ee.emit('user:text', 'QUEUE ADD eb GET GOLD');
   }

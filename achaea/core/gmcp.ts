@@ -21,6 +21,10 @@ export function gmcpSupports() {
   return Buffer.from(`Core.Supports.Set [ ${value} ]`);
 }
 
+export function gmcpTime() {
+  return Buffer.from('IRE.Time.Request');
+}
+
 export function gmcpInventory() {
   return Buffer.from('Char.Items.Inv');
 }
@@ -121,6 +125,7 @@ export function processGMCP(text: string) {
     setTimeout(() => ee.emit('user:gmcp', gmcpRiftItems()), 500);
     // Game has started, enable user logic
     setTimeout(() => ee.emit('game:start'), 750);
+    setTimeout(() => ee.emit('user:gmcp', gmcpTime()), 15_000);
     return;
   }
 

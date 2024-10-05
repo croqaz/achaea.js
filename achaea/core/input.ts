@@ -63,8 +63,7 @@ export default function processUserInput(text: string): string | void {
       ee.emit('user:text', 'config AutoOpenDoors on');
       ee.emit('user:text', 'config CommandSeparator &&');
       ee.emit('user:text', 'config ScreenWidth 0');
-      ee.emit('user:text', 'config ShowQueueAlerts on');
-      ee.emit('user:text', 'config UniversalAfflictionMessages on');
+      ee.emit('user:text', 'config XTERM256 off');
       return;
     } else if (cmd === 'me') {
       const x = JSON.stringify(STATE.Me, null, 2);

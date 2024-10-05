@@ -136,6 +136,7 @@ export var STATE: T.StateType = Object.seal({
     input: '',
     autoWalk: [], // auto-walk state
     walkHist: [], // walk history
+    gold: true, // pickup gold?
     rats: false, // watching for rats?
     greed: false, // auto-keep greedy
     filla: false, // catch elixlist trigger
@@ -659,9 +660,9 @@ export function gmcpProcessRoomPlayers(type: string, data) {
       const p = await getPlayer(data);
       const span = playerSpan(p);
       if (span) {
-        ee.emit('sys:text', `<b>Players --</b>${span}`);
+        ee.emit('sys:text', `<b>Players --</b> ${span}`);
       } else {
-        ee.emit('sys:text', `<b>Players --</b>${data}`);
+        ee.emit('sys:text', `<b>Players --</b> ${data}`);
       }
     }, 1);
     STATE.Room.players = STATE.Room.players.filter((x) => x.name !== (data as string));
