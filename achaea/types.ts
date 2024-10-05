@@ -4,6 +4,7 @@ export interface StateType {
   Battle: StateBattle;
   Time: StateTime;
   Stats: StateStats;
+  Misc: Record<string, any>;
   Custom: Record<string, any>;
   Queue: Record<string, string[]>;
 }

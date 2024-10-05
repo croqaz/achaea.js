@@ -77,7 +77,7 @@ wss.on('connection', function (ws, req) {
   ws.on('message', function (line: string) {
     line = line.toString().trim();
     // Save user's original cmd for later
-    STATE.Custom.input = line;
+    STATE.Misc.input = line;
     try {
       line = processUserInput(line);
       if (line && typeof line === 'string') {

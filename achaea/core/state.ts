@@ -636,6 +636,10 @@ export function gmcpProcessRoomPlayers(type: string, data) {
     }, 0);
   } else if (type === 'Room.AddPlayer') {
     const tsData = data as T.GmcpPlayer;
+    for (const p of STATE.Room.players) {
+      // If the player already exists, return
+      if (p.name === tsData.name) return;
+    }
     setTimeout(async () => {
       const p = await getPlayer(tsData.name);
       const span = playerSpan(p);

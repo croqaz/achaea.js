@@ -88,8 +88,8 @@ function parseWaresLine(line: string): T.DBWares {
 
 export function parseElixList(text: string) {
   const lines = text.split('\n').filter((x) => !!x);
-  if (!lines.length || !lines[1].includes('-------')) return [];
-  const head1 = /Vial[ ]+Fluid[ ]+Sips[ ]+Months$/;
+  if (lines.length < 3 || !lines[1].includes('-------')) return [];
+  const head1 = /Vial[ ]+Fluid[ ]+Sips[ ]+Months/;
   if (!head1.test(lines[0])) return [];
 
   const elixlist = [];

@@ -163,6 +163,12 @@ body {
   z-index: 999;
 }
 
+#rightSide.note {
+  padding: 0.25rem;
+  border-radius: 8px;
+  border: 2px solid #E5E9F0;
+}
+
 #main {
   display: flex;
   grid-column: 3/8;
