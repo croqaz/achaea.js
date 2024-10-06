@@ -10,6 +10,7 @@ export default function processUserInput(args): string | void {
    * Proces user text input, eg: aliases, custom commands.
    * This function HAS TO BE SUPER FAST !!
    * The text returned from this function is sent to Achaea.
+   * Read the docs/Aliases to learn more.
    */
 
   let { text, parts, firstWord, secondWord, otherWords } = args;

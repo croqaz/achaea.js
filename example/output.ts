@@ -9,6 +9,7 @@ export default function processDisplayText(text: string): string {
    * This is raw ANSI text, from the game.
    * It is only used for display in the GUI,
    * it is not used for triggers.
+   * Read the docs/Output to learn more.
    */
 
   // example: make the talisman text super visible
