@@ -42,7 +42,7 @@ displayNote('[NOTE] Something happened and you need to know...');
 // ...
 ```
 
-## logWrite(line)
+### logWrite(line)
 
 Write some text in the LOG file. This is useful for later debug. The text is NOT sent to the game and you can't see it in the interface.
 

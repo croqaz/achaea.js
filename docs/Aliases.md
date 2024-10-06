@@ -62,12 +62,15 @@ For example:
 ( please don't re-implement this command, it is already available )
 
 ```ts
+import { displayText } from '../achaea/core/index.ts';
+// snip ...
+
 if (text.startsWith('//')) {
     const cmd = text.replace(/^[/]+/, '');
     // Run this like: //me to see the User's state tree
     //
     if (cmd === 'me') {
-        ee.emit('sys:text', `ME: ${ JSON.stringify(STATE.Me, null, 2)}`);
+        displayText(`ME: ${JSON.stringify(STATE.Me, null, 2)}`);
         return ''; // <- notice this alias doesn't send anything to the game
     }
 }
