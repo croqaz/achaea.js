@@ -6,7 +6,8 @@ import * as m from '../maps/index.ts';
 import * as w from '../maps/walker.ts';
 import * as comm from '../core/common.ts';
 import { htmlTable } from './table.ts';
-import { listDenizens, stateStopBattle, STATE } from '../core/state.ts';
+import { displayNote, displayText } from '../core/index.ts';
+import { listDenizens, STATE, stateStopBattle } from '../core/state.ts';
 
 let customProcessUserInput;
 try {
@@ -154,6 +155,9 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
       STATE.Misc.gold = !STATE.Misc.gold;
       ee.emit('sys:text', `<b>[Gold]</b>: Pickup is ${STATE.Misc.gold ? 'on' : 'off'}.`);
       return;
+    } else if (firstWord === '//note') {
+      displayNote(parts.slice(1).join(' '));
+      return;
     } else if (fullCmd === 'ea') {
       /*
        * Extract all minerals
@@ -263,7 +267,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
       else if (secondWord === 'mid') {
         const room = m.calcAreaMiddle(otherWords);
         const x = JSON.stringify(room, null, 2);
-        ee.emit('sys:text', `Middle of Area: ${x}`);
+        displayText(`Middle of Area: ${x}`);
       } else {
         ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Unknown MAP command!</i>');
       }
@@ -287,22 +291,22 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
       // eg: DB find herb pear
       if (secondWord === 'herb' || secondWord === 'plant') {
         const r = comm.findHerb(lower);
-        ee.emit('sys:text', JSON.stringify(r, null, 2) + '\n---\n');
+        displayText(JSON.stringify(r, null, 2) + '\n---\n');
       } //
       // eg: DB find mineral aurum
       else if (secondWord === 'mineral') {
         const r = comm.findMineral(lower);
-        ee.emit('sys:text', JSON.stringify(r, null, 2) + '\n---\n');
+        displayText(JSON.stringify(r, null, 2) + '\n---\n');
       } //
       // eg: DB find venom curare
       else if (secondWord === 'venom' || secondWord === 'poison') {
         const r = comm.findVenom(lower);
-        ee.emit('sys:text', JSON.stringify(r, null, 2) + '\n---\n');
+        displayText(JSON.stringify(r, null, 2) + '\n---\n');
       } //
       // eg: DB find rune fehu
       else if (secondWord === 'rune') {
         const r = comm.findRune(lower);
-        ee.emit('sys:text', JSON.stringify(r, null, 2) + '\n---\n');
+        displayText(JSON.stringify(r, null, 2) + '\n---\n');
       } //
       // eg: DB find room parade
       else if (secondWord === 'room') {

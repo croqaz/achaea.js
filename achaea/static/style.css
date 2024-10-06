@@ -163,10 +163,12 @@ body {
   z-index: 999;
 }
 
-#rightSide.note {
+#rightSide .notes {
   padding: 0.25rem;
   border-radius: 8px;
-  border: 2px solid #E5E9F0;
+  border: 1px solid #3B4252;
+  margin-bottom: 2px;
+  background: rgb(97.2967032967, 110.0989010989, 135.7032967033);
 }
 
 #main {

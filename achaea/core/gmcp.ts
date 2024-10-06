@@ -1,5 +1,3 @@
-'use strict';
-
 import process from 'node:process';
 import * as T from '../types.ts';
 
@@ -125,7 +123,8 @@ export function processGMCP(text: string) {
     setTimeout(() => ee.emit('user:gmcp', gmcpRiftItems()), 500);
     // Game has started, enable user logic
     setTimeout(() => ee.emit('game:start'), 750);
-    setTimeout(() => ee.emit('user:gmcp', gmcpTime()), 15_000);
+    // repeat fetch time every X sec
+    // setInterval(() => ee.emit('user:gmcp', gmcpTime()), 60_000);
     return;
   }
 

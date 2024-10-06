@@ -448,41 +448,51 @@ function displayChannel(data) {
   elem.scrollTop = elem.scrollHeight;
 }
 
+const emoji = {
+  0: '🕛',
+  1: '🕐',
+  2: '🕑',
+  3: '🕒',
+  4: '🕓',
+  5: '🕓',
+  6: '🕕',
+  7: '🕖',
+  8: '🕗',
+  9: '🕘',
+  10: '🕙',
+  11: '🕚',
+  12: '🕛',
+  0.5: '🕧',
+  1.5: '🕜',
+  2.5: '🕝',
+  3.5: '🕞',
+  4.5: '🕟',
+  5.5: '🕠',
+  6.5: '🕡',
+  7.5: '🕢',
+  8.5: '🕣',
+  9.5: '🕤',
+  10.5: '🕥',
+  11.5: '🕦',
+  12.5: '🕧',
+};
+const moon = {
+  'New Moon': '🌑',
+  'Waxing Crescent': '🌒',
+  'First Quarter': '🌓',
+  'Waxing Gibbous': '🌔',
+  'Full Moon': '🌕',
+  'Waning Gibbous': '🌖',
+  'Last Quarter': '🌗',
+  'Waning Crescent': '🌘',
+};
+
 function displayDateTime() {
   const elem = document.getElementById('dateTimeWrap');
   if (elem.dataset['human']) {
     elem.innerHTML = `${window.TIME.hhour} | ${window.TIME.season}`;
     return;
   }
-
-  const emoji = {
-    0: '🕛',
-    1: '🕐',
-    2: '🕑',
-    3: '🕒',
-    4: '🕓',
-    5: '🕓',
-    6: '🕕',
-    7: '🕖',
-    8: '🕗',
-    9: '🕘',
-    10: '🕙',
-    11: '🕚',
-    12: '🕛',
-    0.5: '🕧',
-    1.5: '🕜',
-    2.5: '🕝',
-    3.5: '🕞',
-    4.5: '🕟',
-    5.5: '🕠',
-    6.5: '🕡',
-    7.5: '🕢',
-    8.5: '🕣',
-    9.5: '🕤',
-    10.5: '🕥',
-    11.5: '🕦',
-    12.5: '🕧',
-  };
   let key = window.TIME.hour / 2.5;
   let rest = key - parseInt(key);
   if (rest <= 0.25) {
@@ -494,6 +504,7 @@ function displayDateTime() {
   }
   key = parseInt(key) + rest;
   if (key > 12) key -= 12;
-  let html = `${emoji[key]} ${window.TIME.rlhm} | ${window.TIME.day} ${window.TIME.month} ${window.TIME.year}`;
+  let html = `${emoji[key]} ${window.TIME.rlhm} | ${window.TIME.day} ${window.TIME.month}`;
+  html += ` ${window.TIME.year} ${moon[window.TIME.moonphase]}`;
   elem.innerHTML = html;
 }

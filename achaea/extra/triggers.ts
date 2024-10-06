@@ -65,10 +65,11 @@ export default function processTriggers(text: string, normText: string) {
           ee.emit('user:text', `FILL ${elem.type} WITH ${elem.type} FROM rift`);
         }
       }
-      if (toFill)
+      if (toFill) {
         setTimeout(() => {
           ee.emit('sys:text', `Tried to fill ${toFill} vials.`);
         }, 1000);
+      }
     }
   }
 
