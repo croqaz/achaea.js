@@ -232,6 +232,56 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
       }
       return;
       // End of GoTo
+    } else if (firstWord === '//explore') {
+      /*
+       * Auto explore area...
+       * EXPLORE AREA | START | PAUSE | STOP | NEXT | PREV
+       */
+      if (secondWord === 'stop' && STATE.Misc.autoWalk && STATE.Misc.autoWalk.walk) {
+        ee.emit('sys:text', `<b>[Path]</b>: Stopping!`);
+        STATE.Misc.autoWalk.pause();
+        STATE.Misc.autoWalk.walk = null;
+        return;
+      }
+
+      if (secondWord === 'next' || secondWord === 'prev') {
+        const walk = STATE.Misc.autoWalk ? STATE.Misc.autoWalk.walk : null;
+        if (walk) {
+          const n = walk[secondWord]();
+          if (n && n.dir) {
+            ee.emit('user:text', n.dir);
+          } else {
+            ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Direction not defined!</i>');
+          }
+        } else {
+          ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Walk not defined!</i>');
+        }
+      } else if (secondWord === 'pause' || secondWord === 'start') {
+        const walk = STATE.Misc.autoWalk ? STATE.Misc.autoWalk.walk : null;
+        if (walk) {
+          ee.emit('sys:text', `<b>[Path]</b>: Walk ${secondWord}!`);
+          STATE.Misc.autoWalk[secondWord]();
+        } else {
+          ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Walk not defined!</i>');
+        }
+      } else if (secondWord === 'a' || secondWord === 'area') {
+        setTimeout(async function () {
+          const fromID = STATE.Room.num.toString();
+          STATE.Misc.autoWalk = await w.autoWalker(fromID, null, {
+            explore: true,
+            type: 'local',
+          });
+          if (STATE.Misc.autoWalk && STATE.Misc.autoWalk.walk) {
+            const len = STATE.Misc.autoWalk.walk.path.length;
+            const m = `<b>[Path]</b>: Explore area is walk is <b>${len} rooms</b> long...`;
+            displayText(m);
+          }
+        }, 1);
+      } else {
+        ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Unknown EXPLORE command!</i>');
+      }
+      return;
+      // End of Explore
     } else if (firstWord === '//map') {
       /*
        * Query MAP info in game
