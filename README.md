@@ -68,19 +68,22 @@ Has a cute browser GUI. *I think* it's cute. GUI features:
 * //find venom NAME - find and list all venoms matching
 * //find rune NAME - find and list all runes matching
 
-* //map room WHATEVER - try to find the room ID using the MAP data, so you can walk to it
-* //map area WHATEVER - try to find the area ID using the MAP data
-* //map mid UID - try to find the middle room of the area ID, so you can walk to it
+* //map note ... -- save a note for the current room
+* //map notes -- list all the rooms with notes
+* //map room WHATEVER -- try to find the room ID using the MAP data, so you can walk to it
+* //map area WHATEVER -- try to find the area ID using the MAP data
+* //map mid UID -- try to find the middle room of the area ID, so you can walk to it
 
-* //goto UID -- try to walk to a room ID, in the local area
-* //goto UID global -- try to walk to a global room ID, anywhere on the map
+* //go n 2e 3se in 5u nw -- go to a series of directions
+* //go UID -- try to walk to a room ID, in the local area
+* //go UID global -- try to walk to a global room ID, anywhere on the map
 * NOTE: if you can use the server side WALK TO command, you should use it, it's faster and more reliable;
-  After getting close to the place you want to be, you can //goto a room.
-* //goto stop -- stop/pause walking. You can resume with //goto start
-* //goto start -- continue walking on the same path, ONLY IF you are in the same room where you stopped;
-  If you have gone off-course, just call //goto UID again, to calculate a new path
-* //goto next -- take one step towards the room ID, after stop
-* //goto prev -- take one step back to the starting room, after stop
+  After getting close to the place you want to be, you can //go to a room.
+* //go pause -- pause walking. You can resume with //go start
+* //go start -- continue walking on the same path, ONLY IF you are in the same room where you stopped;
+  If you have gone off-course, just call //go UID again, to calculate a new path
+* //go next -- take one step towards the room ID, after stop
+* //go prev -- take one step back to the starting room, after stop
 
 * //explore area -- try to explore all the rooms in one area; this can get stuck
 * //explore stop, start, next, prev -- they work just like the //GOTO command

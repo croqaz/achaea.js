@@ -227,7 +227,7 @@ export function drawMap(data) {
       this.fillColor = COLOR.amber;
       const userInput = document.getElementById('userInput');
       userInput.focus();
-      userInput.value = `//goto ${this.data.id}`;
+      userInput.value = `//go ${this.data.id}`;
       document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
     };
 

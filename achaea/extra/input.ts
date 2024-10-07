@@ -2,10 +2,10 @@ import chokidar from 'chokidar';
 
 import ee from '../events/index.ts';
 import * as db from './leveldb.js';
-import * as m from '../maps/index.ts';
-import * as w from '../maps/walker.ts';
 import * as comm from '../core/common.ts';
 import { htmlTable } from './table.ts';
+import processMapAliases from './map.ts';
+
 import { displayNote, displayText } from '../core/index.ts';
 import { listDenizens, STATE, stateStopBattle } from '../core/state.ts';
 
@@ -181,148 +181,6 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
       STATE.Misc.getPlants = true;
       STATE.Misc.getMinerals = true;
       return 'PLANTS && MINERALS';
-    } else if (firstWord === '//goto') {
-      /*
-       * Auto mapper/ walking...
-       * GOTO 1234 | START | PAUSE | STOP | NEXT | PREV
-       */
-      if (secondWord === 'stop' && STATE.Misc.autoWalk && STATE.Misc.autoWalk.walk) {
-        ee.emit('sys:text', `<b>[Path]</b>: Stopping!`);
-        STATE.Misc.autoWalk.pause();
-        STATE.Misc.autoWalk.walk = null;
-        return;
-      }
-
-      if (secondWord === 'next' || secondWord === 'prev') {
-        const walk = STATE.Misc.autoWalk ? STATE.Misc.autoWalk.walk : null;
-        if (walk) {
-          const n = walk[secondWord]();
-          if (n && n.dir) {
-            ee.emit('user:text', n.dir);
-          } else {
-            ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Direction not defined!</i>');
-          }
-        } else {
-          ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Walk not defined!</i>');
-        }
-      } else if (secondWord === 'pause' || secondWord === 'start') {
-        const walk = STATE.Misc.autoWalk ? STATE.Misc.autoWalk.walk : null;
-        if (walk) {
-          ee.emit('sys:text', `<b>[Path]</b>: Walk ${secondWord}!`);
-          STATE.Misc.autoWalk[secondWord]();
-        } else {
-          ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Walk not defined!</i>');
-        }
-      } //
-      // JS hack to check if param is numeric
-      else if (+secondWord) {
-        setTimeout(async function () {
-          const fromID = STATE.Room.num.toString();
-          STATE.Misc.autoWalk = await w.autoWalker(fromID, secondWord, {
-            type: otherWords,
-          });
-          if (STATE.Misc.autoWalk && STATE.Misc.autoWalk.walk) {
-            const len = STATE.Misc.autoWalk.walk.path.length;
-            const m = `<b>[Path]</b>: Walk from: ${fromID} to: ${secondWord} is <b>${len} rooms</b> distance.`;
-            ee.emit('sys:text', m);
-          }
-        }, 1);
-      } else {
-        ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Unknown GOTO command!</i>');
-      }
-      return;
-      // End of GoTo
-    } else if (firstWord === '//explore') {
-      /*
-       * Auto explore area...
-       * EXPLORE AREA | START | PAUSE | STOP | NEXT | PREV
-       */
-      if (secondWord === 'stop' && STATE.Misc.autoWalk && STATE.Misc.autoWalk.walk) {
-        ee.emit('sys:text', `<b>[Path]</b>: Stopping!`);
-        STATE.Misc.autoWalk.pause();
-        STATE.Misc.autoWalk.walk = null;
-        return;
-      }
-
-      if (secondWord === 'next' || secondWord === 'prev') {
-        const walk = STATE.Misc.autoWalk ? STATE.Misc.autoWalk.walk : null;
-        if (walk) {
-          const n = walk[secondWord]();
-          if (n && n.dir) {
-            ee.emit('user:text', n.dir);
-          } else {
-            ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Direction not defined!</i>');
-          }
-        } else {
-          ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Walk not defined!</i>');
-        }
-      } else if (secondWord === 'pause' || secondWord === 'start') {
-        const walk = STATE.Misc.autoWalk ? STATE.Misc.autoWalk.walk : null;
-        if (walk) {
-          ee.emit('sys:text', `<b>[Path]</b>: Walk ${secondWord}!`);
-          STATE.Misc.autoWalk[secondWord]();
-        } else {
-          ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Walk not defined!</i>');
-        }
-      } else if (secondWord === 'a' || secondWord === 'area') {
-        setTimeout(async function () {
-          const fromID = STATE.Room.num.toString();
-          STATE.Misc.autoWalk = await w.autoWalker(fromID, null, {
-            explore: true,
-            type: 'local',
-          });
-          if (STATE.Misc.autoWalk && STATE.Misc.autoWalk.walk) {
-            const len = STATE.Misc.autoWalk.walk.path.length;
-            const m = `<b>[Path]</b>: Explore area is walk is <b>${len} rooms</b> long...`;
-            displayText(m);
-          }
-        }, 1);
-      } else {
-        ee.emit('sys:text', '<i class="c-dim c-red"><b>[Path]</b>: Unknown EXPLORE command!</i>');
-      }
-      return;
-      // End of Explore
-    } else if (firstWord === '//map') {
-      /*
-       * Query MAP info in game
-       */
-      if (parts.length < 3) {
-        ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Query must specify 3 args!</i>');
-        return;
-      }
-      // Map find room
-      if (secondWord === 'room') {
-        const arr = m.findRooms(otherWords).map((x) => {
-          let name = x.title;
-          if (name.length > 30) name = name.slice(0, 30) + '…';
-          if (x.area.length > 24) x.area = x.area.slice(0, 24) + '…';
-          return {
-            id: x.id,
-            name,
-            areaID: x.areaID,
-            area: x.area,
-            env: x.environment,
-          };
-        });
-        if (!arr.length) ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Room not found!</i>');
-        else ee.emit('sys:html', htmlTable(arr));
-      } //
-      // Map find area
-      else if (secondWord === 'area') {
-        const arr = m.findAreas(otherWords);
-        if (!arr.length) ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Area not found!</i>');
-        else ee.emit('sys:html', htmlTable(arr));
-      } //
-      // Map find the middle of an area
-      else if (secondWord === 'mid') {
-        const room = m.calcAreaMiddle(otherWords);
-        const x = JSON.stringify(room, null, 2);
-        displayText(`Middle of Area: ${x}`);
-      } else {
-        ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Unknown MAP command!</i>');
-      }
-      return;
-      // End of Map command
     } else if (firstWord === '//find') {
       /*
        * Query DB in game
@@ -394,6 +252,10 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
       }
       return;
     }
+
+    // If map aliases are found...
+    //
+    if (processMapAliases(firstWord, secondWord, otherWords, parts)) return;
 
     // TODO :: more commands
     // flee

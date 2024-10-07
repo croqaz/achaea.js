@@ -27,20 +27,45 @@ export const REV_EXITS = Object.freeze({
   southeast: 'nw',
   southwest: 'ne',
   //
-  up: 'down',
-  down: 'up',
+  up: 'd',
+  down: 'u',
   in: 'out',
   out: 'in',
 });
 
+export function parseDirections(line: string, parts: string[]) {
+  const re = new RegExp('^[1-9]{0,2}(?:ne|nw|se|sw|in|out|n|s|e|w|u|d)');
+  if (!parts) parts = line.split(' ').filter((x) => !!x);
+  const dirs = [];
+  for (const p of parts) {
+    const m = p.match(re);
+    if (!m) return null;
+    let dir = m[0];
+    const repeat = parseInt(dir);
+    dir = dir.replace(/^\d+/, '');
+    if (isNaN(repeat) || repeat === 1) dirs.push([dir, 0]);
+    else dirs.push([dir, repeat]);
+  }
+  return dirs;
+}
+
+export function smartMove(dir: string, currRoom: string, nextRoom: string) {
+  /*
+   * TODO: Based on the Next Room, it needs to handle
+   * swim in water
+   * jump over stone/ ice walls
+   * special actions, need to twist/push/pull, or say something
+   */
+  return userText(dir);
+}
+
+//
 // TODO: NEEDS TO HANDLE
 // on the clouds / duanathar
 // "Now now, don't be so hasty!"
 // You slip and fall on the ice as you try to leave ??
 // You stumble through the fog, attempting to find a way out.
 // Some crazy fast river washing you away
-// Special exits, need to twist/push/pull, or Say something
-// Jumping over stone/ ice walls
 // You sweep your trained eye across your surroundings, searching for hidden exits.
 // You spot a hidden exit to the in.
 //
@@ -78,18 +103,20 @@ export async function autoWalker(
 
     // If we are in the room the walker is expecting, move again
     //
-    const currentRoom = STATE.Room.num.toString();
-    if (currentRoom === walk.curr().uid) {
+    const currRoom = STATE.Room.num.toString();
+    if (currRoom === walk.curr().uid) {
       const nextRoom = walk.next();
       if (nextRoom && nextRoom.dir) {
         timer = 0;
         await sleep(walkDelay);
-        return userText(nextRoom.dir);
+        // "smart" logic to decide how to move into next room
+        return smartMove(nextRoom.dir, currRoom, nextRoom.uid);
       } else {
         displayText('<i class="c-dim c-red"><b>[Path]</b>: Cannot move!</i>');
         return pause();
       }
     }
+
     // If we cannot move for a long time, abandon
     //
     if (timer >= MAX_TIME) {
