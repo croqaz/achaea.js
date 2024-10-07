@@ -1,10 +1,9 @@
 // deno-lint-ignore-file no-explicit-any
-'use strict';
-import { italic } from 'ansicolor';
 
+import { italic } from 'ansicolor';
+import ansiToHtml from './ansi.ts';
 import * as T from '../types.ts';
 import ee from '../events/index.ts';
-import ansiToHtml from './ansi.ts';
 import { MAP } from '../maps/index.ts';
 import * as t from './time.ts';
 
@@ -162,7 +161,7 @@ export function resetDefaultState() {
   STATE.Misc = Object.seal(JSON.parse(JSON.stringify(defaultMUD)));
 }
 
-function addToStateList(key: string, list: any[], value: any) {
+function addToStateList(key: string, list: string, value: any) {
   if (!STATE[key]) {
     console.error('Wrong STATE key!', key);
     return;
@@ -174,7 +173,7 @@ function addToStateList(key: string, list: any[], value: any) {
   STATE[key][list].push(value);
 }
 
-function remFromStateList(key: string, list: any[], value: any) {
+function remFromStateList(key: string, list: string, value: any) {
   if (!STATE[key]) {
     console.error('Wrong STATE key!', key);
     return;
@@ -406,7 +405,7 @@ export function gmcpProcessAfflictions(type: string, data) {
     for (const name of tsData) {
       remFromStateList('Me', 'afflictions', name);
       // Hook after removing some aff
-      if (name === 'blackout') {
+      if (name === 'blindness' || name === 'blackout') {
         ee.emit('user:text', 'QL');
       }
     }
@@ -687,7 +686,7 @@ export function gmcpProcessRoomPlayers(type: string, data) {
 export function gmcpProcessTime(type: string, data: T.GmcpTime) {
   if (type === 'IRE.Time.List') {
     // This contains: day, mon, month, year, hour, time, moonphase & daynight
-    STATE.Time = data;
+    STATE.Time = data as T.StateTime;
   } else if (type === 'IRE.Time.Update') {
     // This usually contains only DayNight,
     // but sometimes contains all fields

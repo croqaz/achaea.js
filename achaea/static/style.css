@@ -147,7 +147,7 @@ body {
   max-height: 99.9vh;
   margin: 1px;
   border-right: 1px solid #3B4252;
-  padding: 0.5rem;
+  padding: 0.4rem;
   background: #4C566A;
   overflow-y: scroll;
   position: relative;
@@ -310,7 +310,7 @@ body {
   border: 1px solid #3B4252;
   font-size: 13px;
   top: 2px;
-  right: 2px;
+  right: 0.6rem;
   padding: 0.4rem;
   min-width: 7.5rem;
   white-space: normal;

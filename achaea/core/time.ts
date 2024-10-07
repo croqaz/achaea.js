@@ -15,6 +15,7 @@ export function dayNightToHour(dn: number): number {
  */
 export function achaeaHourToRLhour(h: number): string {
   const raw = h / 2.5;
+  // @ts-ignore: Types
   const hour = parseInt(raw);
   const rest = raw - hour;
   const min = Math.round(rest * 60);

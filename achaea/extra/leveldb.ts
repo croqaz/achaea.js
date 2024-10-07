@@ -40,7 +40,7 @@ export function dbValues(prefix: string, limit = Infinity) {
   return DB.values({ gte: `${prefix}-0`, lte: `${prefix}-zzz`, limit });
 }
 
-export async function dbGet(prefix: string, id) {
+export async function dbGet(prefix: string, id: string | number) {
   // Get DB item by ID
   return await DB.get(`${prefix}-${id}`);
 }
@@ -50,7 +50,7 @@ export async function dbDel(id) {
   return await DB.del(id);
 }
 
-export async function dbSave(prefix: string, item) {
+export async function dbSave(prefix: string, item: Record<string, any>) {
   // The item MUST have an ID
   if (!item.id) {
     return console.error('Cannot DB save! Item ID is null!', item);

@@ -22,7 +22,7 @@ try {
     customProcessDisplayText = require('../../custom/output.ts').default;
   });
 } catch (err) {
-  console.error('Error loading user output function!', err);
+  console.warn('Canot load user output function!', err);
 }
 
 export default function extraProcessDisplayText(text: string): string {

@@ -30,7 +30,7 @@ try {
     customProcessUserInput = require('../../custom/input.ts').default;
   });
 } catch (err) {
-  console.error('Error loading user input function!', err);
+  console.warn('Cannot load user input function!', err);
 }
 
 export default function extraProcessUserInput(text: string, parts: string[]): string | void {

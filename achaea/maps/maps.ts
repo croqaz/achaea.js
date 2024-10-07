@@ -151,7 +151,8 @@ function roomSlowness(uid: string): number {
   const room = MAP.rooms[uid];
   // If the room is not on the map ???
   if (!room) return 4;
-  // If the map didn't define an environment ???
+  // If the map didn't define an environment
+  // some rooms have environment=0 or null
   if (!room.environment) return 4;
 
   const env = room.environment;
