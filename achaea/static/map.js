@@ -55,7 +55,7 @@ export async function fetchRoom() {
   const data = await res.json();
   if (data && data.room && data.room.coord) {
     window.ROOM = { id: data.num, level: data.room.coord.z };
-    console.log('Room:', data.name, window.ROOM);
+    // console.log('Room:', data.name, window.ROOM);
     return data;
   }
 }
@@ -68,9 +68,9 @@ export async function fetchMap(data) {
   const res = await fetch(`/area/${areaID}.json`);
   const area = await res.json();
   // Check no. rooms for this area
-  const noRooms = Object.keys(area.rooms).length;
-  if (noRooms) console.log('Area:', area.name, 'Rooms:', noRooms);
-  else console.warn('Area:', area.name, 'has NO ROOMS!');
+  // const noRooms = Object.keys(area.rooms).length;
+  // if (noRooms) console.log('Area:', area.name, 'Rooms:', noRooms);
+  // else console.warn('Area:', area.name, 'has NO ROOMS!');
 
   window.AREA = area;
 }

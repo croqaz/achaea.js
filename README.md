@@ -55,8 +55,11 @@ Has a cute browser GUI. *I think* it's cute. GUI features:
 * ll - look at all denizens in the room
 * la - look at all players in the room
 
-* //stress ITEM - run all kinds of actions on an item, to see what works (twist, turn, push, pull...)
-* //quest NPC - say all kinds of questy things to an NPC
+* //note -- send a note on the comms right widget for yourself; Nobody else can see it
+* //remind -- just like the note, but with a delay in seconds, minutes, or hours
+
+* //stress ITEM -- run all kinds of actions on an item, to see what works (twist, turn, push, pull...)
+* //quest NPC -- say all kinds of questy things to an NPC
 
 * //find wares ITEM - find and list all matching items from the DB
 * //find whois NAME - find and list all matching players from the DB
@@ -86,7 +89,7 @@ Has a cute browser GUI. *I think* it's cute. GUI features:
 * //go prev -- take one step back to the starting room, after stop
 
 * //explore area -- try to explore all the rooms in one area; this can get stuck
-* //explore stop, start, next, prev -- they work just like the //GOTO command
+* //explore stop, start, next, prev -- they work just like the //go command
 
 * www - writhe forever, to keep yourself off balance
 * wxx - writhe stop, or just STOP

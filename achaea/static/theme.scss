@@ -156,6 +156,7 @@ body {
   background: $nord3;
   overflow-y: scroll;
   position: relative;
+  scrollbar-width: thin;
   scrollbar-color: $nord10 lighten($nord3, 10);
 }
 #rightSide.big {
@@ -189,20 +190,22 @@ body {
   background: lighten($nord3, 10);
   width: calc(100% - 2px);
   height: calc(100% - 2px);
+  max-height: 33.333vh;
 }
 #map.big {
   position: fixed;
   left: 4rem;
   top: 2rem;
+  max-height: 99vh;
   width: calc(100% - 10em);
   height: calc(99vh - 10rem);
   border: 2px solid $nord5;
   z-index: 999;
 }
 #loc, #exits {
+  position: absolute;
   font-size: $font-size - 2;
   background: color.change($nord1, $alpha: 0.5);
-  position: absolute;
 }
 #loc {
   padding: 0.3rem 0.5rem 0.3rem 0.5rem;
@@ -220,6 +223,7 @@ body {
   border-top: 1px solid $nord1;
   border-right: 1px solid $nord1;
   overflow-y: scroll;
+  scrollbar-width: thin;
   scrollbar-color: $nord10 lighten($nord3, 10);
   padding: 0.5rem;
   background: lighten($nord2, 1%);
@@ -229,6 +233,7 @@ body {
   background: $nord3;
   padding: 0.5rem;
   overflow-y: scroll;
+  scrollbar-width: thin;
   scrollbar-color: $nord10 lighten($nord3, 10);
 }
 .roomPlayer:hover, .roomItem:hover {
@@ -302,7 +307,7 @@ body {
   white-space: normal;
   background: color.change(lighten($nord3, 10), $alpha: 0.9);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  z-index: 999;
+  z-index: 990;
 }
 #dateTimeWrap:hover {
   cursor: pointer;

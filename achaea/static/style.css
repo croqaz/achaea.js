@@ -151,6 +151,7 @@ body {
   background: #4C566A;
   overflow-y: scroll;
   position: relative;
+  scrollbar-width: thin;
   scrollbar-color: #5E81AC rgb(97.2967032967, 110.0989010989, 135.7032967033);
 }
 
@@ -187,12 +188,14 @@ body {
   background: rgb(97.2967032967, 110.0989010989, 135.7032967033);
   width: calc(100% - 2px);
   height: calc(100% - 2px);
+  max-height: 33.333vh;
 }
 
 #map.big {
   position: fixed;
   left: 4rem;
   top: 2rem;
+  max-height: 99vh;
   width: calc(100% - 10em);
   height: calc(99vh - 10rem);
   border: 2px solid #E5E9F0;
@@ -200,9 +203,9 @@ body {
 }
 
 #loc, #exits {
+  position: absolute;
   font-size: 13px;
   background: rgba(59, 66, 82, 0.5);
-  position: absolute;
 }
 
 #loc {
@@ -223,6 +226,7 @@ body {
   border-top: 1px solid #3B4252;
   border-right: 1px solid #3B4252;
   overflow-y: scroll;
+  scrollbar-width: thin;
   scrollbar-color: #5E81AC rgb(97.2967032967, 110.0989010989, 135.7032967033);
   padding: 0.5rem;
   background: rgb(69.1223602484, 78.4074534161, 96.9776397516);
@@ -233,6 +237,7 @@ body {
   background: #4C566A;
   padding: 0.5rem;
   overflow-y: scroll;
+  scrollbar-width: thin;
   scrollbar-color: #5E81AC rgb(97.2967032967, 110.0989010989, 135.7032967033);
 }
 
@@ -316,7 +321,7 @@ body {
   white-space: normal;
   background: rgba(97.2967032967, 110.0989010989, 135.7032967033, 0.9);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  z-index: 999;
+  z-index: 990;
 }
 
 #dateTimeWrap:hover {

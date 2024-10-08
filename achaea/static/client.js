@@ -22,7 +22,6 @@ window.addEventListener('load', function () {
   })();
 
   document.body.onkeydown = function (ev) {
-    // console.log(ev);
     // Full expand map
     if (ev.ctrlKey && ev.key === 'm') {
       if (rightElem.classList.contains('big')) {
@@ -108,6 +107,16 @@ window.addEventListener('load', function () {
       }
     }
   };
+  document.body.onpaste = function (ev) {
+    if (ev.target.id === 'userInput') return;
+    // Hack the paste event to paste in the user's input text
+    ev.preventDefault();
+    const paste = (ev.clipboardData || window.clipboardData).getData('text');
+    if (!userInput.value || userInput.value.endsWith(' ') || paste.startsWith(' ')) userInput.value += paste;
+    // Add a space between the existing text, and the paste
+    else userInput.value += ' ' + paste;
+    userInput.focus();
+  };
 
   const dateTime = document.getElementById('dateTimeWrap');
   dateTime.onclick = function switchTimeDisplay() {
@@ -125,6 +134,7 @@ async function startWS() {
   window.WS = new WebSocket(`ws://${location.host}`);
 
   window.WS.onmessage = async function (event) {
+    const gameLog = document.getElementById('gameLog');
     const data = JSON.parse(event.data);
     // console.log(data); // DEBUG
     let text = data.text;
@@ -204,7 +214,7 @@ async function startWS() {
 
     // Check if user has scrolled manually
     // (before adding the new element)
-    const notScrolled = Math.abs(gameLog.scrollTopMax - gameLog.scrollTop) <= 4;
+    const notScrolled = Math.abs(gameLog.scrollHeight - gameLog.scrollTop - gameLog.clientHeight) <= 10;
 
     gameLog.append(txt);
 
