@@ -9,7 +9,13 @@ import * as m from '../achaea/maps/maps.js';
 import * as mi from '../achaea/maps/index.js';
 import { STATE } from '../achaea/core/state.js';
 import { sleep } from '../achaea/core/util.js';
-import { autoWalker, walkDirections, innerWalker, walkRooms } from '../achaea/maps/walker.js';
+import {
+  autoWalker,
+  walkDirections,
+  innerWalker,
+  walkRooms,
+  parseDirections,
+} from '../achaea/maps/walker.js';
 
 const dirName = dirname(fileURLToPath(import.meta.url));
 const LODI = JSON.parse(fs.readFileSync(dirName + '/lodi-map.json'));
@@ -20,6 +26,31 @@ test('area sanity', async () => {
   expect(area.id).toBe(LODI.id);
   expect(area.name.length).toBe(LODI.name.length);
   expect(area.rooms.length).toBe(LODI.rooms.length);
+});
+
+test('directions parse', () => {
+  let dirs = parseDirections('1w e ne 3se 5in 99u d  in  out');
+  expect(dirs.length).toBe(9);
+  expect(dirs).toEqual([
+    ['w', 0],
+    ['e', 0],
+    ['ne', 0],
+    ['se', 3],
+    ['in', 5],
+    ['u', 99],
+    ['d', 0],
+    ['in', 0],
+    ['out', 0],
+  ]);
+
+  dirs = parseDirections('a o i'); // bad directions not allowed
+  expect(dirs).toBeFalsy();
+
+  dirs = parseDirections('a in e');
+  expect(dirs).toBeFalsy();
+
+  dirs = parseDirections('3n -2se'); // negative not allowed
+  expect(dirs).toBeFalsy();
 });
 
 test('auto walk', async () => {

@@ -158,6 +158,18 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
     } else if (firstWord === '//note') {
       displayNote(parts.slice(1).join(' '));
       return;
+    } else if (firstWord === '//remind') {
+      const re = /^[0-9]{1,3}[smh]?$/;
+      if (!re.test(secondWord)) {
+        ee.emit('sys:text', `<i class="c-dim c-red">Invalid delay number! Examples: 30s, or 5m, or 3h.</i>`);
+        return;
+      }
+      let delay = parseInt(secondWord) * 1000;
+      if (secondWord.endsWith('m')) delay = parseInt(secondWord) * 60 * 1000;
+      else if (secondWord.endsWith('h')) delay = parseInt(secondWord) * 3600 * 1000;
+      setTimeout(() => {
+        displayNote(otherWords);
+      }, delay);
     } else if (fullCmd === 'ea') {
       /*
        * Extract all minerals

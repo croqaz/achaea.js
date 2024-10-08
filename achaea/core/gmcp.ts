@@ -123,8 +123,8 @@ export function processGMCP(text: string) {
     setTimeout(() => ee.emit('user:gmcp', gmcpRiftItems()), 500);
     // Game has started, enable user logic
     setTimeout(() => ee.emit('game:start'), 750);
-    // repeat fetch time every X sec
-    // setInterval(() => ee.emit('user:gmcp', gmcpTime()), 60_000);
+    // Repeat GMCP time every X sec
+    setInterval(() => ee.emit('user:gmcp', gmcpTime()), 180_000);
     return;
   }
 

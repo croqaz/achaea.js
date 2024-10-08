@@ -15,11 +15,14 @@ test('normalize text', () => {
 test('title-case', () => {
   expect(u.toTitleCase('aSd Zxc')).toBe('Asd zxc');
   expect(u.toTitleCase('QWE ZXC')).toBe('Qwe zxc');
+  expect(u.toTitleCase(' \t\n')).toBe(' \t\n');
 });
 
 test('day-night to hour', () => {
   expect(t.dayNightToHour(0)).toBe(12);
   expect(t.dayNightToHour(3)).toBe(13);
+  expect(t.dayNightToHour(6)).toBe(14);
+  expect(t.dayNightToHour(9)).toBe(15);
   expect(t.dayNightToHour(24)).toBe(20);
   expect(t.dayNightToHour(30)).toBe(22);
   expect(t.dayNightToHour(39)).toBe(25);
@@ -33,17 +36,21 @@ test('day-night to hour', () => {
   expect(t.dayNightToHour(93)).toBe(43);
   expect(t.dayNightToHour(96)).toBe(44);
   expect(t.dayNightToHour(100)).toBe(45);
+  expect(t.dayNightToHour(103)).toBe(46);
   expect(t.dayNightToHour(118)).toBe(50);
   expect(t.dayNightToHour(122)).toBe(51);
   expect(t.dayNightToHour(125)).toBe(52);
   expect(t.dayNightToHour(129)).toBe(53);
   expect(t.dayNightToHour(137)).toBe(55);
   expect(t.dayNightToHour(140)).toBe(56);
+  expect(t.dayNightToHour(144)).toBe(57);
   expect(t.dayNightToHour(148)).toBe(58);
   expect(t.dayNightToHour(151)).toBe(59);
 
   expect(t.dayNightToHour(155)).toBe(0);
+  expect(t.dayNightToHour(159)).toBe(1);
   expect(t.dayNightToHour(162)).toBe(2);
+  expect(t.dayNightToHour(166)).toBe(3);
   expect(t.dayNightToHour(170)).toBe(4);
   expect(t.dayNightToHour(174)).toBe(5);
   expect(t.dayNightToHour(177)).toBe(6);
