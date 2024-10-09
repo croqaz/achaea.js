@@ -388,7 +388,7 @@ export function gmcpProcessAfflictions(type: string, data) {
     //
     const tsData = data as T.GmcpAffliction;
     if (tsData.name === 'amnesia') {
-      ee.emit('user:text', 'QUEUE PREPEND EB TOUCH AMNESIA');
+      ee.emit('user:text', 'QUEUE PREPEND eb TOUCH AMNESIA');
       ee.emit('sys:text', '[SYS] Touching amnesia ...');
     }
     ee.emit(
@@ -603,7 +603,7 @@ export function gmcpProcessRoomPlayers(type: string, data) {
       else if (city === 'targossas') p.cls = 'c-yellow c-bright';
       return p;
     } catch {
-      return data;
+      return;
     }
   };
   const playerSpan = (obj: Record<string, any>) => {
@@ -626,7 +626,7 @@ export function gmcpProcessRoomPlayers(type: string, data) {
       for (const x of tsData) {
         // remove current player from the list
         if (x.name === STATE.Me.name) continue;
-        const p = await getPlayer(x.name);
+        const p = (await getPlayer(x.name)) || x;
         STATE.Room.players.push(p as T.GmcpPlayer);
       }
       // sync battle targets
@@ -649,7 +649,7 @@ export function gmcpProcessRoomPlayers(type: string, data) {
     }
     setTimeout(async () => {
       const p = await getPlayer(tsData.name);
-      const span = playerSpan(p);
+      const span = playerSpan(p || data);
       if (span) {
         ee.emit('sys:text', `<b>Players ++</b> ${span}`);
       } else {
@@ -669,7 +669,7 @@ export function gmcpProcessRoomPlayers(type: string, data) {
   } else if (type === 'Room.RemovePlayer') {
     setTimeout(async () => {
       const p = await getPlayer(data);
-      const span = playerSpan(p);
+      const span = playerSpan(p || { name: data, fullname: data });
       if (span) {
         ee.emit('sys:text', `<b>Players --</b> ${span}`);
       } else {
