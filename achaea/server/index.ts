@@ -144,6 +144,9 @@ wss.on('connection', function (ws, req) {
   ee.on('battle:stop', () => {
     ws.send(JSON.stringify({ textType: 'battleStop' }));
   });
+
+  if (STATE.Me.level) ee.emit('myself:update', STATE.Me);
+  if (STATE.Room.num) ee.emit('room:update', STATE.Room);
 });
 
 export function startServer(port = 18888) {

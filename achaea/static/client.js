@@ -133,9 +133,6 @@ async function startWS() {
   window.WS = null;
   window.WS = new WebSocket(`ws://${location.host}`);
 
-  // Send a refresh command on connect
-  setTimeout(() => window.WS.send('QL'), 3500);
-
   window.WS.onmessage = async function (event) {
     const gameLog = document.getElementById('gameLog');
     const data = JSON.parse(event.data);
