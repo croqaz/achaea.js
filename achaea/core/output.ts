@@ -29,7 +29,7 @@ const POWER_LEVELS = [
   ['looks weak and feeble', 1, '1-4'],
 ];
 
-const SPAN_CODE = '<span class="[a-zA-Z- ]+">';
+const SPAN_CODE = '<span class="[a-zA-Z -]+">';
 const SPAN_STOP = '</span>\n?';
 // This can only handle CONFIG PROMPT STATS & ALL
 export const PROMPT = new RegExp(
@@ -41,18 +41,18 @@ export const PROMPT = new RegExp(
 
 // let count = 1;
 
-export default function processDisplayText(text: string): string {
+export default function processDisplayText(html: string, text: string): string {
   /*
    * Game text processor.
    * Used to highlight or replace text, display meta-data...
-   * This is HTML text, from the game.
+   * This is HTML output, straight from the game.
    * The output is used for display and the logs,
    * it is not used for triggers.
    */
   // console.time(`core-output-${count}`);
 
   {
-    const p = text.match(PROMPT);
+    const p = html.match(PROMPT);
     if (p) {
       let extra = '';
       if (STATE.Battle.active && STATE.Battle.tgtHP) {
@@ -67,34 +67,34 @@ export default function processDisplayText(text: string): string {
       if (!extra) {
         extra = ' <b>●</b>';
       }
-      text = text.replace(p[0], p[0] + extra);
+      html = html.replace(p[0], p[0] + extra);
     }
   }
 
-  if (text.includes(' CRITICAL hit')) {
+  if (html.includes(' CRITICAL hit')) {
     let index = 0;
     for (const p of CRITIC_LEVELS) {
-      if (text.includes(p)) {
-        text = text.replace(p, `${p} ${'⭐'.repeat(index + 1)}`);
+      if (html.includes(p)) {
+        html = html.replace(p, `${p} ${'⭐'.repeat(index + 1)}`);
         break;
       }
       index++;
     }
   }
 
-  if (text.includes(' health remaining.')) {
+  if (html.includes(' health remaining.')) {
     for (const p of POWER_LEVELS) {
-      if (text.includes(p[0] as string)) {
-        text = text.replace(p[0] as string, `${p[0]} 🦾=${p[1]} LVL=${p[2]}`);
+      if (html.includes(p[0] as string)) {
+        html = html.replace(p[0] as string, `${p[0]} 🦾=${p[1]} LVL=${p[2]}`);
         break;
       }
     }
   }
 
-  text = extraProcessDisplayText(text);
+  html = extraProcessDisplayText(html, text);
 
   // console.timeEnd(`core-output-${count}`);
   // count++;
 
-  return text.trim();
+  return html.trim();
 }

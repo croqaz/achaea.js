@@ -541,6 +541,7 @@ export function gmcpProcessSkills(type: string, data: any) {
 }
 
 export function gmcpProcessRoomInfo(_type: string, data: T.GmcpRoom) {
+  //
   // TODO :: navigation history
   // STATE.Misc.walkHist.push({ id: data.num, name: data.name });
   //
@@ -573,6 +574,13 @@ export function gmcpProcessRoomInfo(_type: string, data: T.GmcpRoom) {
     } else if (data.name.startsWith('You are surrounded by utter darkness, and can see nothing.')) {
       STATE.Room.details?.push('burrow');
     }
+  }
+  // wilderness, subdivision and ships
+  if (data.ohmap) {
+    if (!data.area && !STATE.Room.details?.includes('wilderness')) STATE.Room.details?.push('wilderness');
+    else if (data.area && !STATE.Room.details?.includes('subdivision'))
+      STATE.Room.details?.push('subdivision');
+    STATE.Room.details?.push('wildMap');
   }
   ee.emit('room:update', STATE.Room);
 }

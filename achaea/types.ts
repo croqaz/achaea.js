@@ -146,6 +146,7 @@ export interface GmcpRoom {
   name: string;
   area: string;
   coords: string;
+  ohmap?: number;
   desc: string;
   details?: string[];
   environment: string;

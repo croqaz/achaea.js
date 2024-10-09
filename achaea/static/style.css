@@ -183,7 +183,7 @@ body {
 }
 
 /* Left side: map, room, player */
-#map {
+#map, #wildMap {
   margin: 1px;
   background: rgb(97.2967032967, 110.0989010989, 135.7032967033);
   width: calc(100% - 2px);
@@ -191,7 +191,17 @@ body {
   max-height: 33.333vh;
 }
 
-#map.big {
+#wildMap {
+  display: none;
+  font-family: MonegoRegular, monospace;
+  font-size: 14px;
+  white-space: pre-wrap;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+#map.big, #wildMap.big {
   position: fixed;
   left: 4rem;
   top: 2rem;
@@ -269,15 +279,16 @@ body {
   padding: 0.5rem;
   font-size: 15px;
   color: #D8DEE9;
-  background: #3B4252;
+  background: rgb(48.329787234, 54.0638297872, 67.170212766);
   border-bottom: 2px solid #5E81AC;
-  transition: border-color 0.33s;
+  transition: all 0.33s;
 }
 
 #userInput:focus {
   color: #E5E9F0;
-  background: #4C566A;
+  background: rgb(65.4021276596, 73.1617021277, 90.8978723404);
   border-bottom: 2px solid #81A1C1;
+  box-shadow: 0 0 5px rgba(143, 188, 187, 0.9);
 }
 
 .userText, .sysText {
@@ -551,31 +562,31 @@ body {
 }
 
 .bg-red {
-  background-color: rgba(191, 97, 106, 0.5);
+  background-color: #bf616a;
 }
 
 .bg-green {
-  background-color: rgba(163, 190, 140, 0.5);
+  background-color: #a3be8c;
 }
 
 .bg-yellow {
-  background-color: rgba(208, 135, 112, 0.5);
+  background-color: #d08770;
 }
 
 .bg-blue {
-  background-color: rgba(94, 129, 172, 0.5);
+  background-color: #5e81ac;
 }
 
 .bg-magenta {
-  background-color: rgba(180, 142, 173, 0.5);
+  background-color: #b48ead;
 }
 
 .bg-cyan {
-  background-color: rgba(143, 188, 187, 0.5);
+  background-color: #8fbcbb;
 }
 
 .bg-darkGray {
-  background-color: rgba(150.7868852459, 166.8196721311, 196.2131147541, 0.5);
+  background-color: rgb(150.7868852459, 166.8196721311, 196.2131147541);
 }
 
 .bg-lightGray {
@@ -594,9 +605,9 @@ body {
 
 /* dim */
 .bg-dim.bg-red {
-  color: rgba(183.6486486486, 78.8513513514, 88.8851351351, 0.5);
+  color: rgb(183.6486486486, 78.8513513514, 88.8851351351);
 }
 
 .bg-dim.bg-blue {
-  color: rgba(94.8191489362, 135.5, 176.1808510638, 0.5);
+  color: rgb(94.8191489362, 135.5, 176.1808510638);
 }

@@ -157,7 +157,7 @@ body {
   overflow-y: scroll;
   position: relative;
   scrollbar-width: thin;
-  scrollbar-color: $nord10 lighten($nord3, 10);
+  scrollbar-color: $nord10 color.adjust($nord3, $lightness: 10%);
 }
 #rightSide.big {
   position: fixed;
@@ -172,7 +172,7 @@ body {
   border-radius: 8px;
   border: 1px solid $nord1;
   margin-bottom: 2px;
-  background: lighten($nord3, 10);
+  background: color.adjust($nord3, $lightness: 10%);
 }
 #main {
   display: flex;
@@ -185,14 +185,23 @@ body {
 }
 
 /* Left side: map, room, player */
-#map {
+#map, #wildMap {
   margin: 1px;
-  background: lighten($nord3, 10);
+  background: color.adjust($nord3, $lightness: 10%);
   width: calc(100% - 2px);
   height: calc(100% - 2px);
   max-height: 33.333vh;
 }
-#map.big {
+#wildMap {
+  display: none;
+  font-family: $font-reg;
+  font-size: $font-size - 1;
+  white-space: pre-wrap;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+#map.big, #wildMap.big {
   position: fixed;
   left: 4rem;
   top: 2rem;
@@ -224,9 +233,9 @@ body {
   border-right: 1px solid $nord1;
   overflow-y: scroll;
   scrollbar-width: thin;
-  scrollbar-color: $nord10 lighten($nord3, 10);
+  scrollbar-color: $nord10 color.adjust($nord3, $lightness: 10%);
   padding: 0.5rem;
-  background: lighten($nord2, 1%);
+  background: color.adjust($nord2, $lightness: 1%);
 }
 #player {
   margin: 1px;
@@ -234,7 +243,7 @@ body {
   padding: 0.5rem;
   overflow-y: scroll;
   scrollbar-width: thin;
-  scrollbar-color: $nord10 lighten($nord3, 10);
+  scrollbar-color: $nord10 color.adjust($nord3, $lightness: 10%);
 }
 .roomPlayer:hover, .roomItem:hover {
   cursor: pointer;
@@ -246,9 +255,9 @@ body {
 
 /* In the middle: game log, user input, status bar */
 #gameLog {
-  background: lighten($nord2, 1%);
+  background: color.adjust($nord2, $lightness: 1%);
   overflow-y: scroll;
-  scrollbar-color: $nord10 lighten($nord3, 10);
+  scrollbar-color: $nord10 color.adjust($nord3, $lightness: 10%);
   padding: 0.5rem;
   height: 18px;
   flex: 1 0;
@@ -261,14 +270,15 @@ body {
   padding: 0.5rem;
   font-size: $font-size;
   color: $dark-foreground;
-  background: $nord1;
+  background: color.adjust($nord1, $lightness: -5%);
   border-bottom: 2px solid $nord10;
-  transition: border-color 0.33s;
+  transition: all 0.33s;
 }
 #userInput:focus {
   color: $nord5;
-  background: $nord3;
+  background: color.adjust($nord1, $lightness: 3%);
   border-bottom: 2px solid $nord9;
+  box-shadow: 0 0 5px rgba($nord7, 0.9);
 }
 .userText, .sysText {
   color: $dark-foreground;
@@ -305,7 +315,7 @@ body {
   padding: 0.4rem;
   min-width: 7.5rem;
   white-space: normal;
-  background: color.change(lighten($nord3, 10), $alpha: 0.9);
+  background: rgba(color.adjust($nord3, $lightness: 10%), 0.9);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   z-index: 990;
 }
@@ -343,7 +353,7 @@ body {
   text-align: center;
   font-size: $font-size - 2;
   border-right: 1px solid $nord4;
-  background: darken($nord11, 20%);
+  background: color.adjust($nord11, $lightness: -20%);
   transition: width 0.5s;
 }
 #targetHpnow:hover {
@@ -363,7 +373,7 @@ body {
 }
 #selfRageNow {
   border-right: 1px solid $nord4;
-  background: darken($nord13, 10%);
+  background: color.adjust($nord13, $lightness: -10%);
   transition: width 0.5s;
 }
 
@@ -407,13 +417,13 @@ body {
 }
 
 #hpnow {
-  background: darken($nord11, 20%);
+  background: color.adjust($nord11, $lightness: -20%);;
 }
 #mpnow {
   background: #005f87;
 }
 #epnow {
-  background: darken($nord13, 40%);
+  background: color.adjust($nord13, $lightness: -40%);
 }
 #wpnow {
   background: #703080;
@@ -423,7 +433,7 @@ body {
 //   width: 9px;
 // }
 // *::-webkit-scrollbar-track {
-//   background: lighten($nord3, 10);
+//   background: color.adjust($nord3, $lightness: 10%);
 // }
 // *::-webkit-scrollbar-thumb {
 //   background: $nord10;
@@ -435,7 +445,7 @@ body {
 
 /* wikipedia.org/wiki/ANSI_escape_code */
 .c-black {
-  color: darken($nord0, 10%);
+  color: color.adjust($nord0, $lightness: -10%);
   font-family: $font-bold;
   font-weight: bold;
 }
@@ -459,7 +469,7 @@ body {
   color: $nord7;
 }
 .c-darkGray {
-  color: darken($nord4, 20%);
+  color: color.adjust($nord4, $lightness: -20%);
   font-family: $font-bold;
 }
 .c-lightGray {
@@ -476,10 +486,10 @@ body {
   font-weight: bold;
 }
 .c-bright.c-black {
-  color: darken($nord4, 20%);
+  color: color.adjust($nord4, $lightness: -20%);
 }
 .c-bright.c-red {
-  color: lighten($nord11, 5%);
+  color: color.adjust($nord11, $lightness: 5%);
 }
 .c-bright.c-green {
   color: $nord14;
@@ -505,36 +515,36 @@ body {
   font-weight: bold;
 }
 .c-dim.c-red {
-  color: darken($nord11, 5%);
+  color: color.adjust($nord11, $lightness: -5%);
 }
 .c-dim.c-blue {
-  color: darken($nord9, 10%);
+  color: color.adjust($nord9, $lightness: -10%);
 }
 
 /* backgrounds */
 .bg-black {
-  background-color: rgba(darken($nord0, 10%), 0.5);
+  background-color: rgba(color.adjust($nord0, $lightness: -10%), 0.5);
 }
 .bg-red {
-  background-color: rgba($nord11, 0.5);
+  background-color: color.adjust($nord11, $alpha: 0.5);
 }
 .bg-green {
-  background-color: rgba($nord14, 0.5);
+  background-color: color.adjust($nord14, $alpha: 0.5);
 }
 .bg-yellow {
-  background-color: rgba($nord12, 0.5);
+  background-color: color.adjust($nord12, $alpha: 0.5);
 }
 .bg-blue {
-  background-color: rgba($nord10, 0.5);
+  background-color: color.adjust($nord10, $alpha: 0.5);
 }
 .bg-magenta {
-  background-color: rgba($nord15, 0.5);
+  background-color: color.adjust($nord15, $alpha: 0.5);
 }
 .bg-cyan {
-  background-color: rgba($nord7, 0.5);
+  background-color: color.adjust($nord7, $alpha: 0.5);
 }
 .bg-darkGray {
-  background-color: rgba(darken($nord4, 20%), 0.5);
+  background-color: color.adjust($nord4, $lightness: -20%, $alpha: 0.5);
 }
 .bg-lightGray {
   background-color: rgba($dark-foreground, 0.5);
@@ -549,8 +559,8 @@ body {
 }
 /* dim */
 .bg-dim.bg-red {
-  color: rgba(darken($nord11, 5%), 0.5);
+  color: color.adjust($nord11, $lightness: -5%, $alpha: 0.5);
 }
 .bg-dim.bg-blue {
-  color: rgba(darken($nord9, 10%), 0.5);
+  color: color.adjust($nord9, $lightness: -10%, $alpha: 0.5);
 }

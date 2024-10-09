@@ -104,7 +104,7 @@ ee.on('tel:text', (rawText: string) => {
   ee.emit('game:text', plainText, normText(plainText));
   // Processed out text for GUI and logs
   let viewText = ansiToHtml(escapeHtml(rawText));
-  viewText = processDisplayText(viewText.trim());
+  viewText = processDisplayText(viewText.trim(), plainText);
   ee.emit('game:html', viewText);
   logWrite('\n' + logFixtures(viewText) + '\n');
 });

@@ -129,6 +129,10 @@ wss.on('connection', function (ws, req) {
     // GMCP Room.Players ...
     ws.send(JSON.stringify({ textType: 'roomPlayers', players: data }));
   });
+  ee.on('wild:map', (text) => {
+    // Wilderness map
+    ws.send(JSON.stringify({ textType: 'wildMap', text }));
+  });
 
   ee.on('myself:update', (data) => {
     ws.send(JSON.stringify(data));

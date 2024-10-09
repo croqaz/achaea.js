@@ -22,6 +22,98 @@ This locale has fallen under the influence of the Eldritch Empire of Ruin.`);
   expect(result.environment).toBe('Constructed underground');
 });
 
+test('maps test', () => {
+  let result = p.validMap(`Grasslands.
+.........................
+.......................**
+......................***
+.....................****
+....................*****
+...................******
+...................******
+............@......******
+...................******
+.................********
+................*********
+...............**********
+.............************
+.............************
+............*************
+`);
+  expect(result[1]).toBe('Grasslands.');
+
+  result = p.validMap(`Small hills.
+    wwww..@@@@@@@@@nnnnnMMMMM
+    wwwww@@@@@@@@@nnnnnMMMMMM
+    wwwww@@@@@@@@@nnnnMMMMMMM
+    wwww@@@@@@@@@nnnnMMMMMMMM
+    www@@@@@@@@@nnnnMMMMMMMMM
+    ww@@@@@@@@@?nnnnMMMMMMMMM
+    ww@@@@@@@@@@@nnnMMMMMMMMM
+    ww@@@@@@@nnnnnnMMMMMMMMMM
+    www.@@@@@nnnnnnMMMMMMMMMM
+    .wwwww@@@nnnnnMMMMMMMMMMM
+    www.......nnnnMMMMMMMMMMM
+    www........nnnMMMMMMMMMMM
+    ww.........nnnnMMMMMMMMMM
+    `);
+  expect(result[1]).toBe('Small hills.');
+
+  result = p.validMap(`Upon a glacier.
+     wwww.....@@@@@@@nnnnnnMM
+    wwwww...@@@@@@@@@nnnnnMMM
+    wwwww..@@@@@@@@@nnnnnnMMM
+    wwwww..@@@@@@@@@nnnnnMMMM
+    wwwwww@@@@@@@@@nnnnnMMMMM
+    wwwwww@@@@@@@@@nnnnMMMMMM
+    wwwww@@@@@@@@@nnnnMMMMMMM
+    wwww@@@@@@@@@nnnnMMMMMMMM
+    www@@@@@@@@@?nnnnMMMMMMMM
+    www@@@@@@@@@@nnnnMMMMMMMM
+    www@@@@@@@nnnnnnMMMMMMMMM
+    wwww.@@@@@nnnnnnMMMMMMMMM
+    w.wwwww@@@nnnnnMMMMMMMMMM
+    wwww.......nnnnMMMMMMMMMM
+    wwww........nnnMMMMMMMMMM
+    www.........nnnnMMMMMMMMM
+    www.........nnnnMMMMMMMMM`);
+  expect(result[1]).toBe('Upon a glacier.');
+
+  result = p.validMap(`
+You enter the subdivision.
+A cosy forest hollow.
+    *^   *^*  Y,*|***|**Y
+    ##^ * X * &Y,Y@*@Y**^
+    ##^  ***  *X^    ****
+    ..^   #  *^^^ *** ###
+    YY*^###***^^^    *&&&
+    YY*^ ; **^^^^^Y,*****
+    YY*^^;^*^^@^^^Y,*****
+    ..*^ ^ ^^^|^^XY,*****
+    ||*^   ^^;# ;Y   *&&&
+    ||*^ Y  ; X ;  *  ###
+    ***^ ,,,|X \\|,,     ,
+    ^^^^ X||/XX \\||X ****
+       # *,/ *** \\,* **.*`);
+  expect(result[1]).toBe('You enter the subdivision.\nA cosy forest hollow.');
+
+  // Negative testing
+  result = p.validMap(`Shoreline.
+    w.........ww.wwww........
+    wwww..wwwwww..wwww......!`);
+  expect(result).toBeFalsy();
+
+  result = p.validMap(`Shoreline.
+w.........ww.wwww........
+wwww..wwwwww..wwww......`);
+  expect(result).toBeFalsy();
+
+  result = p.validMap(`Shoreline.
+w.........ww.wwww........
+wwww..wwwwww..wwww......0`);
+  expect(result).toBeFalsy();
+});
+
 test('honours test', () => {
   let result = p.parseHonours(`Abc, Founder of Xyz (male Rajamala).
 He is 719 years old, having been born on the 8th of Phaestian, 204 years after the fall of the Seleucarian Empire.
@@ -130,23 +222,6 @@ test('parse wares', () => {
   expect(wares.at(-1).stock).toBe(999);
   expect(wares.at(-1).price).toBe(25);
 });
-
-// test('parse directory', (t) => {
-//   `Price      Item description                   Shop
-// ------------------------------------------------------------------------------------------------------------------------
-// 40000gp    a gleaming suit of full plate      The Motley Magpie
-// 69000gp    a shimmering suit of full plate ar The Vashnarian Variety
-// 70000gp    an unembellished suit of Cyrenian  Hearth and Home
-// 70000gp    an unembellished suit of Cyrenian  Hearth and Home
-// 120000gp   an unembellished suit of Cyrenian  The Phaestean Forge
-// 120000gp   an unembellished suit of Cyrenian  The Phaestean Forge
-// 120000gp   a polished suit of heavy full plat The Phaestean Forge
-// 120000gp   a polished suit of heavy full plat The Phaestean Forge
-// 120000gp   an unembellished suit of Cyrenian  The Phaestean Forge
-// 120000gp   a polished suit of heavy full plat The Phaestean Forge
-// 175000gp   a cerulean suit of Vashnari full p Blue Dragon's Lair
-// ------------------------------------------------------------------------------------------------------------------------`;
-// });
 
 test('parse elix-list', () => {
   const result = p.parseElixList(

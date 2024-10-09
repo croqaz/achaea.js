@@ -321,6 +321,9 @@ export function drawMap(data) {
 }
 
 export function autoCenterMap() {
+  const mapElem = document.getElementById('map');
+  if (mapElem.style.display === 'none') return;
+
   const { view } = window.PAPER;
 
   // auto center the layer with rooms & paths

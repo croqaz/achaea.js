@@ -29,11 +29,38 @@ export function parseSurvey(text: string) {
   return { area, environment, plane };
 }
 
-// export function parseRoom(text: string) {
-//   // WIP ... hacky
-//   if (!text.includes('You see exits leading') && !text.includes('here are no obvious exits')) return;
-//   const parts = text.split('\n').filter((x) => !!x);
-// }
+export function validMap(text: string): string[] | null {
+  /*
+   * Validate wilderness maps.
+   */
+  const parts = text.trim().split('\n');
+  if (parts.length < 8) return null;
+  const title = parts[0].replace(/\r$/, '');
+  if (!(title.endsWith('.') || parts[0].includes('.</span><span'))) return null;
+  const re = /^[ #&%?*;,.\/;@MXYnw\\|\+-~^]+\r?$/;
+  let map = [];
+  let desc = [parts.shift()];
+  if (
+    title === 'You enter the subdivision.' ||
+    title.startsWith('You begin to flap your wings powerfully,') ||
+    title.endsWith('You land easily, back on the ground again.')
+  )
+    desc.push(parts.shift());
+  let len = 0;
+  for (let line of parts) {
+    // all map lines must have the same length,
+    // and must have the correct ASCII letters
+    const txt = line
+      .replace(/\r$/, '')
+      .replaceAll('</span>', '')
+      .replace(/<span class="[a-zA-Z -]+">/g, '');
+    if (len === 0) len = txt.length;
+    if (txt.length === len && re.test(txt)) map.push(line);
+    else desc.push(line);
+  }
+  if (map.length >= 8 && desc.length > 0) return [map.join('\n'), desc.join('\n')];
+  return null;
+}
 
 export function isWaresHeader(text: string): boolean {
   if (
@@ -55,7 +82,7 @@ export function parseWares(text: string): T.DBWares[] {
   text = text.trim();
   if (!(text.startsWith('Proprietor:') || text.startsWith('[File continued via MORE]'))) {
     console.error('Cannot parse text as WARES!');
-    return;
+    return [];
   }
   const parts = text.split('\n').filter((x) => !!x);
   const stateOwner = STATE.Room.owner;
@@ -86,7 +113,7 @@ function parseWaresLine(line: string): T.DBWares {
   return { id, stock, price, name, owner: '' };
 }
 
-export function parseElixList(text: string) {
+export function parseElixList(text: string): any[] {
   const lines = text.split('\n').filter((x) => !!x);
   if (lines.length < 3 || !lines[1].includes('-------')) return [];
   const head1 = /Vial[ ]+Fluid[ ]+Sips[ ]+Months/;
@@ -119,7 +146,7 @@ export function parseElixList(text: string) {
   return elixlist;
 }
 
-export function parseQuickWho(text: string) {
+export function parseQuickWho(text: string): string[] {
   /*
    * Parse quick-who text
    */

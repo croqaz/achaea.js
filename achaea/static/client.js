@@ -11,6 +11,7 @@ window.addEventListener('load', function () {
   const userInput = document.getElementById('userInput');
 
   const mapElem = document.getElementById('map');
+  const wildMap = document.getElementById('wildMap');
   const rightElem = document.getElementById('rightSide');
 
   startWS();
@@ -27,7 +28,8 @@ window.addEventListener('load', function () {
       if (rightElem.classList.contains('big')) {
         rightElem.classList.toggle('big');
       }
-      mapElem.classList.toggle('big');
+      const mapView = mapElem.style.display === 'none' ? wildMap : mapElem;
+      mapView.classList.toggle('big');
       // Force Paper.js to resize & recalculate
       // https://github.com/paperjs/paper.js/issues/662
       window.dispatchEvent(new Event('resize'));
@@ -35,8 +37,8 @@ window.addEventListener('load', function () {
     }
     // Half screen expand the chat
     if (ev.ctrlKey && ev.key === ',') {
-      if (mapElem.classList.contains('big')) {
-        mapElem.classList.toggle('big');
+      if (mapView.classList.contains('big')) {
+        mapView.classList.toggle('big');
         window.dispatchEvent(new Event('resize'));
       }
       return rightElem.classList.toggle('big');
@@ -46,8 +48,8 @@ window.addEventListener('load', function () {
       return;
     }
     if (ev.key === 'Escape') {
-      if (mapElem.classList.contains('big')) {
-        mapElem.classList.toggle('big');
+      if (mapView.classList.contains('big')) {
+        mapView.classList.toggle('big');
         window.dispatchEvent(new Event('resize'));
         return map.autoCenterMap();
       }
@@ -112,9 +114,7 @@ window.addEventListener('load', function () {
     // Hack the paste event to paste in the user's input text
     ev.preventDefault();
     const paste = (ev.clipboardData || window.clipboardData).getData('text');
-    if (!userInput.value || userInput.value.endsWith(' ') || paste.startsWith(' ')) userInput.value += paste;
-    // Add a space between the existing text, and the paste
-    else userInput.value += ' ' + paste;
+    userInput.value += paste;
     userInput.focus();
   };
 
@@ -132,6 +132,9 @@ window.addEventListener('load', function () {
 async function startWS() {
   window.WS = null;
   window.WS = new WebSocket(`ws://${location.host}`);
+
+  // Send a refresh command on connect
+  setTimeout(() => window.WS.send('QL'), 3500);
 
   window.WS.onmessage = async function (event) {
     const gameLog = document.getElementById('gameLog');
@@ -204,6 +207,12 @@ async function startWS() {
       return gameLog.append(div);
     }
 
+    if (data.textType === 'wildMap') {
+      const wildMap = document.getElementById('wildMap');
+      wildMap.innerHTML = `<div>${data.text}</div>`;
+      return;
+    }
+
     // Echo user's input text
     const txt = document.createElement('p');
     if (data.textType === 'userText') {
@@ -264,6 +273,19 @@ function restoreHistory() {
 function displayRoom(data) {
   const roomX = document.getElementById('room');
   let room = '';
+
+  if (data && data.details) {
+    const mapElem = document.getElementById('map');
+    const wildMap = document.getElementById('wildMap');
+    if (data.details.includes('wildMap')) {
+      wildMap.style.display = 'flex';
+      mapElem.style.display = 'none';
+    } else if (mapElem.style.display === 'none') {
+      mapElem.style.display = 'block';
+      wildMap.style.display = 'none';
+      map.autoCenterMap();
+    }
+  }
 
   if (data && data.name) {
     const locX = document.getElementById('loc');

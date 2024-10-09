@@ -4,18 +4,20 @@
  */
 import { STATE } from '../core/state.ts';
 
-export default function processDisplayText(text: string): string {
-  /*
-   * This is raw ANSI text, from the game.
-   * It is only used for display in the GUI,
-   * it is not used for triggers.
-   * Read the docs/Output to learn more.
-   */
+export default function processDisplayText(html: string, text: string): string {
+ /*
+ * Game text processor.
+ * Used to highlight or replace text, display meta-data...
+ * This is HTML output, straight from the game.
+ * The output is used for display and the logs,
+ * it is not used for triggers.
+ * Read the docs/Output to learn more.
+ */
 
   // example: make the talisman text super visible
   //
-  text = text.replaceAll(' talisman piece ', ' talisman piece 🧿 ');
+  html = html.replaceAll(' talisman piece ', ' talisman piece 🧿 ');
 
   // Return the changed text to be displayed in the GUI
-  return text;
+  return html;
 }
