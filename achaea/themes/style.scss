@@ -202,8 +202,8 @@ body {
 #userInput:focus {
   color: $light2;
   background: color.adjust($dark2, $lightness: 3%);
-  border-bottom: 2px solid $c-blue2;
-  box-shadow: 0 0 5px rgba($c-blue2, 0.75);
+  border-bottom: 2px solid $c-bright-blue;
+  box-shadow: 0 0 5px rgba($c-bright-blue, 0.75);
 }
 .userText, .sysText {
   color: $dark-foreground;
@@ -365,12 +365,12 @@ body {
 //   border-radius: 9px;
 // }
 // *::-webkit-scrollbar-thumb:hover {
-//   background: $c-blue2;
+//   background: $c-bright-blue;
 // }
 
 /* wikipedia.org/wiki/ANSI_escape_code */
 .c-black {
-  color: color.adjust($dark1, $lightness: -10%);
+  color: $dark1;
   font-family: $font-bold;
   font-weight: bold;
 }
@@ -384,17 +384,16 @@ body {
   color: $c-orange;
 }
 .c-blue {
-  /* blue1: $c-cyan; blue2: $c-blue2; blue3: $c-blue; */
   color: $c-blue;
 }
 .c-magenta {
   color: $c-magenta;
 }
 .c-cyan {
-  color: color.adjust($c-cyan, $lightness: -10%);
+  color: $c-cyan;
 }
 .c-darkGray {
-  color: color.adjust($light1, $lightness: -20%);
+  color: color.adjust($dark-foreground, $lightness: -25%);
   font-family: $font-bold;
 }
 .c-lightGray {
@@ -408,42 +407,43 @@ body {
 /* bright */
 .c-bright {
   font-family: $font-bold;
-  font-weight: bold;
 }
 .c-bright.c-black {
-  color: color.adjust($light1, $lightness: -20%);
+  color: color.adjust($dark-foreground, $lightness: -10%);
 }
 .c-bright.c-red {
-  color: color.adjust($c-red, $lightness: 5%);
+  color: $c-bright-red;
 }
 .c-bright.c-green {
-  color: $c-green;
+  color: $c-bright-green;
 }
 .c-bright.c-yellow {
-  color: $c-yellow;
+  color: $c-bright-yellow;
 }
 .c-bright.c-blue {
-  color: $c-blue2;
+  color: $c-bright-blue;
 }
 .c-bright.c-magenta {
-  color: $c-magenta;
+  color: $c-bright-magenta;
 }
 .c-bright.c-cyan {
-  color: $c-cyan;
+  color: $c-bright-cyan;
 }
 .c-bright.c-lightGray {
-  color: $foreground;
+  color: $bright-foreground;
 }
 /* dim */
 .c-dim {
   font-family: $font-boit;
-  font-weight: bold;
 }
 .c-dim.c-red {
-  color: color.adjust($c-red, $lightness: -5%);
+  color: color.adjust($c-red, $lightness: -10%);
+}
+.c-dim.c-green {
+  color: color.adjust($c-green, $lightness: -10%);
 }
 .c-dim.c-blue {
-  color: color.adjust($c-blue2, $lightness: -10%);
+  color: color.adjust($c-bright-blue, $lightness: -10%);
 }
 
 /* backgrounds */
@@ -469,23 +469,11 @@ body {
   background-color: color.adjust($c-cyan, $alpha: 0.5);
 }
 .bg-darkGray {
-  background-color: color.adjust($light1, $lightness: -20%, $alpha: 0.5);
+  background-color: rgba($dark2, 0.5);
 }
 .bg-lightGray {
-  background-color: rgba($dark-foreground, 0.5);
+  background-color: rgba($dark3, 0.5);
 }
 .bg-white {
   background-color: rgba($bright-foreground, 0.5);
-}
-/* bright */
-.bg-bright {
-  font-family: $font-bold;
-  font-weight: bold;
-}
-/* dim */
-.bg-dim.bg-red {
-  color: color.adjust($c-red, $lightness: -5%, $alpha: 0.5);
-}
-.bg-dim.bg-blue {
-  color: color.adjust($c-blue2, $lightness: -10%, $alpha: 0.5);
 }

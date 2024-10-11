@@ -1,0 +1,67 @@
+$srcery-black: #1c1b19;
+$srcery-red: #ef2f27;
+$srcery-green: #519f50;
+$srcery-yellow: #fbb829;
+$srcery-blue: #2c78bf;
+$srcery-magenta: #e02c6d;
+$srcery-cyan: #0aaeb3;
+$srcery-white: #baa67f;
+$srcery-bright-black: #918175;
+$srcery-bright-red: #f75341;
+$srcery-bright-green: #98bc37;
+$srcery-bright-yellow: #fed06e;
+$srcery-bright-blue: #68a8e4;
+$srcery-bright-magenta: #ff5c8f;
+$srcery-bright-cyan: #2be4d0;
+$srcery-bright-white: #fce8c3;
+$srcery-orange: #ff5f00;
+$srcery-bright-orange: #ff8700;
+$srcery-teal: #008080;
+$srcery-hard-black: #121212;
+$srcery-xgray1: #262626;
+$srcery-xgray2: #303030;
+$srcery-xgray3: #3a3a3a;
+$srcery-xgray4: #444444;
+$srcery-xgray5: #4e4e4e;
+$srcery-xgray6: #585858;
+$srcery-xgray7: #626262;
+$srcery-xgray8: #6c6c6c;
+$srcery-xgray9: #767676;
+
+$dark1: $srcery-black; // the darkest
+$dark2: $srcery-xgray1;
+$dark3: $srcery-xgray3;
+$dark4: $srcery-xgray5;
+
+$light1: #a8a8af;
+$light2: #bbbbbf;
+$light3: #c4c4cf; // the brightest
+
+$dark-foreground: $light1;
+$foreground: $light2;
+$bright-foreground: $light3;
+
+$c-blue: $srcery-blue;
+$c-cyan: $srcery-cyan;
+$c-green: $srcery-green;
+$c-magenta: $srcery-magenta;
+$c-orange: $srcery-orange;
+$c-red: $srcery-red;
+$c-yellow: $srcery-yellow;
+
+$c-bright-blue: $srcery-bright-blue;
+$c-bright-cyan: $srcery-bright-cyan;
+$c-bright-green: $srcery-bright-green;
+$c-bright-magenta: $srcery-bright-magenta;
+$c-bright-red: $srcery-bright-red;
+$c-bright-yellow: $srcery-bright-yellow;
+
+:root {
+  --background: #{$dark1};
+  --background1: #{$dark2};
+  --background2: #{$dark3};
+  --background3: #{$dark4};
+  --foreground: #{$foreground};
+  --dark-foreground: #{$light1};
+  --bright-foreground: #{$light3};
+}

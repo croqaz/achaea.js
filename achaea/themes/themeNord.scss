@@ -1,5 +1,197 @@
-// Needs to run from the root of the project
-@import '~node_modules/nord/src/sass/nord.scss';
+/// Base component color of "Polar Night".
+///
+/// Used for texts, backgrounds, carets and structuring characters like curly- and square brackets.
+///
+/// @access public
+/// @example scss - SCSS
+///   /* For dark ambiance themes */
+///   .background {
+///     background-color: $nord0;
+///   }
+///   /* For light ambiance themes */
+///   .text {
+///     color: $nord0;
+///   }
+/// @group polarnight
+/// @since 0.1.0
+$nord0: #2e3440;
+
+/// Used as a lighter background color for UI elements like status bars.
+///
+/// @access public
+/// @group polarnight
+/// @see $nord0
+/// @since 0.1.0
+$nord1: #3b4252;
+
+/// Used as line highlighting in the editor.
+/// In the UI scope it may be used as selection- and hightlight color.
+///
+/// @access public
+/// @example scss - SCSS
+///   /* Code Syntax Highlighting scope */
+///   .editor {
+///     &.line {
+///       background-color: $nord2;
+///     }
+///   }
+///
+///   /* UI scope */
+///   button {
+///     &:selected {
+///       background-color: $nord2;
+///     }
+///   }
+/// @group polarnight
+/// @see $nord0
+/// @since 0.1.0
+$nord2: #434c5e;
+
+/// Used for comments, invisibles, indent- and wrap guide marker.
+/// In the UI scope used as pseudoclass color for disabled elements.
+///
+/// @access public
+/// @example scss - SCSS
+///   /* Code Syntax Highlighting scope */
+///   .editor {
+///     &.indent-guide,
+///     &.wrap-guide {
+///       &.marker {
+///         color: $nord3;
+///       }
+///     }
+///   }
+///   .comment,
+///   .invisible {
+///     color: $nord3;
+///   }
+///
+///   /* UI scope */
+///   button {
+///     &:disabled {
+///       background-color: $nord3;
+///     }
+///   }
+/// @group polarnight
+/// @see $nord0
+/// @since 0.1.0
+$nord3: #4c566a;
+
+/// Base component color of "Snow Storm".
+///
+/// Main color for text, variables, constants and attributes.
+/// In the UI scope used as semi-light background depending on the theme shading design.
+///
+/// @access public
+/// @example scss - SCSS
+///   /* For light ambiance themes */
+///   .background {
+///     background-color: $nord4;
+///   }
+///   /* For dark ambiance themes */
+///   .text {
+///     color: $nord4;
+///   }
+/// @group snowstorm
+/// @since 0.1.0
+$nord4: #d8dee9;
+
+/// Used as a lighter background color for UI elements like status bars.
+/// Used as semi-light background depending on the theme shading design.
+///
+/// @access public
+/// @group snowstorm
+/// @see $nord4
+/// @since 0.1.0
+$nord5: #e5e9f0;
+
+/// Used for punctuations, carets and structuring characters like curly- and square brackets.
+/// In the UI scope used as background, selection- and hightlight color depending on the theme shading design.
+///
+/// @access public
+/// @group snowstorm
+/// @see $nord4
+/// @since 0.1.0
+$nord6: #eceff4;
+
+/// Bluish core color.
+///
+/// Used for classes, types and documentation tags.
+///
+/// @access public
+/// @group frost
+/// @since 0.1.0
+$nord7: #8fbcbb;
+
+/// Bluish core accent color.
+///
+/// Represents the accent color of the color palette.
+/// Main color for primary UI elements and methods/functions.
+///
+/// Can be used for
+///   - Markup quotes
+///   - Markup link URLs
+///
+/// @access public
+/// @group frost
+/// @since 0.1.0
+$nord8: #88c0d0;
+
+/// Bluish core color.
+///
+/// Used for language-specific syntactic/reserved support characters and keywords, operators, tags, units and
+/// punctuations like (semi)colons,commas and braces.
+///
+/// @access public
+/// @group frost
+/// @since 0.1.0
+$nord9: #81a1c1;
+
+/// Bluish core color.
+///
+/// Used for markup doctypes, import/include/require statements, pre-processor statements and at-rules (`@`).
+///
+/// @access public
+/// @group frost
+/// @since 0.1.0
+$nord10: #5e81ac;
+
+/// Used for errors, git/diff deletion and linter marker.
+///
+/// @access public
+/// @group aurora
+/// @since 0.1.0
+$nord11: #bf616a;
+
+/// Used for annotations.
+///
+/// @access public
+/// @group aurora
+/// @since 0.1.0
+$nord12: #d08770;
+
+/// Used for escape characters, regular expressions and markup entities.
+/// In the UI scope used for warnings and git/diff renamings.
+///
+/// @access public
+/// @group aurora
+/// @since 0.1.0
+$nord13: #ebcb8b;
+
+/// Main color for strings and attribute values.
+/// In the UI scope used for git/diff additions and success visualizations.
+///
+/// @access public
+/// @group aurora
+/// @since 0.1.0
+$nord14: #a3be8c;
+
+/// Used for numbers.
+///
+/// @access public
+/// @group aurora
+/// @since 0.1.0
+$nord15: #b48ead;
 
 $dark1: $nord0; // the darkest
 $dark2: $nord1;
@@ -15,13 +207,19 @@ $foreground: $light2;
 $bright-foreground: $light3;
 
 $c-blue: $nord10;
-$c-blue2: $nord9;
 $c-cyan: $nord8;
 $c-green: $nord14;
 $c-magenta: $nord15;
 $c-orange: $nord12;
 $c-red: $nord11;
 $c-yellow: $nord13;
+
+$c-bright-blue: $nord9;
+$c-bright-cyan: color.adjust($c-cyan, $lightness: 5%);
+$c-bright-green: color.adjust($c-green, $lightness: 10%);
+$c-bright-magenta: color.adjust($c-magenta, $lightness: 5%);
+$c-bright-red: color.adjust($c-red, $lightness: 10%);
+$c-bright-yellow: $c-yellow;
 
 :root {
   --background: #{$dark1};
