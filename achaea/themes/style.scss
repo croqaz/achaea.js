@@ -1,0 +1,491 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+  background-color: var(--background);
+}
+body > * {
+  font-size: $font-size;
+  font-family: $font-norm;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+}
+html, body, canvas, main, aside, div, span, pre, input {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  color: var(--foreground);
+  font-size: $font-size;
+  font-family: $font-norm;
+}
+p, b, i, small, span, pre, h5 {
+  margin: 0;
+  line-height: 1.6rem;
+  font-family: $font-norm;
+  font-size: $font-size;
+  font-variant-ligatures: contextual common-ligatures;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+}
+
+i {
+  font-family: $font-ital;
+}
+b, h5, h6 {
+  font-family: $font-bold;
+}
+small {
+  font-size: $font-size - 2;
+}
+.bold {
+  font-family: $font-bold;
+}
+.italic {
+  font-family: $font-ital;
+  font-style: italic;
+}
+.bold.italic {
+  font-family: $font-boit;
+  font-style: italic;
+}
+.thin {
+  font-weight: lighter !important;
+}
+input {
+  font-weight: 500 !important;
+}
+
+body {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  max-height: 99.9vh;
+}
+
+#leftSide {
+  display: grid;
+  grid-column: 1 / 3;
+  grid-template-rows: repeat(3, 1fr);
+  max-height: 99.9vh;
+  position: relative;
+}
+#rightSide {
+  grid-column: 8 / 10;
+  max-height: 99.9vh;
+  margin: 1px;
+  border-right: 1px solid $dark2;
+  padding: 0.4rem;
+  background: $dark4;
+  overflow-y: scroll;
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: $c-blue color.adjust($dark4, $lightness: 10%);
+}
+#rightSide.big {
+  position: fixed;
+  right: 0;
+  width: 50vw;
+  height: calc(99vh - 4rem);
+  border: 2px solid $light2;
+  z-index: 999;
+}
+#rightSide .notes {
+  padding: 0.25rem;
+  border-radius: 8px;
+  border: 1px solid $dark2;
+  margin-bottom: 2px;
+  background: color.adjust($dark4, $lightness: 10%);
+}
+#main {
+  display: flex;
+  grid-column: 3 / 8;
+  flex-direction: column;
+  border-left: 1px solid $dark2;
+  border-right: 1px solid $dark2;
+  min-height: 99.5vh;
+  max-height: 99.9vh;
+}
+
+/* Left side: map, room, player */
+#map, #wildMap {
+  margin: 1px;
+  background: color.adjust($dark4, $lightness: 10%);
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+  max-height: 33.333vh;
+}
+#wildMap {
+  display: none;
+  font-family: $font-norm;
+  font-size: $font-size - 1;
+  white-space: pre-wrap;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+#map.big, #wildMap.big {
+  position: fixed;
+  left: 4rem;
+  top: 2rem;
+  max-height: 99vh;
+  width: calc(100% - 10em);
+  height: calc(99vh - 10rem);
+  border: 2px solid $light2;
+  z-index: 999;
+}
+#loc, #exits {
+  position: absolute;
+  font-size: $font-size - 2;
+  background: color.change($dark2, $alpha: 0.5);
+}
+#loc {
+  padding: 0.3rem 0.5rem 0.3rem 0.5rem;
+  display: inline;
+}
+#exits {
+  height: 2rem;
+  line-height: 2rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  top: calc(33% - 2rem + 2px);
+}
+#room {
+  border-bottom: 1px solid $dark2;
+  border-top: 1px solid $dark2;
+  border-right: 1px solid $dark2;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: $c-blue color.adjust($dark4, $lightness: 10%);
+  padding: 0.5rem;
+  background: color.adjust($dark3, $lightness: 1%);
+}
+#player {
+  margin: 1px;
+  background: $dark4;
+  padding: 0.5rem;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: $c-blue color.adjust($dark4, $lightness: 10%);
+}
+.roomPlayer:hover, .roomItem:hover {
+  cursor: pointer;
+  font-family: $font-ital;
+}
+.playerDef:hover, .playerAff:hover {
+  font-family: $font-ital;
+}
+
+/* In the middle: game log, user input, status bar */
+#gameLog {
+  background: color.adjust($dark3, $lightness: 1%);
+  overflow-y: scroll;
+  scrollbar-color: $c-blue color.adjust($dark4, $lightness: 10%);
+  padding: 0.5rem;
+  height: 18px;
+  flex: 1 0;
+}
+#gameLog > p {
+  white-space: pre-wrap;
+}
+#userInput {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: $font-size;
+  color: $dark-foreground;
+  background: color.adjust($dark2, $lightness: -5%);
+  border-bottom: 2px solid $c-blue;
+  transition: all 0.33s;
+}
+#userInput:focus {
+  color: $light2;
+  background: color.adjust($dark2, $lightness: 3%);
+  border-bottom: 2px solid $c-blue2;
+  box-shadow: 0 0 5px rgba($c-blue2, 0.75);
+}
+.userText, .sysText {
+  color: $dark-foreground;
+}
+#gameLog table {
+  background: $dark4;
+  border-collapse: collapse;
+  border-top: 1px solid $dark2;
+  border-left: 1px solid $dark2;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  font-size: $font-size - 2;
+}
+#gameLog table tr {
+  border-bottom: 1px solid $dark2;
+}
+#gameLog table th {
+  font-family: $font-bold;
+  font-weight: bold;
+}
+#gameLog table th,
+#gameLog table td {
+  padding: 2px 5px 1px 5px;
+  border-right: 1px solid $dark2;
+}
+
+#dateTimeWrap {
+  display: block;
+  position: fixed;
+  border-radius: 8px;
+  border: 1px solid $dark2;
+  font-size: $font-size - 2;
+  top: 2px;
+  right: 0.6rem;
+  padding: 0.4rem;
+  min-width: 7.5rem;
+  white-space: normal;
+  background: rgba(color.adjust($dark4, $lightness: 10%), 0.9);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  z-index: 990;
+}
+#dateTimeWrap:hover {
+  cursor: pointer;
+}
+
+#battleWrap {
+  display: none;
+  position: fixed;
+  border: 1px solid $dark2;
+  border-top: 0;
+  font-size: $font-size - 2;
+  left: calc(50% - 18rem);
+  top: 0;
+  width: 36rem;
+  padding: 0.5rem;
+  white-space: normal;
+  background: color.change($dark4, $alpha: 0.9);
+}
+#battleBar {
+  height: 1rem;
+  display: flex;
+  margin-top: 0.5rem;
+  background-color: var(--background);
+}
+#targetHpmax {
+  flex: 1;
+  display: flex;
+  color: $dark-foreground;
+  line-height: $font-size - 2;
+  border-left: 1px solid $light1;
+}
+#targetHpnow {
+  text-align: center;
+  font-size: $font-size - 2;
+  border-right: 1px solid $light1;
+  background: color.adjust($c-red, $lightness: -20%);
+  transition: width 0.5s;
+}
+#targetHpnow:hover {
+  color: $bright-foreground;
+  font-family: $font-bold;
+}
+#rageBar {
+  display: none; // flex
+  height: 0.225rem;
+  background-color: var(--background);
+}
+#selfRageMax {
+  flex: 1;
+  display: flex;
+  color: $dark-foreground;
+  border-left: 1px solid $light1;
+}
+#selfRageNow {
+  border-right: 1px solid $light1;
+  background: color.adjust($c-yellow, $lightness: -10%);
+  transition: width 0.5s;
+}
+
+#statBar {
+  height: 1rem;
+  display: flex;
+  border-top: 1px solid $dark2;
+  z-index: 99;
+}
+
+#hpmax,
+#mpmax,
+#epmax,
+#wpmax {
+  flex: 1;
+  display: flex;
+  color: $dark-foreground;
+  line-height: $font-size - 2;
+}
+#mpmax,
+#epmax,
+#wpmax {
+  border-left: 1px solid $light1;
+}
+
+#hpnow,
+#mpnow,
+#epnow,
+#wpnow {
+  text-align: center;
+  font-size: $font-size - 2;
+  border-right: 1px solid $light1;
+  transition: width 0.5s;
+}
+#hpnow:hover,
+#mpnow:hover,
+#epnow:hover,
+#wpnow:hover {
+  color: $bright-foreground;
+  font-family: $font-bold;
+}
+
+#hpnow {
+  background: color.adjust($c-red, $lightness: -20%);;
+}
+#mpnow {
+  background: #005f87;
+}
+#epnow {
+  background: color.adjust($c-yellow, $lightness: -40%);
+}
+#wpnow {
+  background: #703080;
+}
+
+// *::-webkit-scrollbar {
+//   width: 9px;
+// }
+// *::-webkit-scrollbar-track {
+//   background: color.adjust($dark4, $lightness: 10%);
+// }
+// *::-webkit-scrollbar-thumb {
+//   background: $c-blue;
+//   border-radius: 9px;
+// }
+// *::-webkit-scrollbar-thumb:hover {
+//   background: $c-blue2;
+// }
+
+/* wikipedia.org/wiki/ANSI_escape_code */
+.c-black {
+  color: color.adjust($dark1, $lightness: -10%);
+  font-family: $font-bold;
+  font-weight: bold;
+}
+.c-red {
+  color: $c-red;
+}
+.c-green {
+  color: $c-green;
+}
+.c-yellow {
+  color: $c-orange;
+}
+.c-blue {
+  /* blue1: $c-cyan; blue2: $c-blue2; blue3: $c-blue; */
+  color: $c-blue;
+}
+.c-magenta {
+  color: $c-magenta;
+}
+.c-cyan {
+  color: color.adjust($c-cyan, $lightness: -10%);
+}
+.c-darkGray {
+  color: color.adjust($light1, $lightness: -20%);
+  font-family: $font-bold;
+}
+.c-lightGray {
+  color: $dark-foreground;
+  font-family: $font-bold;
+}
+.c-white {
+  color: $bright-foreground;
+  font-family: $font-bold;
+}
+/* bright */
+.c-bright {
+  font-family: $font-bold;
+  font-weight: bold;
+}
+.c-bright.c-black {
+  color: color.adjust($light1, $lightness: -20%);
+}
+.c-bright.c-red {
+  color: color.adjust($c-red, $lightness: 5%);
+}
+.c-bright.c-green {
+  color: $c-green;
+}
+.c-bright.c-yellow {
+  color: $c-yellow;
+}
+.c-bright.c-blue {
+  color: $c-blue2;
+}
+.c-bright.c-magenta {
+  color: $c-magenta;
+}
+.c-bright.c-cyan {
+  color: $c-cyan;
+}
+.c-bright.c-lightGray {
+  color: $foreground;
+}
+/* dim */
+.c-dim {
+  font-family: $font-boit;
+  font-weight: bold;
+}
+.c-dim.c-red {
+  color: color.adjust($c-red, $lightness: -5%);
+}
+.c-dim.c-blue {
+  color: color.adjust($c-blue2, $lightness: -10%);
+}
+
+/* backgrounds */
+.bg-black {
+  background-color: rgba(color.adjust($dark1, $lightness: -10%), 0.5);
+}
+.bg-red {
+  background-color: color.adjust($c-red, $alpha: 0.5);
+}
+.bg-green {
+  background-color: color.adjust($c-green, $alpha: 0.5);
+}
+.bg-yellow {
+  background-color: color.adjust($c-orange, $alpha: 0.5);
+}
+.bg-blue {
+  background-color: color.adjust($c-blue, $alpha: 0.5);
+}
+.bg-magenta {
+  background-color: color.adjust($c-magenta, $alpha: 0.5);
+}
+.bg-cyan {
+  background-color: color.adjust($c-cyan, $alpha: 0.5);
+}
+.bg-darkGray {
+  background-color: color.adjust($light1, $lightness: -20%, $alpha: 0.5);
+}
+.bg-lightGray {
+  background-color: rgba($dark-foreground, 0.5);
+}
+.bg-white {
+  background-color: rgba($bright-foreground, 0.5);
+}
+/* bright */
+.bg-bright {
+  font-family: $font-bold;
+  font-weight: bold;
+}
+/* dim */
+.bg-dim.bg-red {
+  color: color.adjust($c-red, $lightness: -5%, $alpha: 0.5);
+}
+.bg-dim.bg-blue {
+  color: color.adjust($c-blue2, $lightness: -10%, $alpha: 0.5);
+}

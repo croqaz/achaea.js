@@ -2,26 +2,25 @@
   "private": true,
   "name": "achaea",
   "description": "Achaea MUD custom logic",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "type": "module",
   "authors": [
     "Cristi Constantin"
   ],
   "dependencies": {
     "@yanick/updeep-remeda": "2.x",
-    "ansicolor": "2.x",
     "as-table": "1.x",
     "chokidar": "3.x",
     "classic-level": "1.x",
     "express": "4.x",
     "mri": "1.2.x",
-    "nord": "0.x",
     "qheap": "1.x",
     "remeda": "1.x",
     "ws": "8.x"
   },
   "devDependencies": {
     "@types/node": "22.x",
+    "nord": "0.x",
     "prettier": "3.x",
     "sass": "1.x",
     "typescript": "5.6.x"
@@ -35,7 +34,6 @@
   },
   "scripts": {
     "fmt": "prettier --write achaea/{*,*/}*.ts",
-    "lint": "tsc -noEmit -allowImportingTsExtensions -esModuleInterop achaea/*.ts",
-    "sass": "sass achaea/static/theme.scss achaea/static/style.css --no-source-map"
+    "lint": "tsc -noEmit -allowImportingTsExtensions -esModuleInterop achaea/*.ts"
   }
 }

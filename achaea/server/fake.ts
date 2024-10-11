@@ -1,8 +1,8 @@
-import { black, blue, darkGray, green, lightGray, red, white } from 'ansicolor';
-import { bgRed, bgGreen, bgBlue, bgBlack, bgWhite } from 'ansicolor';
-
 import ee from '../events/index.ts';
-import ansiToHtml from '../core/ansi.ts';
+import { Colors, ansi2Html } from '../ansi.ts';
+
+const { black, blue, darkGray, green, lightGray, red, white } = Colors;
+const { bgRed, bgGreen, bgBlue, bgBlack, bgWhite } = Colors;
 
 const sleep = (s) => new Promise((r) => setTimeout(r, s * 1000));
 
@@ -14,22 +14,22 @@ export default async function fakeEvents() {
   ee.emit('user:text', '$ password');
   ee.emit('game:html', 'Welcome to Achaea.');
 
-  ee.emit('game:html', ansiToHtml(red('This is color red.')));
-  ee.emit('game:html', ansiToHtml(green('This is color green.')));
-  ee.emit('game:html', ansiToHtml(blue('This is color blue.')));
+  ee.emit('game:html', ansi2Html(red('This is color red.')));
+  ee.emit('game:html', ansi2Html(green('This is color green.')));
+  ee.emit('game:html', ansi2Html(blue('This is color blue.')));
 
-  ee.emit('game:html', ansiToHtml(black('This is color black.')));
-  ee.emit('game:html', ansiToHtml(white('This is color white.')));
-  ee.emit('game:html', ansiToHtml(lightGray('This is light gray.')));
-  ee.emit('game:html', ansiToHtml(darkGray('This is dark gray.')));
+  ee.emit('game:html', ansi2Html(black('This is color black.')));
+  ee.emit('game:html', ansi2Html(white('This is color white.')));
+  ee.emit('game:html', ansi2Html(lightGray('This is light gray.')));
+  ee.emit('game:html', ansi2Html(darkGray('This is dark gray.')));
 
   await sleep(0.2);
-  ee.emit('game:html', ansiToHtml(bgRed('This is background red.')));
-  ee.emit('game:html', ansiToHtml(bgGreen('This is background green.')));
-  ee.emit('game:html', ansiToHtml(bgBlue('This is background blue.')));
+  ee.emit('game:html', ansi2Html(bgRed('This is background red.')));
+  ee.emit('game:html', ansi2Html(bgGreen('This is background green.')));
+  ee.emit('game:html', ansi2Html(bgBlue('This is background blue.')));
 
-  ee.emit('game:html', ansiToHtml(bgBlack('This is background black.')));
-  ee.emit('game:html', ansiToHtml(bgWhite('This is background white.')));
+  ee.emit('game:html', ansi2Html(bgBlack('This is background black.')));
+  ee.emit('game:html', ansi2Html(bgWhite('This is background white.')));
 
   await sleep(0.1);
   ee.emit('sys:text', `<i class="c-darkGray"><b>[DB]</b> 6789 entries saved in WARES.</i>`);
@@ -67,14 +67,14 @@ export default async function fakeEvents() {
 
   ee.emit(
     'game:html',
-    ansiToHtml(`Room Descriptions:
+    ansi2Html(`Room Descriptions:
 [37mRoom_Title     [33m  3   0  [37m[33mOutside the Cave.
 [37mRoom_Desc      [33m  7   0  [37mThe trees loom above you...\n`),
   );
 
   ee.emit(
     'game:html',
-    ansiToHtml(`Things         [33m  6   0  [37m[36mA squirrel scampers about here.
+    ansi2Html(`Things         [33m  6   0  [37m[36mA squirrel scampers about here.
 [37mPlants         [33m  5   0  [37m[35mA lobelia wildflower is growing here.
 [37mPlayers        [33m 14   0  [37m[1;36mMaya, the Great Mother, is here.
 [0;37mExits          [33m  3   0  [37m[33mYou see exits to the north and east.
@@ -85,7 +85,7 @@ export default async function fakeEvents() {
   await sleep(0.5);
   ee.emit(
     'game:html',
-    ansiToHtml(`
+    ansi2Html(`
 Your current colour configuration is as follows:
 Channel        FG BG  Sample
 [34m-------------------------------------------------------------------------------
@@ -145,7 +145,7 @@ To restore the defaults, enter CONFIG COLOUR DEFAULT
   await sleep(0.5);
   ee.emit(
     'game:html',
-    ansiToHtml(`Proprietor: Lady Bambi Peaceful Dragon.
+    ansi2Html(`Proprietor: Lady Bambi Peaceful Dragon.
 [36m--------([33mItem[36m)------([33mDescription[36m)------------------------------([33mStock[36m)--([33mPrice[36m)
 [37m[1;32m[0;37m[1;32m[0;37m[1;32m[0;37m[1;32m[0;37m[1;32m[0;37m[1;32m[0;37m[32m       shield230957[37m a dented hefty kite shield                      1    5000[1;33mgp[0;37m
 [33m                    Cutting%    7;  Blunt%   13;  Magic%  n/a[37m

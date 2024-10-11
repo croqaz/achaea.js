@@ -1,0 +1,31 @@
+@font-face {
+  font-family: 'MononokiRegular';
+  src: url('Mononoki/Mononoki-Regular.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'MononokiBold';
+  src: url('Mononoki/Mononoki-Bold.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'MononokiBoldItalic';
+  src: url('Mononoki/Mononoki-BoldItalic.otf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'MononokiItalic';
+  src: url('Mononoki/Mononoki-Italic.otf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+$font-norm: MononokiRegular, monospace;
+$font-bold: MononokiBold, monospace;
+$font-ital: MononokiItalic, monospace;
+$font-boit: MononokiBoldItalic, monospace;
+
+$font-size: 15px;

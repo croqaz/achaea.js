@@ -1,0 +1,31 @@
+@font-face {
+  font-family: 'MonegoRegular';
+  src: url('Monego/Monego-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'MonegoBold';
+  src: url('Monego/Monego-Bold.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'MonegoBoldItalic';
+  src: url('Monego/Monego-BoldItalic.otf') format('opentype');
+  font-weight: normal;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'MonegoItalic';
+  src: url('Monego/Monego-Italic.otf') format('opentype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+$font-norm: MonegoRegular, monospace;
+$font-bold: MonegoBold, monospace;
+$font-ital: MonegoItalic, monospace;
+$font-boit: MonegoBoldItalic, monospace;
+
+$font-size: 15px;

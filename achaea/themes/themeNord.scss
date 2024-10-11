@@ -1,0 +1,34 @@
+// Needs to run from the root of the project
+@import '~node_modules/nord/src/sass/nord.scss';
+
+$dark1: $nord0; // the darkest
+$dark2: $nord1;
+$dark3: $nord2;
+$dark4: $nord3;
+
+$light1: $nord4;
+$light2: $nord5;
+$light3: $nord6; // the brightest
+
+$dark-foreground: $light1;
+$foreground: $light2;
+$bright-foreground: $light3;
+
+$c-blue: $nord10;
+$c-blue2: $nord9;
+$c-cyan: $nord8;
+$c-green: $nord14;
+$c-magenta: $nord15;
+$c-orange: $nord12;
+$c-red: $nord11;
+$c-yellow: $nord13;
+
+:root {
+  --background: #{$dark1};
+  --background1: #{$dark2};
+  --background2: #{$dark3};
+  --background3: #{$dark4};
+  --foreground: #{$foreground};
+  --dark-foreground: #{$light1};
+  --bright-foreground: #{$light3};
+}
