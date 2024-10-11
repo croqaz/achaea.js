@@ -1,7 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
 
-import { italic } from 'ansicolor';
-import ansiToHtml from './ansi.ts';
 import * as T from '../types.ts';
 import ee from '../events/index.ts';
 import { MAP } from '../maps/index.ts';
@@ -364,10 +362,10 @@ export function gmcpProcessDefences(type: string, data) {
     updateMyself({ defences: data });
   } else if (type === 'Char.Defences.Add') {
     const tsData = data as T.GmcpDefence;
-    ee.emit('sys:text', ansiToHtml(italic.magenta(`Defences ++ ${tsData.name}`)));
+    ee.emit('sys:text', `<i class="c-magenta">Defences ++ ${tsData.name}</i>`);
     addToStateList('Me', 'defences', tsData);
   } else if (type === 'Char.Defences.Remove') {
-    ee.emit('sys:text', ansiToHtml(italic.red(`Defences -- ${data}`)));
+    ee.emit('sys:text', `<i class="c-red">Defences -- ${data}</i>`);
     for (const item of data as string[]) {
       remFromStateList('Me', 'defences', item);
     }
@@ -389,19 +387,15 @@ export function gmcpProcessAfflictions(type: string, data) {
     const tsData = data as T.GmcpAffliction;
     if (tsData.name === 'amnesia') {
       ee.emit('user:text', 'QUEUE PREPEND eb TOUCH AMNESIA');
-      ee.emit('sys:text', '[SYS] Touching amnesia ...');
     }
     ee.emit(
       'sys:text',
-      ansiToHtml(
-        italic.red(`Afflictions ++ ${tsData.name} `) +
-          (tsData.cure ? italic.magenta(`; CURE: ${tsData.cure}`) : ''),
-      ),
+      `<i class="c-red">Afflictions ++ ${tsData.name};${tsData.cure ? ' Cure: ' + tsData.cure : ''}</i>`,
     );
     addToStateList('Me', 'afflictions', tsData);
   } else if (type === 'Char.Afflictions.Remove') {
     const tsData = data as string[];
-    ee.emit('sys:text', ansiToHtml(italic.magenta(`Afflictions -- ${data}`)));
+    ee.emit('sys:text', `<i class="c-magenta">Afflictions -- ${data}</i>`);
     for (const name of tsData) {
       remFromStateList('Me', 'afflictions', name);
       // Hook after removing some aff

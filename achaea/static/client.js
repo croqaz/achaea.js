@@ -26,7 +26,7 @@ window.addEventListener('load', function () {
     // Full expand map
     if (ev.ctrlKey && ev.key === 'm') {
       if (rightElem.classList.contains('big')) {
-        rightElem.classList.toggle('big');
+        rightElem.classList.remove('big');
       }
       const mapView = mapElem.style.display === 'none' ? wildMap : mapElem;
       mapView.classList.toggle('big');
@@ -37,8 +37,9 @@ window.addEventListener('load', function () {
     }
     // Half screen expand the chat
     if (ev.ctrlKey && ev.key === ',') {
-      if (mapView.classList.contains('big')) {
-        mapView.classList.toggle('big');
+      if (mapElem.classList.contains('big') || wildMap.classList.contains('big')) {
+        mapElem.classList.remove('big');
+        wildMap.classList.remove('big');
         window.dispatchEvent(new Event('resize'));
       }
       return rightElem.classList.toggle('big');
@@ -48,13 +49,14 @@ window.addEventListener('load', function () {
       return;
     }
     if (ev.key === 'Escape') {
-      if (mapView.classList.contains('big')) {
-        mapView.classList.toggle('big');
+      if (mapElem.classList.contains('big') || wildMap.classList.contains('big')) {
+        mapElem.classList.remove('big');
+        wildMap.classList.remove('big');
         window.dispatchEvent(new Event('resize'));
         return map.autoCenterMap();
       }
       if (rightElem.classList.contains('big')) {
-        return rightElem.classList.toggle('big');
+        return rightElem.classList.remove('big');
       }
       userInput.blur();
       gameLog.focus();

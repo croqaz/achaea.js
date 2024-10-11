@@ -1,7 +1,7 @@
 import * as T from './types.ts';
 import { STATE } from './core/state.ts';
 import { Config } from './extra/config.ts';
-import { CITIES, HERBS, MINERALS, MATERIALS } from './core/common.ts';
+import { CITIES, HERBS, MATERIALS, MINERALS } from './core/common.ts';
 
 export function parseSurvey(text: string) {
   const parts = text.split('\n').filter((x) => !!x);
@@ -44,8 +44,9 @@ export function validMap(text: string): string[] | null {
     title === 'You enter the subdivision.' ||
     title.startsWith('You begin to flap your wings powerfully,') ||
     title.endsWith('You land easily, back on the ground again.')
-  )
+  ) {
     desc.push(parts.shift());
+  }
   let len = 0;
   for (let line of parts) {
     // all map lines must have the same length,

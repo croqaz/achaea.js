@@ -1,13 +1,12 @@
 import { Buffer } from 'buffer';
-import ansiColor from 'ansicolor';
 
 import ee from './events/index.ts';
-import ansiToHtml from './core/ansi.ts';
 import { PROMPT } from './core/output.ts';
+import { ansi2Html, ansiStrip } from './ansi';
 import processDisplayText from './core/output.ts';
 import { TelnetSocket, telOpts } from './telnet/index.ts';
-import { logSetup, logDestroy, logWrite } from './logs/index.ts';
-import { isoDate, normText, escapeHtml } from './core/util.ts';
+import { logDestroy, logSetup, logWrite } from './logs/index.ts';
+import { escapeHtml, isoDate, normText } from './core/util.ts';
 // import { teloptFmt } from './telnet/util.ts';
 
 // import core stuff
@@ -99,11 +98,11 @@ function logFixtures(txt: string): string {
 // On any telnet text
 ee.on('tel:text', (rawText: string) => {
   rawText = globalFixtures(rawText);
-  const plainText = ansiColor.strip(rawText);
+  const plainText = ansiStrip(rawText);
   // Plain text + normalized text for triggers
   ee.emit('game:text', plainText, normText(plainText));
   // Processed out text for GUI and logs
-  let viewText = ansiToHtml(escapeHtml(rawText));
+  let viewText = ansi2Html(escapeHtml(rawText));
   viewText = processDisplayText(viewText.trim(), plainText);
   ee.emit('game:html', viewText);
   logWrite('\n' + logFixtures(viewText) + '\n');

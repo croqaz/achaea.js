@@ -1,9 +1,8 @@
-import process from 'node:process';
+// import process from 'node:process';
 import * as T from '../types.ts';
-
-import ee from '../events/index.ts';
-import ansiToHtml from './ansi.ts';
 import * as S from './state.ts';
+import ee from '../events/index.ts';
+import { ansi2Html } from '../ansi';
 
 export function gmcpHello() {
   return Buffer.from(`Core.Hello {"Client":"node","Version":"${process.version}"}`);
@@ -109,7 +108,7 @@ export function processGMCP(text: string) {
   if (type === 'Comm.Channel.Text') {
     // Communication msgs are not saved in STATE
     const tsData = data as T.GmcpChannelText;
-    tsData.text = ansiToHtml(tsData.text);
+    tsData.text = ansi2Html(tsData.text);
     return ee.emit('channel:text', tsData);
   }
 

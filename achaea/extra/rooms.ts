@@ -25,7 +25,7 @@ async function onRoomInfoUpdate(data: Record<string, string>) {
   await dbSave('room', room);
 }
 
-async function onRoomItemsUpdate(data) {
+async function onRoomItemsUpdate(data: T.GmcpItem[]) {
   if (!data || data.length === 0) return;
 
   const room = STATE.Room;
