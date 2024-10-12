@@ -649,7 +649,7 @@ export function gmcpProcessRoomPlayers(type: string, data) {
       } else {
         ee.emit('sys:text', `<b>Players ++</b> ${tsData.name}`);
       }
-      STATE.Room.players.push(p as T.GmcpPlayer);
+      STATE.Room.players.push((p || data) as T.GmcpPlayer);
       // sync battle targets
       STATE.Battle.tgts[tsData.name] = {
         player: true,

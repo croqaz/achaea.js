@@ -176,6 +176,9 @@ test('room players state', async () => {
 
   g.processGMCP('Room.AddPlayer { "name": "Abc", "fullname": "The Abc" }');
   await sleep(0.1);
+  g.processGMCP('Room.AddPlayer { "name": "Abc", "fullname": "The Abc" }');
+  await sleep(0.1);
+  expect(s.STATE.Room.players.length).toBe(1);
   expect(s.STATE.Room.players[0].name).toBe('Abc');
 
   // try to remove inexistent player
