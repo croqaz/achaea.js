@@ -27,6 +27,9 @@ $c-red: #e06c75;
 $c-yellow: #e5c07b;
 $c-orange: mix($c-red, $c-yellow);
 
+$c-bright-red: color.adjust($c-red, $lightness: 10%);
+$c-bright-yellow: color.adjust($c-yellow, $lightness: 10%);
+
 //
 // usually you don't need to edit these:
 //
@@ -43,8 +46,6 @@ $c-bright-blue: color.adjust($c-blue, $lightness: 20%);
 $c-bright-cyan: color.adjust($c-cyan, $lightness: 20%);
 $c-bright-green: color.adjust($c-green, $lightness: 20%);
 $c-bright-magenta: color.adjust($c-magenta, $lightness: 20%);
-$c-bright-red: color.adjust($c-red, $lightness: 20%);
-$c-bright-yellow: color.adjust($c-yellow, $lightness: 20%);
 
 $c-bright-black: color.adjust($dark-foreground, $lightness: -10%);
 $c-bright-darkGray: $dark-foreground;
