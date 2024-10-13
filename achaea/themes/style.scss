@@ -1,3 +1,9 @@
+
+$base-r: #881000;
+$base-b: #004088;
+$base-y: #916919;
+$base-m: #703080;
+
 *,
 *::before,
 *::after {
@@ -278,28 +284,12 @@ body {
   text-align: center;
   font-size: $font-size - 2;
   border-right: 1px solid $light1;
-  background: color.adjust($c-red, $lightness: -20%);
+  background: $base-r;
   transition: width 0.5s;
 }
 #targetHpnow:hover {
   color: $bright-foreground;
   font-family: $font-bold;
-}
-#rageBar {
-  display: none; // flex
-  height: 0.225rem;
-  background-color: var(--background);
-}
-#selfRageMax {
-  flex: 1;
-  display: flex;
-  color: $dark-foreground;
-  border-left: 1px solid $light1;
-}
-#selfRageNow {
-  border-right: 1px solid $light1;
-  background: color.adjust($c-yellow, $lightness: -10%);
-  transition: width 0.5s;
 }
 
 #statBar {
@@ -342,16 +332,16 @@ body {
 }
 
 #hpnow {
-  background: color.adjust($c-red, $lightness: -20%);;
+  background: $base-r;
 }
 #mpnow {
-  background: #005f87;
+  background: $base-b;
 }
 #epnow {
-  background: color.adjust($c-yellow, $lightness: -40%);
+  background: $base-y;
 }
 #wpnow {
-  background: #703080;
+  background: $base-m;
 }
 
 // *::-webkit-scrollbar {
@@ -370,7 +360,7 @@ body {
 
 /* wikipedia.org/wiki/ANSI_escape_code */
 .c-black {
-  color: $dark1;
+  color: $c-black;
   font-family: $font-bold;
   font-weight: bold;
 }
@@ -393,11 +383,11 @@ body {
   color: $c-cyan;
 }
 .c-darkGray {
-  color: color.adjust($dark-foreground, $lightness: -25%);
+  color: $c-darkGray;
   font-family: $font-bold;
 }
 .c-lightGray {
-  color: $dark-foreground;
+  color: $c-lightGray;
   font-family: $font-bold;
 }
 .c-white {
@@ -409,7 +399,7 @@ body {
   font-family: $font-bold;
 }
 .c-bright.c-black {
-  color: color.adjust($dark-foreground, $lightness: -10%);
+  color: $c-bright-black;
 }
 .c-bright.c-red {
   color: $c-bright-red;
@@ -429,10 +419,17 @@ body {
 .c-bright.c-cyan {
   color: $c-bright-cyan;
 }
-.c-bright.c-lightGray {
-  color: $bright-foreground;
+.c-bright.c-darkGray {
+  color: $c-bright-darkGray;
 }
-/* dim */
+.c-bright.c-lightGray {
+  color: $c-bright-lightGray;
+}
+.c-bright.c-white {
+  color: $c-bright-white;
+}
+
+/* dim -- NOT sure if used in game */
 .c-dim {
   font-family: $font-boit;
 }

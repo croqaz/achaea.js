@@ -202,10 +202,6 @@ $light1: $nord4;
 $light2: $nord5;
 $light3: $nord6; // the brightest
 
-$dark-foreground: $light1;
-$foreground: $light2;
-$bright-foreground: $light3;
-
 $c-blue: $nord10;
 $c-cyan: $nord8;
 $c-green: $nord14;
@@ -220,6 +216,23 @@ $c-bright-green: color.adjust($c-green, $lightness: 10%);
 $c-bright-magenta: color.adjust($c-magenta, $lightness: 5%);
 $c-bright-red: color.adjust($c-red, $lightness: 10%);
 $c-bright-yellow: $c-yellow;
+
+//
+// usually you don't need to edit these:
+//
+$dark-foreground: $light1;
+$foreground: $light2;
+$bright-foreground: $light3;
+
+$c-black: $dark1;
+$c-darkGray: color.adjust($dark-foreground, $lightness: -25%);
+$c-lightGray: $dark-foreground;
+$c-white: $bright-foreground;
+
+$c-bright-black: color.adjust($dark-foreground, $lightness: -10%);
+$c-bright-darkGray: $dark-foreground;
+$c-bright-lightGray: $bright-foreground;
+$c-bright-white: color.adjust($bright-foreground, $lightness: 10%);
 
 :root {
   --background: #{$dark1};

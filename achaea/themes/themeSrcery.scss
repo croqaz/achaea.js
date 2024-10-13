@@ -1,3 +1,7 @@
+//
+// Srcery Theme
+// https://srcery.sh
+//
 $srcery-black: #1c1b19;
 $srcery-red: #ef2f27;
 $srcery-green: #519f50;
@@ -33,13 +37,9 @@ $dark2: $srcery-xgray1;
 $dark3: $srcery-xgray3;
 $dark4: $srcery-xgray5;
 
-$light1: #a8a8af;
-$light2: #bbbbbf;
-$light3: #c4c4cf; // the brightest
-
-$dark-foreground: $light1;
-$foreground: $light2;
-$bright-foreground: $light3;
+$light1: #b0b0b6;
+$light2: #d0d0d5;
+$light3: #e0e0e4; // the brightest
 
 $c-blue: $srcery-blue;
 $c-cyan: $srcery-cyan;
@@ -49,12 +49,33 @@ $c-orange: $srcery-orange;
 $c-red: $srcery-red;
 $c-yellow: $srcery-yellow;
 
+//
+// Srcery provides bright colors, which is awesome
+//
 $c-bright-blue: $srcery-bright-blue;
 $c-bright-cyan: $srcery-bright-cyan;
 $c-bright-green: $srcery-bright-green;
 $c-bright-magenta: $srcery-bright-magenta;
 $c-bright-red: $srcery-bright-red;
 $c-bright-yellow: $srcery-bright-yellow;
+
+$c-bright-black: $srcery-bright-black;
+$c-bright-white: $srcery-bright-white;
+
+//
+// usually you don't need to edit these:
+//
+$dark-foreground: $light1;
+$foreground: $light2;
+$bright-foreground: $light3;
+
+$c-black: $dark1;
+$c-darkGray: color.adjust($dark-foreground, $lightness: -25%);
+$c-lightGray: $dark-foreground;
+$c-white: $bright-foreground;
+
+$c-bright-darkGray: $dark-foreground;
+$c-bright-lightGray: $bright-foreground;
 
 :root {
   --background: #{$dark1};

@@ -1,0 +1,73 @@
+//
+// Solarized Theme
+// https://ethanschoonover.com/solarized
+//
+/* prettier-ignore-start */
+$base03:  #002b36;
+$base02:  #073642;
+$base01:  #586e75;
+$base00:  #657b83;
+$base0:   #839496;
+$base1:   #93a1a1;
+$base2:   #eee8d5;
+$base3:   #fdf6e3;
+$yellow:  #b58900;
+$orange:  #cb4b16;
+$red:     #dc322f;
+$magenta: #d33682;
+$violet:  #6c71c4;
+$blue:    #268bd2;
+$cyan:    #2aa198;
+$green:   #859900;
+/* prettier-ignore-end */
+
+$dark1: color.adjust($base03, $lightness: -9%); // the darkest
+$dark2: $base03;
+$dark3: $base02;
+$dark4: $base01;
+
+$light1: $base2;
+$light2: $base3;
+$light3: color.adjust($base3, $lightness: 10%); // the brightest
+
+$c-blue: $blue;
+$c-cyan: $cyan;
+$c-green: $green;
+$c-magenta: $magenta;
+$c-orange: $orange;
+$c-red: $red;
+$c-yellow: $yellow;
+
+//
+// usually you don't need to edit these:
+//
+$dark-foreground: $light1;
+$foreground: $light2;
+$bright-foreground: $light3;
+
+$c-black: $dark1;
+$c-darkGray: color.adjust($dark-foreground, $lightness: -25%);
+$c-lightGray: $dark-foreground;
+$c-white: $bright-foreground;
+
+$c-bright-blue: color.adjust($c-blue, $lightness: 20%);
+$c-bright-cyan: color.adjust($c-cyan, $lightness: 20%);
+$c-bright-green: color.adjust($c-green, $lightness: 20%);
+$c-bright-magenta: color.adjust($c-magenta, $lightness: 20%);
+$c-bright-red: color.adjust($c-red, $lightness: 20%);
+$c-bright-yellow: color.adjust($c-yellow, $lightness: 20%);
+
+$c-bright-black: color.adjust($dark-foreground, $lightness: -10%);
+$c-bright-darkGray: $dark-foreground;
+$c-bright-lightGray: $bright-foreground;
+$c-bright-white: color.adjust($bright-foreground, $lightness: 10%);
+
+:root {
+  --background: #{$dark1};
+  --background1: #{$dark2};
+  --background2: #{$dark3};
+  --background3: #{$dark4};
+  --foreground: #{$foreground};
+  --dark-foreground: #{$light1};
+  --bright-foreground: #{$light3};
+}
