@@ -37,7 +37,7 @@ export function validMap(text: string): string[] | null {
   if (parts.length < 8) return null;
   const title = parts[0].replace(/\r$/, '');
   if (!(title.endsWith('.') || parts[0].includes('.</span><span'))) return null;
-  const re = /^[ #&%?*;,.\/;@MXYnw\\|\+-~^]+\r?$/;
+  const re = /^[ #&%?*';,.\/;@MXYjnw\\|\+-~^]+\r?$/;
   let map = [];
   let desc = [parts.shift()];
   if (

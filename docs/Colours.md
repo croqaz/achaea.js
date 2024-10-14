@@ -69,3 +69,9 @@ To regenerate the styles with your custom style #1, run:
 ```sh
 bun achaea/themes/gen.ts --theme custom1 --output achaea/static/style.css
 ```
+
+To start a test/ simulation mode and view your colors, open the fake mode:
+
+```
+NODE_ENV=test bun main.ts --fake 1 --telnet 0 <NAME>
+```

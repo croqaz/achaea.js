@@ -12,12 +12,6 @@ test('normalize text', () => {
   expect(u.normText(' Asd\n\nqwe, \t zxc. ')).toEqual('Asd qwe, zxc.');
 });
 
-test('title-case', () => {
-  expect(u.toTitleCase('aSd Zxc')).toBe('Asd zxc');
-  expect(u.toTitleCase('QWE ZXC')).toBe('Qwe zxc');
-  expect(u.toTitleCase(' \t\n')).toBe(' \t\n');
-});
-
 test('day-night to hour', () => {
   expect(t.dayNightToHour(0)).toBe(12);
   expect(t.dayNightToHour(3)).toBe(13);

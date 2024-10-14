@@ -1,5 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 
+import * as R from 'remeda';
 import * as T from '../types.ts';
 import ee from '../events/index.ts';
 import { MAP } from '../maps/index.ts';
@@ -348,7 +349,7 @@ export function gmcpProcessTarget(type: string, data) {
   if (type === 'IRE.Target.Set') {
     const tsData = data as string;
     // @ts-ignore: Types
-    STATE.Battle.tgtID = parseInt(tsData) || tsData.toTitleCase();
+    STATE.Battle.tgtID = parseInt(tsData) || R.capitalize(tsData);
   } else if (type === 'IRE.Target.Info') {
     const tsData = data as Record<string, string>;
     if (tsData.id && tsData.id !== '-1') STATE.Battle.tgtID = parseInt(tsData.id as string);
@@ -605,10 +606,10 @@ export function gmcpProcessRoomPlayers(type: string, data) {
     //
     // TODO :: move this from the server side ...
     //
-    let city = obj.city ? obj.city.toTitleCase() : 'Rogue';
+    let city = obj.city ? R.capitalize(obj.city) : 'Rogue';
     // Highlight player's own city
     if (city === STATE.Me.city) city = '★ ' + city;
-    const race = obj.race ? obj.race.toTitleCase() + ' ' : '';
+    const race = obj.race ? R.capitalize(obj.race) + ' ' : '';
     const lvl = obj.level ? `lvl.${obj.level},` : '';
     return `<span class="${obj.cls}">${obj.fullname}, ${race}${lvl} <b>${city}</b></span>`;
   };

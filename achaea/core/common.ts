@@ -1,4 +1,4 @@
-import u from '@yanick/updeep-remeda';
+import * as R from 'remeda';
 
 export const CITIES = Object.freeze(['Ashtan', 'Cyrene', 'Eleusis', 'Hashan', 'Mhaldor', 'Targossas']);
 
@@ -452,7 +452,9 @@ Weed          (Smoked) Induces feelings of euphoria and hallucinations of giant,
     return [name.toLowerCase(), { long }];
   });
 
-export const HERBS = u.freeze(u(Object.fromEntries(_herbs_short), Object.fromEntries(_herbs_long)));
+export const HERBS = Object.freeze(
+  R.mergeDeep(Object.fromEntries(_herbs_short), Object.fromEntries(_herbs_long)),
+);
 // Release memory
 _herbs_short = null;
 _herbs_long = null;
@@ -519,7 +521,9 @@ Stannum       When eaten, cures various afflictions relating to your sanity.
     return [name.toLowerCase(), { long }];
   });
 
-export const MINERALS = u.freeze(u(Object.fromEntries(_minerals_short), Object.fromEntries(_minerals_long)));
+export const MINERALS = Object.freeze(
+  R.mergeDeep(Object.fromEntries(_minerals_short), Object.fromEntries(_minerals_long)),
+);
 // Release memory
 _minerals_short = null;
 _minerals_long = null;
@@ -544,7 +548,7 @@ Vegetable   Healthy food to help you grow big and strong.
     return [name.toLowerCase(), desc];
   });
 
-export const MATERIALS = u.freeze(Object.fromEntries(_gather_materials));
+export const MATERIALS = Object.freeze(Object.fromEntries(_gather_materials));
 _gather_materials = null;
 
 // Mineral to Herb equivalence
@@ -578,8 +582,8 @@ Stannum      Ash
     return [herb.toLowerCase(), mineral.toLowerCase()];
   });
 
-export const MINERAL_EQ_HERB = u.freeze(Object.fromEntries(_mineral_eq_herb));
-export const HERB_EQ_MINERAL = u.freeze(Object.fromEntries(_mineral_eq_herb.map((x) => [x[1], x[0]])));
+export const MINERAL_EQ_HERB = Object.freeze(Object.fromEntries(_mineral_eq_herb));
+export const HERB_EQ_MINERAL = Object.freeze(Object.fromEntries(_mineral_eq_herb.map((x) => [x[1], x[0]])));
 // Release memory
 _mineral_eq_herb = null;
 

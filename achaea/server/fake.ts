@@ -1,8 +1,7 @@
 import ee from '../events/index.ts';
 import { Colors, ansi2Html } from '../ansi.ts';
 
-const { black, blue, darkGray, green, lightGray, red, white } = Colors;
-const { bgRed, bgGreen, bgBlue, bgBlack, bgWhite } = Colors;
+const { bgRed, bgGreen, bgBlue, bgBlack, bgCyan, bgWhite } = Colors;
 
 const sleep = (s) => new Promise((r) => setTimeout(r, s * 1000));
 
@@ -14,28 +13,59 @@ export default async function fakeEvents() {
   ee.emit('user:text', '$ password');
   ee.emit('game:html', 'Welcome to Achaea.');
 
-  ee.emit('game:html', ansi2Html(red('This is color red.')));
-  ee.emit('game:html', ansi2Html(green('This is color green.')));
-  ee.emit('game:html', ansi2Html(blue('This is color blue.')));
+  // this is in the order of ANSI codes
+  ee.emit('sys:text', `<b>[test]</b> testing colors ...</i>`);
+  ee.emit('game:html', ansi2Html(Colors.red('This is color red.')));
+  ee.emit('game:html', ansi2Html(Colors.green('This is color green.')));
+  ee.emit('game:html', ansi2Html(Colors.yellow('This is color yellow.')));
+  ee.emit('game:html', ansi2Html(Colors.blue('This is color blue.')));
+  ee.emit('game:html', ansi2Html(Colors.magenta('This is color magenta.')));
+  ee.emit('game:html', ansi2Html(Colors.cyan('This is color cyan.')));
+  ee.emit('game:html', ansi2Html(Colors.white('This is color white.')));
+  ee.emit('game:html', ansi2Html(Colors.lightGray('This is light gray.')));
+  ee.emit('game:html', ansi2Html(Colors.darkGray('This is dark gray.')));
+  ee.emit('game:html', ansi2Html(Colors.black('This is color black.')));
 
-  ee.emit('game:html', ansi2Html(black('This is color black.')));
-  ee.emit('game:html', ansi2Html(white('This is color white.')));
-  ee.emit('game:html', ansi2Html(lightGray('This is light gray.')));
-  ee.emit('game:html', ansi2Html(darkGray('This is dark gray.')));
+  await sleep(0.2);
+  ee.emit('game:html', ansi2Html(Colors.bright.red('This is bright red.')));
+  ee.emit('game:html', ansi2Html(Colors.bright.green('This is bright green.')));
+  ee.emit('game:html', ansi2Html(Colors.bright.yellow('This is bright yellow.')));
+  ee.emit('game:html', ansi2Html(Colors.bright.blue('This is bright blue.')));
+  ee.emit('game:html', ansi2Html(Colors.bright.magenta('This is bright magenta.')));
+  ee.emit('game:html', ansi2Html(Colors.bright.cyan('This is bright cyan.')));
+
+  await sleep(0.2);
+  ee.emit('game:html', ansi2Html(Colors.dim.red('This is dim red.')));
+  ee.emit('game:html', ansi2Html(Colors.dim.green('This is dim green.')));
+  ee.emit('game:html', ansi2Html(Colors.dim.yellow('This is dim yellow.')));
+  ee.emit('game:html', ansi2Html(Colors.dim.blue('This is dim blue.')));
+  ee.emit('game:html', ansi2Html(Colors.dim.magenta('This is dim magenta.')));
+  ee.emit('game:html', ansi2Html(Colors.dim.cyan('This is dim cyan.')));
 
   await sleep(0.2);
   ee.emit('game:html', ansi2Html(bgRed('This is background red.')));
   ee.emit('game:html', ansi2Html(bgGreen('This is background green.')));
   ee.emit('game:html', ansi2Html(bgBlue('This is background blue.')));
-
+  ee.emit('game:html', ansi2Html(bgCyan('This is background cyan.')));
   ee.emit('game:html', ansi2Html(bgBlack('This is background black.')));
   ee.emit('game:html', ansi2Html(bgWhite('This is background white.')));
 
-  await sleep(0.1);
+  // NOT SURE if these colors will ever show up in the game...
+  //
+  ee.emit('sys:text', `<i class="c-bright c-black"><b>[test]</b> this is bright black.</i>`);
+  ee.emit('sys:text', `<i class="c-bright c-darkGray"><b>[test]</b> this is bright darkGray.</i>`);
+  ee.emit('sys:text', `<i class="c-bright c-lightGray"><b>[test]</b> this is bright lightGray.</i>`);
+  ee.emit('sys:text', `<i class="c-bright c-white"><b>[test]</b> this is bright white.</i>`);
+
+  ee.emit('sys:text', `<i class="bg-darkGray"><b>[test]</b> this is background darkGray.</i>`);
+  ee.emit('sys:text', `<i class="bg-lightGray"><b>[test]</b> this is background lightGray.</i>`);
+  ee.emit('sys:text', `<i class="bg-white"><b>[test]</b> this is background white #2.</i>`);
+
+  await sleep(0.2);
   ee.emit('sys:text', `<i class="c-darkGray"><b>[DB]</b> 6789 entries saved in WARES.</i>`);
   ee.emit('sys:text', `<i class="c-darkGray"><b>[DB]</b> 0123 entries saved in WHOIS.</i>`);
 
-  await sleep(0.5);
+  await sleep(0.2);
   ee.emit('user:text', 'User text');
   ee.emit('user:text', 'TEST ligatures: fi, ffi, th ...');
   ee.emit('user:text', 'TEST ligatures: find fluffy jello ...');
@@ -256,7 +286,7 @@ To restore the defaults, enter CONFIG COLOUR DEFAULT
     ee.emit(
       'game:gmcp',
       `Room.AddPlayer {
-        "name": "Proficy", "fullname": "Proficy Ikari"
+        "name": "Proficy", "fullname": "Collector of Tithes, Proficy Ikari"
       }`,
     );
     ee.emit(
@@ -300,7 +330,7 @@ To restore the defaults, enter CONFIG COLOUR DEFAULT
     ee.emit(
       'game:gmcp',
       `Room.AddPlayer {
-        "name": "Faerum", "fullname": "Challenger Faerum"
+        "name": "Faerum", "fullname": "Deadly Toddler Faerum, Prophet of Laytron"
       }`,
     );
     await sleep(4);
@@ -308,6 +338,13 @@ To restore the defaults, enter CONFIG COLOUR DEFAULT
     await sleep(2);
     ee.emit('game:gmcp', `Room.RemovePlayer "Faerum"`);
   }, 8500);
+
+  let sayMsgNo = 1;
+  setInterval(() => {
+    let say = { 'channel': 'says', 'talker': 'Abc', 'text': Colors.cyan(`You say, "Hello ${sayMsgNo}."`) };
+    ee.emit('game:gmcp', 'Comm.Channel.Text ' + JSON.stringify(say));
+    sayMsgNo++;
+  }, 3500);
 
   await sleep(0.25);
   ee.emit(
@@ -324,6 +361,17 @@ To restore the defaults, enter CONFIG COLOUR DEFAULT
       "name": "weathering", "desc": "Weathering increases your constitution..."
     }`,
   );
+
+  let tellMsgNo = 1;
+  setInterval(() => {
+    let say = {
+      'channel': 'tell Abc',
+      'talker': 'Abc',
+      'text': Colors.bright.yellow(`Abc tells you, "Hello ${tellMsgNo}."`),
+    };
+    ee.emit('game:gmcp', 'Comm.Channel.Text ' + JSON.stringify(say));
+    tellMsgNo++;
+  }, 3500);
 
   await sleep(0.25);
   ee.emit('game:gmcp', `Char.Afflictions.Remove [ "prone" ]`);
@@ -351,7 +399,8 @@ To restore the defaults, enter CONFIG COLOUR DEFAULT
   ee.emit(
     'game:gmcp',
     `Comm.Channel.Text {
-      "channel": "says", "talker": "Liirup the Placid", "text": "Liirup says, \\"Dead rats. Truly, is there anything tastier in this entire, wonderful world?\\""
+      "channel": "says", "talker": "Liirup the Placid", "text":
+      "Liirup says, \\"Dead rats. Truly, is there anything tastier in this entire, wonderful world?\\""
     }`,
   );
 
@@ -360,17 +409,8 @@ To restore the defaults, enter CONFIG COLOUR DEFAULT
     'game:gmcp',
     `Comm.Channel.Text {
       "channel": "tell Certimene876", "talker": "Certimene",
-      "text": "Certimene tells you, \\"Greetings! Are you looking to make a change? I can help you into a new class once you have QUIT your current class, if that's your aim!\\""
+      "text":
+      "Certimene tells you, \\"Greetings! Are you looking to make a change? I can help you into a new class once you have QUIT your current class, if that's your aim!\\""
     }`,
   );
-
-  let sayMsgNo = 1;
-  setInterval(() => {
-    ee.emit(
-      'game:gmcp',
-      `Comm.Channel.Text { "channel": "says", "talker": "Abc",
-      "text": "You say, \\"Hello ${sayMsgNo}.\\"" }`,
-    );
-    sayMsgNo++;
-  }, 3500);
 }

@@ -4,16 +4,6 @@ export function words(str: string, divider = /\s+/) {
   return str.trim().split(divider);
 }
 
-// @ts-ignore: Types
-String.prototype.toTitleCase = function () {
-  return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
-};
-
-/** Converts a string to title case. */
-export function toTitleCase(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
-
 /** Normalize spaces and newlines. */
 export function normText(str: string): string {
   if (!str) return '';
