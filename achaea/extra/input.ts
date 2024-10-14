@@ -3,6 +3,7 @@ import chokidar from 'chokidar';
 import ee from '../events/index.ts';
 import * as db from './leveldb.js';
 import * as comm from '../core/common.ts';
+import { millInks } from './mill.ts';
 import { htmlTable } from './table.ts';
 import processMapAliases from './map.ts';
 
@@ -193,6 +194,16 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
       STATE.Misc.getPlants = true;
       STATE.Misc.getMinerals = true;
       return 'PLANTS && MINERALS';
+    } else if (firstWord === '//mill') {
+      /*
+       * Mill inks
+       */
+      const nr = parseInt(otherWords) || 5;
+      if (nr <= 0) {
+        ee.emit('sys:text', `<i class="c-dim c-red"><b>[Mill]</b>: "${nr}" is not a valid number!</i>`);
+        return;
+      }
+      return millInks(nr, secondWord);
     } else if (firstWord === '//find') {
       /*
        * Query DB in game
