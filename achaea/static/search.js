@@ -1,76 +1,89 @@
 String.prototype.toTitleCase = function () {
-  return this.charAt(0).toUpperCase() + this.substr(1).toLowerCase();
+  return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
 };
 
-function processWares(x) {
-  let row = '';
-  row += `<tr><td>${x.id}</td>`;
-  row += `<td class="small">${x.name}</td>`;
-  row += `<td>${x.pp}</td>`;
-  row += `<td>${x.price}</td>`;
-  row += `<td class="small">${x.room}</td>`;
-  row += `<td class="small">${x.dt.replace('T', ' ')}</td>`;
-  row += '</tr>';
-  return row;
-}
-
-function processWhois(x) {
-  x.class = x.class || '?';
-  x.city = (x.city || '?').toTitleCase();
-  x.race = (x.race || '?').toTitleCase();
-  x.rank = x.xp_rank && x.xp_rank !== '0' ? x.xp_rank : '??';
-  const pre = `#${x.rank.padEnd(3, ' ')} lvl.${x.level}\t${x.class}`;
-
-  let row = '';
-  row += `<tr><td>${x.id}</td>`;
-  row += `<td><pre class="small">${pre}</pre></td>`;
-  row += `<td class="small">${x.city}</td>`;
-  row += `<td class="small">${x.race}</td>`;
-  row += `<td class="small">${x.dt.replace('T', ' ')}</td>`;
-  row += '</tr>';
-  return row;
-}
-
-function processItem(x) {
-  let row = '';
-  row += `<tr><td>${x.id}</td>`;
-  row += `<td class="small">${x.name}</td>`;
-  row += `<td class="small">${x.room}</td>`;
-  row += `<td class="small">${x.dt.replace('T', ' ')}</td>`;
-  row += '</tr>';
-  return row;
-}
+const F = {
+  waresHead: () => {
+    return {
+      id: null,
+      name: null,
+      pp: null,
+      price: null,
+      room: null,
+      dt: (x) => x.dt.replace('T', ' '),
+    };
+  },
+  whoisHead: () => {
+    return {
+      id: null,
+      rank: (x) => {
+        x.rank = x.xp_rank && x.xp_rank !== '0' ? x.xp_rank : '??';
+        return `#${x.rank.padEnd(3, ' ')} lvl.${x.level}`;
+      },
+      class: (x) => x.class || '?',
+      city: (x) => (x.city || '?').toTitleCase(),
+      house: (x) => (x.house || '?').toTitleCase(),
+      race: (x) => (x.race || '?').toTitleCase(),
+      dt: (x) => x.dt.replace('T', ' '),
+    };
+  },
+  itemHead: () => {
+    return {
+      id: null,
+      icon: (x) => x.icon || '?',
+      name: null,
+      room: null,
+      dt: (x) => x.dt.replace('T', ' '),
+    };
+  },
+  npcHead: () => {
+    return {
+      id: null,
+      icon: (x) => x.icon || '?',
+      name: null,
+      dt: (x) => x.dt.replace('T', ' '),
+    };
+  },
+};
 
 window.addEventListener('load', function () {
   const dbElem = document.getElementById('db');
-  const qElem = document.getElementById('query');
+  const quElem = document.getElementById('query');
   const searchFunc = async function (ev) {
     if (ev.type === 'keydown' && ev.key !== 'Enter') return;
-    const q = qElem.value.trim().toLowerCase();
+    const q = quElem.value.trim().toLowerCase();
     if (q.length < 2) {
       document.getElementById('result').innerHTML = '<tr><td>-</td></tr>';
       return;
     }
 
     const db = dbElem.value;
-    const resp = await fetch(`/${db}.json?key=${q}`, {
+    const resp = await fetch(`/${db}.json?q=${q}`, {
       mode: 'no-cors',
       cache: 'no-cache',
       headers: { 'Content-Type': 'application/json' },
     });
     const results = await resp.json();
 
-    let table = '';
+    const head = F[db + 'Head']();
+    let table = `<tr class="head">${Object.keys(head)
+      .map((h) => '<td>' + h + '</td>')
+      .join('')}</tr>`;
     for (const x of results) {
-      if (db === 'wares') table += processWares(x);
-      else if (db === 'whois') table += processWhois(x);
-      else if (db === 'item') table += processItem(x);
-      else if (db === 'npc') table += processItem(x);
-      else table += `<tr><td>${JSON.stringify(x)}</td></tr>`;
+      table += '<tr>';
+      for (const [h, f] of Object.entries(head)) {
+        let v = x[h];
+        if (f) v = f(x);
+        if (h === 'id' && x.fullname) {
+          table += `<td class="id" title="${x.fullname}">${v}</td>`;
+        } else table += `<td class="${h}">${v}</td>`;
+      }
+      table += '</tr>';
     }
     document.getElementById('result').innerHTML = table;
   };
+
   dbElem.onchange = searchFunc;
-  qElem.onkeydown = searchFunc;
+  quElem.onkeydown = searchFunc;
   searchFunc({ key: 'Enter' });
 });

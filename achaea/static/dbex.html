@@ -8,13 +8,13 @@
   <link rel="author" href="https://crlf.link/author/">
   <meta name="author" content="Cristi Constantin">
   <meta name="publisher" content="Cristi Constantin">
-  <meta name="copyright" content="Copyright 2023">
+  <meta name="copyright" content="Copyright 2023-2024">
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
     }
     body > * {
-      font-size: 16px;
+      font-size: 15px;
       font-family: monospace;
       font-variant-ligatures: contextual;
       text-rendering: optimizeLegibility;
@@ -23,11 +23,27 @@
     html, body, main, table, input, select, pre {
       margin: 0;
       padding: 0;
-      font-size: 16px;
-      font-family: monospace;
+      font-size: 15px;
+      font-family: monospace, monospace;
     }
-    .small {
+    tr:hover {
+      background-color: #eee;
+    }
+    td:hover {
+      background-color: #ddd;
+    }
+    tr, td {
       font-size: 14px;
+      white-space: pre-wrap;
+    }
+    .head, td.id {
+      font-weight: 600 !important;
+    }
+    td.dt {
+      font-weight: 200 !important;
+    }
+    td.icon {
+      font-style: italic;
     }
     #main {
       display: flex;
