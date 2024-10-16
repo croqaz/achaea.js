@@ -65,7 +65,7 @@ export async function fetchMap(data) {
   const areaID = data.room.area;
 
   // Fetch the area map
-  const res = await fetch(`/area/${areaID}.json`);
+  const res = await fetch(`/area.json?id=${areaID}`);
   const area = await res.json();
   // Check no. rooms for this area
   // const noRooms = Object.keys(area.rooms).length;

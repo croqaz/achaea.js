@@ -1,59 +1,11 @@
-@font-face {
-  font-family: "MonegoRegular";
-  src: url("Monego/Monego-Regular.otf") format("opentype");
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: "MonegoBold";
-  src: url("Monego/Monego-Bold.otf") format("opentype");
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: "MonegoBoldItalic";
-  src: url("Monego/Monego-BoldItalic.otf") format("opentype");
-  font-weight: normal;
-  font-style: italic;
-}
-@font-face {
-  font-family: "MonegoItalic";
-  src: url("Monego/Monego-Italic.otf") format("opentype");
-  font-weight: normal;
-  font-style: italic;
-}
-@font-face {
-  font-family: "MononokiRegular";
-  src: url("Mononoki/Mononoki-Regular.otf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: "MononokiBold";
-  src: url("Mononoki/Mononoki-Bold.otf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: "MononokiBoldItalic";
-  src: url("Mononoki/Mononoki-BoldItalic.otf") format("truetype");
-  font-weight: bold;
-  font-style: italic;
-}
-@font-face {
-  font-family: "MononokiItalic";
-  src: url("Mononoki/Mononoki-Italic.otf") format("truetype");
-  font-weight: normal;
-  font-style: italic;
-}
 :root {
-  --background: #2E3440;
-  --background1: #3B4252;
-  --background2: #434C5E;
-  --background3: #4C566A;
-  --foreground: #E5E9F0;
-  --dark-foreground: #D8DEE9;
-  --bright-foreground: #ECEFF4;
+  --background: #2e3440;
+  --background1: #3b4252;
+  --background2: #434c5e;
+  --background3: #4c566a;
+  --foreground: #e5e9f0;
+  --dark-foreground: #d8dee9;
+  --bright-foreground: #eceff4;
 }
 
 *,
@@ -64,11 +16,12 @@
 
 html, body {
   height: 100%;
+  background-color: var(--background);
 }
 
 body > * {
   font-size: 15px;
-  font-family: MonegoRegular, monospace;
+  font-family: monospace, monospace;
   text-rendering: optimizeLegibility;
   font-kerning: normal;
 }
@@ -80,13 +33,13 @@ html, body, canvas, main, aside, div, span, pre, input {
   outline: 0;
   color: var(--foreground);
   font-size: 15px;
-  font-family: MonegoRegular, monospace;
+  font-family: monospace, monospace;
 }
 
 p, b, i, small, span, pre, h5 {
   margin: 0;
   line-height: 1.6rem;
-  font-family: MonegoRegular, monospace;
+  font-family: monospace, monospace;
   font-size: 15px;
   font-variant-ligatures: contextual common-ligatures;
   text-rendering: optimizeLegibility;
@@ -94,11 +47,11 @@ p, b, i, small, span, pre, h5 {
 }
 
 i {
-  font-family: MonegoItalic, monospace;
+  font-family: monospace, monospace;
 }
 
-b, h5 {
-  font-family: MonegoBold, monospace;
+b, h5, h6 {
+  font-family: monospace, monospace;
 }
 
 small {
@@ -106,15 +59,17 @@ small {
 }
 
 .bold {
-  font-family: MonegoBold, monospace;
+  font-family: monospace, monospace;
 }
 
 .italic {
-  font-family: MonegoItalic, monospace;
+  font-family: monospace, monospace;
+  font-style: italic;
 }
 
 .bold.italic {
-  font-family: MonegoBoldItalic, monospace;
+  font-family: monospace, monospace;
+  font-style: italic;
 }
 
 .thin {
@@ -122,15 +77,12 @@ small {
 }
 
 input {
-  border: 0;
-  outline: 0;
-  font-weight: 500;
+  font-weight: 500 !important;
 }
 
 body {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
-  background-color: var(--background);
   max-height: 99.9vh;
 }
 
@@ -146,13 +98,13 @@ body {
   grid-column: 8/10;
   max-height: 99.9vh;
   margin: 1px;
-  border-right: 1px solid #3B4252;
+  border-right: 1px solid #3b4252;
   padding: 0.4rem;
-  background: #4C566A;
+  background: #4c566a;
   overflow-y: scroll;
   position: relative;
   scrollbar-width: thin;
-  scrollbar-color: #5E81AC rgb(97.2967032967, 110.0989010989, 135.7032967033);
+  scrollbar-color: #5e81ac rgb(97.2967032967, 110.0989010989, 135.7032967033);
 }
 
 #rightSide.big {
@@ -160,14 +112,14 @@ body {
   right: 0;
   width: 50vw;
   height: calc(99vh - 4rem);
-  border: 2px solid #E5E9F0;
+  border: 2px solid #e5e9f0;
   z-index: 999;
 }
 
 #rightSide .notes {
   padding: 0.25rem;
   border-radius: 8px;
-  border: 1px solid #3B4252;
+  border: 1px solid #3b4252;
   margin-bottom: 2px;
   background: rgb(97.2967032967, 110.0989010989, 135.7032967033);
 }
@@ -176,8 +128,8 @@ body {
   display: flex;
   grid-column: 3/8;
   flex-direction: column;
-  border-left: 1px solid #3B4252;
-  border-right: 1px solid #3B4252;
+  border-left: 1px solid #3b4252;
+  border-right: 1px solid #3b4252;
   min-height: 99.5vh;
   max-height: 99.9vh;
 }
@@ -193,7 +145,7 @@ body {
 
 #wildMap {
   display: none;
-  font-family: MonegoRegular, monospace;
+  font-family: monospace, monospace;
   font-size: 14px;
   white-space: pre-wrap;
   text-align: center;
@@ -208,7 +160,7 @@ body {
   max-height: 99vh;
   width: calc(100% - 10em);
   height: calc(99vh - 10rem);
-  border: 2px solid #E5E9F0;
+  border: 2px solid #e5e9f0;
   z-index: 999;
 }
 
@@ -232,39 +184,39 @@ body {
 }
 
 #room {
-  border-bottom: 1px solid #3B4252;
-  border-top: 1px solid #3B4252;
-  border-right: 1px solid #3B4252;
+  border-bottom: 1px solid #3b4252;
+  border-top: 1px solid #3b4252;
+  border-right: 1px solid #3b4252;
   overflow-y: scroll;
   scrollbar-width: thin;
-  scrollbar-color: #5E81AC rgb(97.2967032967, 110.0989010989, 135.7032967033);
+  scrollbar-color: #5e81ac rgb(97.2967032967, 110.0989010989, 135.7032967033);
   padding: 0.5rem;
   background: rgb(69.1223602484, 78.4074534161, 96.9776397516);
 }
 
 #player {
   margin: 1px;
-  background: #4C566A;
+  background: #4c566a;
   padding: 0.5rem;
   overflow-y: scroll;
   scrollbar-width: thin;
-  scrollbar-color: #5E81AC rgb(97.2967032967, 110.0989010989, 135.7032967033);
+  scrollbar-color: #5e81ac rgb(97.2967032967, 110.0989010989, 135.7032967033);
 }
 
 .roomPlayer:hover, .roomItem:hover {
   cursor: pointer;
-  font-family: MonegoItalic, monospace;
+  font-family: monospace, monospace;
 }
 
 .playerDef:hover, .playerAff:hover {
-  font-family: MonegoItalic, monospace;
+  font-family: monospace, monospace;
 }
 
 /* In the middle: game log, user input, status bar */
 #gameLog {
   background: rgb(69.1223602484, 78.4074534161, 96.9776397516);
   overflow-y: scroll;
-  scrollbar-color: #5E81AC rgb(97.2967032967, 110.0989010989, 135.7032967033);
+  scrollbar-color: #5e81ac rgb(97.2967032967, 110.0989010989, 135.7032967033);
   padding: 0.5rem;
   height: 18px;
   flex: 1 0;
@@ -278,52 +230,52 @@ body {
   width: 100%;
   padding: 0.5rem;
   font-size: 15px;
-  color: #D8DEE9;
+  color: #d8dee9;
   background: rgb(48.329787234, 54.0638297872, 67.170212766);
-  border-bottom: 2px solid #5E81AC;
+  border-bottom: 2px solid #5e81ac;
   transition: all 0.33s;
 }
 
 #userInput:focus {
-  color: #E5E9F0;
+  color: #e5e9f0;
   background: rgb(65.4021276596, 73.1617021277, 90.8978723404);
-  border-bottom: 2px solid #81A1C1;
-  box-shadow: 0 0 5px rgba(143, 188, 187, 0.9);
+  border-bottom: 2px solid #81a1c1;
+  box-shadow: 0 0 5px rgba(129, 161, 193, 0.75);
 }
 
 .userText, .sysText {
-  color: #D8DEE9;
+  color: #d8dee9;
 }
 
 #gameLog table {
-  background: #4C566A;
+  background: #4c566a;
   border-collapse: collapse;
-  border-top: 1px solid #3B4252;
-  border-left: 1px solid #3B4252;
+  border-top: 1px solid #3b4252;
+  border-left: 1px solid #3b4252;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   font-size: 13px;
 }
 
 #gameLog table tr {
-  border-bottom: 1px solid #3B4252;
+  border-bottom: 1px solid #3b4252;
 }
 
 #gameLog table th {
-  font-family: MonegoBold, monospace;
+  font-family: monospace, monospace;
   font-weight: bold;
 }
 
 #gameLog table th,
 #gameLog table td {
   padding: 2px 5px 1px 5px;
-  border-right: 1px solid #3B4252;
+  border-right: 1px solid #3b4252;
 }
 
 #dateTimeWrap {
   display: block;
   position: fixed;
   border-radius: 8px;
-  border: 1px solid #3B4252;
+  border: 1px solid #3b4252;
   font-size: 13px;
   top: 2px;
   right: 0.6rem;
@@ -342,7 +294,7 @@ body {
 #battleWrap {
   display: none;
   position: fixed;
-  border: 1px solid #3B4252;
+  border: 1px solid #3b4252;
   border-top: 0;
   font-size: 13px;
   left: calc(50% - 18rem);
@@ -363,47 +315,28 @@ body {
 #targetHpmax {
   flex: 1;
   display: flex;
-  color: #D8DEE9;
+  color: #d8dee9;
   line-height: 13px;
-  border-left: 1px solid #D8DEE9;
+  border-left: 1px solid #d8dee9;
 }
 
 #targetHpnow {
   text-align: center;
   font-size: 13px;
-  border-right: 1px solid #D8DEE9;
-  background: rgb(132.3783783784, 53.6216216216, 61.1621621622);
+  border-right: 1px solid #d8dee9;
+  background: #881000;
   transition: width 0.5s;
 }
 
 #targetHpnow:hover {
-  color: #ECEFF4;
-  font-family: MonegoBold, monospace;
-}
-
-#rageBar {
-  display: none;
-  height: 0.225rem;
-  background-color: var(--background);
-}
-
-#selfRageMax {
-  flex: 1;
-  display: flex;
-  color: #D8DEE9;
-  border-left: 1px solid #D8DEE9;
-}
-
-#selfRageNow {
-  border-right: 1px solid #D8DEE9;
-  background: rgb(227.5, 183.5, 95.5);
-  transition: width 0.5s;
+  color: #eceff4;
+  font-family: monospace, monospace;
 }
 
 #statBar {
   height: 1rem;
   display: flex;
-  border-top: 1px solid #3B4252;
+  border-top: 1px solid #3b4252;
   z-index: 99;
 }
 
@@ -413,14 +346,14 @@ body {
 #wpmax {
   flex: 1;
   display: flex;
-  color: #D8DEE9;
+  color: #d8dee9;
   line-height: 13px;
 }
 
 #mpmax,
 #epmax,
 #wpmax {
-  border-left: 1px solid #D8DEE9;
+  border-left: 1px solid #d8dee9;
 }
 
 #hpnow,
@@ -429,7 +362,7 @@ body {
 #wpnow {
   text-align: center;
   font-size: 13px;
-  border-right: 1px solid #D8DEE9;
+  border-right: 1px solid #d8dee9;
   transition: width 0.5s;
 }
 
@@ -437,16 +370,16 @@ body {
 #mpnow:hover,
 #epnow:hover,
 #wpnow:hover {
-  color: #ECEFF4;
-  font-family: MonegoBold, monospace;
+  color: #eceff4;
+  font-family: monospace, monospace;
 }
 
 #hpnow {
-  background: rgb(132.3783783784, 53.6216216216, 61.1621621622);
+  background: #881000;
 }
 
 #mpnow {
-  background: #005f87;
+  background: #004088;
 }
 
 #epnow {
@@ -459,97 +392,106 @@ body {
 
 /* wikipedia.org/wiki/ANSI_escape_code */
 .c-black {
-  color: rgb(24.6727272727, 27.8909090909, 34.3272727273);
-  font-family: MonegoBold, monospace;
+  color: #2e3440;
+  font-family: monospace, monospace;
   font-weight: bold;
 }
 
 .c-red {
-  color: #BF616A;
+  color: #bf616a;
 }
 
 .c-green {
-  color: #A3BE8C;
+  color: #a3be8c;
 }
 
 .c-yellow {
-  color: #D08770;
+  color: #d08770;
 }
 
 .c-blue {
-  /* blue1: $nord8; blue2: $nord9; blue3: $nord10; */
-  color: #5E81AC;
+  color: #5e81ac;
 }
 
 .c-magenta {
-  color: #B48EAD;
+  color: #b48ead;
 }
 
 .c-cyan {
-  color: #8FBCBB;
+  color: #88c0d0;
 }
 
 .c-darkGray {
-  color: rgb(150.7868852459, 166.8196721311, 196.2131147541);
-  font-family: MonegoBold, monospace;
+  color: rgb(134.4836065574, 153.0245901639, 187.0163934426);
+  font-family: monospace, monospace;
 }
 
 .c-lightGray {
-  color: #D8DEE9;
-  font-family: MonegoBold, monospace;
+  color: #d8dee9;
+  font-family: monospace, monospace;
 }
 
 .c-white {
-  color: #ECEFF4;
-  font-family: MonegoBold, monospace;
+  color: #eceff4;
+  font-family: monospace, monospace;
 }
 
 /* bright */
 .c-bright {
-  font-family: MonegoBold, monospace;
-  font-weight: bold;
+  font-family: monospace, monospace;
 }
 
 .c-bright.c-black {
-  color: rgb(150.7868852459, 166.8196721311, 196.2131147541);
+  color: rgb(183.393442623, 194.4098360656, 214.606557377);
 }
 
 .c-bright.c-red {
-  color: rgb(198.3513513514, 115.1486486486, 123.1148648649);
+  color: rgb(205.7027027027, 133.2972972973, 140.2297297297);
 }
 
 .c-bright.c-green {
-  color: #A3BE8C;
+  color: rgb(189.0666666667, 208.4166666667, 172.5833333333);
 }
 
 .c-bright.c-yellow {
-  color: #EBCB8B;
+  color: #ebcb8b;
 }
 
 .c-bright.c-blue {
-  color: #81A1C1;
+  color: #81a1c1;
 }
 
 .c-bright.c-magenta {
-  color: #B48EAD;
+  color: rgb(190.1728723404, 157.3271276596, 184.1223404255);
 }
 
 .c-bright.c-cyan {
-  color: #88C0D0;
+  color: rgb(154.2801204819, 201.6777108434, 215.2198795181);
+}
+
+.c-bright.c-darkGray {
+  color: #d8dee9;
 }
 
 .c-bright.c-lightGray {
-  color: #E5E9F0;
+  color: #eceff4;
 }
 
-/* dim */
+.c-bright.c-white {
+  color: hsl(217.5, 26.6666666667%, 104.1176470588%);
+}
+
+/* dim -- NOT sure if used in game */
 .c-dim {
-  font-family: MonegoBoldItalic, monospace;
-  font-weight: bold;
+  font-family: monospace, monospace;
 }
 
 .c-dim.c-red {
-  color: rgb(183.6486486486, 78.8513513514, 88.8851351351);
+  color: rgb(168.6756756757, 68.3243243243, 77.9324324324);
+}
+
+.c-dim.c-green {
+  color: rgb(136.9333333333, 171.5833333333, 107.4166666667);
 }
 
 .c-dim.c-blue {
@@ -582,32 +524,17 @@ body {
 }
 
 .bg-cyan {
-  background-color: #8fbcbb;
+  background-color: #88c0d0;
 }
 
 .bg-darkGray {
-  background-color: rgb(150.7868852459, 166.8196721311, 196.2131147541);
+  background-color: rgba(59, 66, 82, 0.5);
 }
 
 .bg-lightGray {
-  background-color: rgba(216, 222, 233, 0.5);
+  background-color: rgba(67, 76, 94, 0.5);
 }
 
 .bg-white {
   background-color: rgba(236, 239, 244, 0.5);
-}
-
-/* bright */
-.bg-bright {
-  font-family: MonegoBold, monospace;
-  font-weight: bold;
-}
-
-/* dim */
-.bg-dim.bg-red {
-  color: rgb(183.6486486486, 78.8513513514, 88.8851351351);
-}
-
-.bg-dim.bg-blue {
-  color: rgb(94.8191489362, 135.5, 176.1808510638);
 }

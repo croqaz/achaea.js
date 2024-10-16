@@ -133,7 +133,7 @@ window.addEventListener('load', function () {
 
 async function startWS() {
   window.WS = null;
-  window.WS = new WebSocket(`ws://${location.host}`);
+  window.WS = new WebSocket(`ws://${location.host}/ws`);
 
   window.WS.onmessage = async function (event) {
     const gameLog = document.getElementById('gameLog');
@@ -194,6 +194,12 @@ async function startWS() {
       return displayDateTime();
     }
 
+    if (data.textType === 'wildMap') {
+      const wildMap = document.getElementById('wildMap');
+      wildMap.innerHTML = `<div>${data.map}</div>`;
+      return;
+    }
+
     // Reject unknown messages
     if (!text || !data.textType) {
       return console.warn(`Unknown message format:`, data);
@@ -204,12 +210,6 @@ async function startWS() {
       div.classList.add(data.textType);
       div.innerHTML = text;
       return gameLog.append(div);
-    }
-
-    if (data.textType === 'wildMap') {
-      const wildMap = document.getElementById('wildMap');
-      wildMap.innerHTML = `<div>${data.text}</div>`;
-      return;
     }
 
     // Echo user's input text

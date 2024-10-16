@@ -1,5 +1,6 @@
-import { pathToFileURL } from 'url';
 import fs from 'node:fs';
+import path from 'node:path';
+import { pathToFileURL } from 'url';
 
 import mri from 'mri';
 import * as sass from 'sass';
@@ -8,7 +9,7 @@ const options = {
   default: {
     fonts: 'mono',
     theme: 'nord',
-    output: 'style.css',
+    output: null,
   },
 };
 
@@ -22,6 +23,8 @@ String.prototype.toTitle = function () {
   const args = mri(process.argv.slice(2), options);
 
   const DIR = import.meta.dirname;
+  const STATIC = path.normalize(DIR + '/../static/');
+  const CUSTOM = path.normalize(DIR + '/../../custom/static/');
   const file1 = `font${args.fonts.toTitle()}.scss`;
   const file2 = `theme${args.theme.toTitle()}.scss`;
 
@@ -43,6 +46,12 @@ String.prototype.toTitle = function () {
       },
     ],
   });
+
+  if (!args.output && fs.existsSync(CUSTOM)) {
+    args.output = path.join(CUSTOM, 'style.css');
+  } else if (!args.output) {
+    args.output = path.join(STATIC, 'style.css');
+  }
 
   fs.writeFileSync(args.output, result.css);
   console.log('Final style saved to:', args.output);

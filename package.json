@@ -8,14 +8,11 @@
     "Cristi Constantin"
   ],
   "dependencies": {
-    "as-table": "1.x",
-    "chokidar": "3.x",
+    "chokidar": "4.x",
     "classic-level": "1.x",
-    "express": "4.x",
-    "mri": "1.2.x",
+    "mri": "1.x",
     "qheap": "1.x",
-    "remeda": "2.x",
-    "ws": "8.x"
+    "remeda": "2.x"
   },
   "devDependencies": {
     "@types/node": "22.x",

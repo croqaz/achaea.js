@@ -341,7 +341,11 @@ To restore the defaults, enter CONFIG COLOUR DEFAULT
 
   let sayMsgNo = 1;
   setInterval(() => {
-    let say = { 'channel': 'says', 'talker': 'Abc', 'text': Colors.cyan(`You say, "Hello ${sayMsgNo}."`) };
+    let say = {
+      'channel': 'says',
+      'talker': 'Abc',
+      'text': Colors.cyan(`You say, "Hello ${sayMsgNo}."`),
+    };
     ee.emit('game:gmcp', 'Comm.Channel.Text ' + JSON.stringify(say));
     sayMsgNo++;
   }, 3500);

@@ -1,4 +1,3 @@
-import asciiTable from 'as-table';
 import { ClassicLevel } from 'classic-level';
 import { dateDiff, isoDate } from '../core/util.ts';
 
@@ -133,7 +132,7 @@ export async function whoisFind(key: string) {
   return arr;
 }
 
-export async function roomFind(key: string, table = true) {
+export async function roomFind(key: string) {
   const arr = [];
   for await (const room of dbValues('room')) {
     if (
@@ -146,8 +145,6 @@ export async function roomFind(key: string, table = true) {
       arr.push(room);
     }
   }
-  if (!arr.length) return '';
-  if (table) return asciiTable.configure({ delimiter: ' | ' })(arr);
   return arr;
 }
 
