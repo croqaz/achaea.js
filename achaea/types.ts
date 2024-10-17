@@ -61,6 +61,7 @@ export interface StateRoom {
   room: any; // meta from map
   details?: string[];
   exits?: Record<string, number>;
+  wild?: boolean;
   items: GmcpItem[];
   players: GmcpPlayer[];
 }

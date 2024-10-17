@@ -60,7 +60,7 @@ export async function saveQuickWho(text: string) {
       if (oldWhois && dateDiff(oldWhois.dt, dt) < 48) {
         continue;
       } else if (oldWhois) {
-        const msg = `Old whois data for "${name}": ${oldWhois.dt}. Refreshing...`;
+        const msg = `Old data for "${name}": ${oldWhois.dt}. Refreshing...`;
         ee.emit('sys:text', `<i class="c-darkGray"><b>[DB]</b> ${msg}</i>`);
       }
     } catch {
@@ -108,7 +108,22 @@ export async function fetchWhois(name: string): Promise<T.DBPlayer> {
     user.id = name;
     return user;
   } catch {
-    ee.emit('sys:text', `<i class="c-red"><b>[DB]</b> Fetch WHOIS failed for: ${name}!</i>`);
+    ee.emit('sys:text', `<i class="c-red"><b>[DB]</b> Cannot fetch WHOIS for: ${name}!</i>`);
+  }
+}
+
+export async function fetchOnline(): Promise<string[]> {
+  try {
+    const resp = await fetch('https://api.achaea.com/characters.json', {
+      headers: { 'Content-Type': 'application/json' },
+    });
+    const { count, characters } = await resp.json();
+    // count is the actual number of players,
+    // including hidden
+    return characters.map((x) => x.name);
+  } catch {
+    ee.emit('sys:text', `<i class="c-red"><b>[DB]</b> Cannot fetch players list!</i>`);
+    return [];
   }
 }
 

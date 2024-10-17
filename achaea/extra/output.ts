@@ -38,7 +38,7 @@ export default function extraProcessDisplayText(html: string, text: string): str
 
   {
     // Check for wilderness map first
-    const mapDescrip = p.validMap(html);
+    const mapDescrip = p.validWildMap(html);
     if (mapDescrip && mapDescrip.length == 2) {
       const [map, desc] = mapDescrip;
       // Send wilderness map

@@ -70,6 +70,7 @@ export var STATE: T.StateType = Object.seal({
     room: {}, // meta from map
     details: [],
     exits: {},
+    wild: false,
     items: [],
     players: [],
   }),
@@ -575,7 +576,7 @@ export function gmcpProcessRoomInfo(_type: string, data: T.GmcpRoom) {
     if (!data.area && !STATE.Room.details?.includes('wilderness')) STATE.Room.details?.push('wilderness');
     else if (data.area && !STATE.Room.details?.includes('subdivision'))
       STATE.Room.details?.push('subdivision');
-    STATE.Room.details?.push('wildMap');
+    STATE.Room.wild = true;
   }
   ee.emit('room:update', STATE.Room);
 }
@@ -584,10 +585,11 @@ export function gmcpProcessRoomPlayers(type: string, data) {
   // IT'S A BAD IDEA TO IMPORT HERE and I feel ashamed
   const { dbGet } = require('../extra/leveldb.ts');
 
-  const getPlayer = async (name: string) => {
+  const getPlayer = async (name: string, fullname?: string) => {
     try {
       const p = await dbGet('whois', name.toLowerCase());
       p.name = name;
+      if (fullname) p.fullname = fullname;
       let city = p.city ? p.city.toLowerCase() : 'rogue';
       if (city === 'rogue') p.cls = 'c-yellow';
       else if (city === 'ashtan') p.cls = 'c-magenta';
@@ -621,7 +623,7 @@ export function gmcpProcessRoomPlayers(type: string, data) {
       for (const x of tsData) {
         // remove current player from the list
         if (x.name === STATE.Me.name) continue;
-        const p = (await getPlayer(x.name)) || x;
+        const p = (await getPlayer(x.name, x.fullname)) || x;
         STATE.Room.players.push(p as T.GmcpPlayer);
       }
       // sync battle targets
@@ -643,7 +645,7 @@ export function gmcpProcessRoomPlayers(type: string, data) {
       if (p.name === tsData.name) return;
     }
     setTimeout(async () => {
-      const p = await getPlayer(tsData.name);
+      const p = await getPlayer(tsData.name, tsData.fullname);
       const span = playerSpan(p || data);
       if (span) {
         ee.emit('sys:text', `<b>Players ++</b> ${span}`);

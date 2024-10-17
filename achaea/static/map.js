@@ -225,10 +225,7 @@ export function drawMap(data) {
     // On room double-click, auto-walk
     group.onDoubleClick = function () {
       this.fillColor = COLOR.amber;
-      const userInput = document.getElementById('userInput');
-      userInput.focus();
-      userInput.value = `//go ${this.data.id}`;
-      document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      WS.send(`//go ${this.data.id}`);
     };
 
     return group;
