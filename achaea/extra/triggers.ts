@@ -1,5 +1,6 @@
 import ee from '../events/index.ts';
 import { STATE, stateStopBattle } from '../core/state.ts';
+import { debounce } from '../core/util.ts';
 import * as p from '../parsers.ts';
 
 // TODO ::
@@ -15,6 +16,14 @@ const RE = {
   barrClear: /^([A-Za-z]+)'s prismatic barrier dissolves into nothing\.$/m,
 };
 
+const diagMe = debounce(() => {
+  ee.emit('user:text', 'QUEUE PREPEND e DIAG ME');
+}, 2500);
+
+const standUp = debounce(() => {
+  ee.emit('user:text', 'STAND');
+}, 1000);
+
 export default function processTriggers(text: string, normText: string) {
   /*
    * Process game text to enable triggers
@@ -26,7 +35,7 @@ export default function processTriggers(text: string, normText: string) {
   if (text.includes('You are confused as to the effects of the venom.')) {
     // if (STATE.me.hp === STATE.me.maxhp && STATE.me.mp === STATE.me.maxmp)
     // ee.emit('user:text', 'CURING PREDICT RECKLESSNESS') ??
-    ee.emit('user:text', 'QUEUE PREPEND e DIAG ME');
+    diagMe();
   }
 
   // Thief protection
@@ -39,7 +48,7 @@ export default function processTriggers(text: string, normText: string) {
     normText.includes('You open your eyes and yawn mightily')
     // normText.includes('You open your eyes and stretch languidly')
   ) {
-    ee.emit('user:text', 'STAND');
+    standUp();
   }
 
   // Auto air-pocket under-water

@@ -174,7 +174,7 @@ export async function innerWalker(
   if (!area) return null;
   // If walk type is Global, use the big graph
   // Else, use a small graph of the local area
-  const gr = type === 'global' ? m.GRAPH : m.localGraph(area);
+  const gr = type === 'g' || type === 'global' ? m.GRAPH : m.localGraph(area);
   let path = null;
   if (explore) {
     try {

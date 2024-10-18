@@ -23,7 +23,7 @@ This locale has fallen under the influence of the Eldritch Empire of Ruin.`);
 });
 
 test('maps test', () => {
-  let result = p.validMap(`Grasslands.
+  let result = p.validWildMap(`Grasslands.
 .........................
 .......................**
 ......................***
@@ -42,7 +42,7 @@ test('maps test', () => {
 `);
   expect(result[1]).toBe('Grasslands.');
 
-  result = p.validMap(`Small hills.
+  result = p.validWildMap(`Small hills.
     wwww..@@@@@@@@@nnnnnMMMMM
     wwwww@@@@@@@@@nnnnnMMMMMM
     wwwww@@@@@@@@@nnnnMMMMMMM
@@ -59,7 +59,7 @@ test('maps test', () => {
     `);
   expect(result[1]).toBe('Small hills.');
 
-  result = p.validMap(`Upon a glacier.
+  result = p.validWildMap(`Upon a glacier.
      wwww.....@@@@@@@nnnnnnMM
     wwwww...@@@@@@@@@nnnnnMMM
     wwwww..@@@@@@@@@nnnnnnMMM
@@ -79,7 +79,7 @@ test('maps test', () => {
     www.........nnnnMMMMMMMMM`);
   expect(result[1]).toBe('Upon a glacier.');
 
-  result = p.validMap(`
+  result = p.validWildMap(`
 You enter the subdivision.
 A cosy forest hollow.
     *^   *^*  Y,*|***|**Y
@@ -98,17 +98,34 @@ A cosy forest hollow.
   expect(result[1]).toBe('You enter the subdivision.\nA cosy forest hollow.');
 
   // Negative testing
-  result = p.validMap(`Shoreline.
+  result = p.validWildMap(`Proprietor: Rurin, the Crafter.
+--------(Item)------(Description)------------------------------(Stock)--(Price)
+           bowl6260 an earthenware bowl                            20     100gp
+        redink13226 a red ink                                     500      20gp
+         sigil13396 a key-shaped sigil                             50    1250gp
+        shovel18633 a hefty shovel                                 10     750gp
+       journal24167 a personal journal                             10    5000gp
+        bucket24713 a bucket                                       49      50gp
+          drum35641 a ritual drum                                  50     500gp
+      backpack54217 a canvas backpack                              20     100gp
+         sigil55060 a flame-shaped sigil                           45     700gp
+          dust63478 a pinch of diamond dust                       200      85gp
+       blueink67136 a blue ink                                    300      40gp
+     purpleink75847 a purple ink                                  300     250gp
+     yellowink77165 a yellow ink                                  500      80gp`);
+  expect(result).toBeFalsy();
+
+  result = p.validWildMap(`Shoreline.
     w.........ww.wwww........
     wwww..wwwwww..wwww......!`);
   expect(result).toBeFalsy();
 
-  result = p.validMap(`Shoreline.
+  result = p.validWildMap(`Shoreline.
 w.........ww.wwww........
 wwww..wwwwww..wwww......`);
   expect(result).toBeFalsy();
 
-  result = p.validMap(`Shoreline.
+  result = p.validWildMap(`Shoreline.
 w.........ww.wwww........
 wwww..wwwwww..wwww......0`);
   expect(result).toBeFalsy();
