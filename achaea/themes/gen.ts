@@ -7,13 +7,14 @@ import * as sass from 'sass';
 
 const options = {
   default: {
+    style: 'style',
     fonts: 'mono',
     theme: 'nord',
     output: null,
   },
 };
 
-String.prototype.toTitle = function () {
+String.prototype.toTitle = function (): string {
   return this.charAt(0).toUpperCase() + this.slice(1);
 };
 
@@ -25,15 +26,22 @@ String.prototype.toTitle = function () {
   const DIR = import.meta.dirname;
   const STATIC = path.normalize(DIR + '/../static/');
   const CUSTOM = path.normalize(DIR + '/../../custom/static/');
+  const file0 = `${args.style.toLowerCase()}.scss`;
   const file1 = `font${args.fonts.toTitle()}.scss`;
   const file2 = `theme${args.theme.toTitle()}.scss`;
 
-  console.log('Loading:', file1, '...');
-  const fontsScss = fs.readFileSync(`${DIR}/${file1}`);
-  console.log('Loading:', file2, '...');
-  const themeScss = fs.readFileSync(`${DIR}/${file2}`);
-  console.log('Loading: style.scss ...');
-  const styleScss = fs.readFileSync(DIR + '/style.scss');
+  function loadStyle(fname: string): Buffer {
+    let fpath = path.join(DIR, fname);
+    if (fs.existsSync(path.join(CUSTOM, fname))) {
+      fpath = path.join(CUSTOM, fname);
+    }
+    console.log('Loading:', path.relative(process.cwd(), fpath), '...');
+    return fs.readFileSync(fpath);
+  }
+
+  const styleScss = loadStyle(file0);
+  const fontsScss = loadStyle(file1);
+  const themeScss = loadStyle(file2);
 
   const scss = "@use 'sass:color'; @use 'sass:math';\n" + fontsScss + '\n' + themeScss + '\n' + styleScss;
   const result = sass.compileString(scss, {
@@ -54,5 +62,5 @@ String.prototype.toTitle = function () {
   }
 
   fs.writeFileSync(args.output, result.css);
-  console.log('Final style saved to:', args.output);
+  console.log(`Final style saved to: ${path.relative(process.cwd(), args.output)}.`);
 })();

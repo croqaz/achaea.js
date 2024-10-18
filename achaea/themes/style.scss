@@ -30,6 +30,7 @@ html, body, canvas, main, aside, div, span, pre, input {
 }
 p, b, i, small, span, pre, h5 {
   margin: 0;
+  width: max-content;
   line-height: 1.6rem;
   font-family: $font-norm;
   font-size: $font-size;
@@ -69,6 +70,27 @@ body {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
   max-height: 99.9vh;
+}
+
+#tooltip {
+  display: none;
+  position: absolute;
+  font-size: 90%;
+  font-weight: bold;
+  width: max-content;
+  min-width: 4rem;
+  top: 1px;
+  left: 0;
+  padding: 4px;
+  border-radius: 4px;
+  color: var(--foreground);
+  background: var(--background);
+  z-index: 9999;
+}
+
+*[data-send]:hover, *[data-input]:hover {
+  cursor: pointer;
+  cursor: hand;
 }
 
 #leftSide {
@@ -177,6 +199,7 @@ body {
   scrollbar-color: $c-blue color.adjust($dark4, $lightness: 10%);
 }
 .roomPlayer:hover, .roomItem:hover {
+  cursor: hand;
   cursor: pointer;
   font-family: $font-ital;
 }
@@ -252,6 +275,7 @@ body {
 }
 #dateTimeWrap:hover {
   cursor: pointer;
+  cursor: hand;
 }
 
 #battleWrap {

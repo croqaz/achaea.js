@@ -25,7 +25,7 @@ $c-green: #98c379;
 $c-magenta: #c678dd;
 $c-red: #e06c75;
 $c-yellow: #e5c07b;
-$c-orange: mix($c-red, $c-yellow);
+$c-orange: color.mix($c-red, $c-yellow);
 
 $c-bright-red: color.adjust($c-red, $lightness: 10%);
 $c-bright-yellow: color.adjust($c-yellow, $lightness: 10%);
