@@ -31,32 +31,50 @@ export function sleep(sec: number) {
   return new Promise((r) => setTimeout(r, Math.round(sec * 1000)));
 }
 
-/**
- * Function wrapper that prevents a function from being executed more than once
- * every t ms. This is particularly useful for optimising callbacks for
- * continues events like scroll, resize or slider move. Setting `forceDelay`
- * to `true` means that even the first function call is after the minimum
- * timout, rather than instantly.
- * https://github.com/mathigon/core.js/blob/master/src/utilities.ts
- * (C) Philipp Legner & contributors
- */
-export function throttle<Args extends unknown[]>(fn: (...args: Args) => void, t = 1, forceDelay = false) {
-  let delay = false;
-  let repeat = false;
-  return (...args: Args) => {
-    if (delay) {
-      repeat = true;
-    } else {
-      if (forceDelay) {
-        repeat = true;
-      } else {
-        fn(...args);
-      }
-      delay = true;
+export function throttle<T, Args extends unknown[]>(fn: (...args: Args) => T, t: number) {
+  /*
+   * Throttle based on the args of the wrapped function.
+   * Eg:
+   * const throttled1 = throttle(() => 1, 5000)
+   * throttled1('a') // would immediately run
+   * throttled1('a') // would not run, you need to wait 5s
+   * throttled1('b') // new param, would immediately run
+   * throttled1('b') // param cached, you need to wait 5s
+   */
+  const __cache = new Map<string, any>();
+  return function (...args: Args) {
+    const argString = args.join('_');
+    if (!__cache.has(argString)) {
+      __cache.set(argString, true);
       setTimeout(() => {
-        if (repeat) fn(...args);
-        delay = repeat = false;
+        __cache.delete(argString);
       }, t);
+      // pass the cb result
+      return fn(...args);
+    }
+  };
+}
+
+export function debounce<T, Args extends unknown[]>(fn: (...args: Args) => T, t: number) {
+  /*
+   * Delay run based on the args of the wrapped function.
+   * Eg:
+   * const debounced1 = debounce(() => 1, 5000)
+   * debounced1('a') // would not run, you need to wait 5s
+   * debounced1('a') // would run after 5s
+   * debounced1('b') // new param, you need to wait 5s
+   * debounced1('b') // would run after 5s
+   */
+  const __cache = new Map<string, any>();
+  return function (...args: Args) {
+    const argString = args.join('_');
+    if (!__cache.has(argString)) {
+      let timeoutId = setTimeout(() => {
+        __cache.delete(argString);
+        // the cb result is lost
+        fn(...args);
+      }, t);
+      __cache.set(argString, timeoutId);
     }
   };
 }

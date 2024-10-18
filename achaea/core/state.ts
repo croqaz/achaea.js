@@ -219,12 +219,10 @@ function syncWieldedWpn(item: T.GmcpItem) {
       // 'L' = wielded_right
       STATE.Me.wieldedR = item;
     }
-  }
-  // Unwield left weapon?
+  } // Unwield left weapon?
   else if (STATE.Me.wieldedL && !item.attrib && item.id === STATE.Me.wieldedL.id) {
     STATE.Me.wieldedL = {} as T.GmcpItem;
-  }
-  // Unwield right weapon?
+  } // Unwield right weapon?
   else if (STATE.Me.wieldedR && !item.attrib && item.id === STATE.Me.wieldedR.id) {
     STATE.Me.wieldedR = {} as T.GmcpItem;
   }
@@ -321,16 +319,14 @@ export function gmcpProcessChar(_: string, data: T.GmcpChar) {
           // or outside of battle
           if (STATE.Battle.active && STATE.Battle.rage !== oldRage && STATE.Battle.rage > 12) {
             ee.emit('battle:rage', STATE.Battle.rage);
-          }
-          // Reset all battle-rage balances to be available next time
+          } // Reset all battle-rage balances to be available next time
           else if (STATE.Battle.rage === 0 && STATE.Battle.rage !== oldRage) {
             for (const k of Object.keys(STATE.Battle.bals)) {
               STATE.Battle.bals[k] = true;
             }
           }
         }
-      }
-      //
+      } //
       // Special display race for Metamorphs
       // TODO: more classes
       else if (cs.startsWith('Morph:')) {
@@ -443,12 +439,12 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
         STATE.Room.items.push(item);
         // Only if Denizen or Guard;
         // should be the same object in memory
-        if (item.attrib && (item.attrib.includes('m') || item.attrib.includes('x')))
+        if (item.attrib && (item.attrib.includes('m') || item.attrib.includes('x'))) {
           STATE.Battle.tgts[item.id] = item;
+        }
       }
     }
-  }
-  //
+  } //
   else if (type === 'Char.Items.Update') {
     // item ID must be int
     const itemID = parseInt(data.item.id as string);
@@ -465,8 +461,7 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
       itm.icon = data.item.icon;
       itm.attrib = data.item.attrib;
     }
-  }
-  //
+  } //
   else if (type === 'Char.Items.Add') {
     if (data.location === 'inv') {
       addToStateList('Me', 'items', data.item);
@@ -475,11 +470,11 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
       data.item.id = parseInt(data.item.id as string);
       STATE.Room.items.push(data.item);
       // Only if Denizen or Guard
-      if (data.item.attrib && (data.item.attrib.includes('m') || data.item.attrib.includes('x')))
+      if (data.item.attrib && (data.item.attrib.includes('m') || data.item.attrib.includes('x'))) {
         STATE.Battle.tgts[data.item.id] = data.item;
+      }
     }
-  }
-  //
+  } //
   else if (type === 'Char.Items.Remove') {
     if (data.location === 'inv') {
       remFromStateList('Me', 'items', data.item);
@@ -574,8 +569,9 @@ export function gmcpProcessRoomInfo(_type: string, data: T.GmcpRoom) {
   // wilderness, subdivision and ships
   if (data.ohmap) {
     if (!data.area && !STATE.Room.details?.includes('wilderness')) STATE.Room.details?.push('wilderness');
-    else if (data.area && !STATE.Room.details?.includes('subdivision'))
+    else if (data.area && !STATE.Room.details?.includes('subdivision')) {
       STATE.Room.details?.push('subdivision');
+    }
     STATE.Room.wild = true;
   }
   ee.emit('room:update', STATE.Room);

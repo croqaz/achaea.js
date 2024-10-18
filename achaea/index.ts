@@ -1,5 +1,3 @@
-import { Buffer } from 'buffer';
-
 import ee from './events/index.ts';
 import { PROMPT } from './core/output.ts';
 import { ansi2Html, ansiStrip } from './ansi';
