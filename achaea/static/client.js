@@ -1,3 +1,5 @@
+import { computePosition, flip, shift, offset } from 'https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.x/+esm';
+
 import * as map from './map.js';
 window.TIME = {};
 window.BATTLE = { tgtID: null };
@@ -13,6 +15,7 @@ window.addEventListener('load', function () {
   const mapElem = document.getElementById('map');
   const wildMap = document.getElementById('wildMap');
   const rightElem = document.getElementById('rightSide');
+  const tooltip = document.getElementById('tooltip');
 
   startWS();
 
@@ -21,6 +24,49 @@ window.addEventListener('load', function () {
     const data = await map.fetchRoom();
     await map.fetchMap(data);
   })();
+
+  document.body.onmouseover = function (ev) {
+    const label = ev.target.getAttribute('aria-label');
+    if (label) {
+      computePosition(ev.target, tooltip, {
+        placement: 'top',
+        middleware: [offset(2), flip(), shift({ padding: 4 })],
+      }).then(({ x, y }) => {
+        Object.assign(tooltip.style, {
+          left: `${x}px`,
+          top: `${y}px`,
+        });
+      });
+      tooltip.innerText = label;
+      tooltip.style.display = 'block';
+      ev.preventDefault();
+    }
+  };
+  document.body.onmouseout = function (ev) {
+    const label = ev.target.getAttribute('aria-label');
+    if (label) {
+      tooltip.innerText = '';
+      tooltip.style.display = '';
+      ev.preventDefault();
+    }
+  };
+
+  document.body.onclick = function (ev) {
+    // a command to send directly on WS
+    const dataSend = ev.target.getAttribute('data-send');
+    if (dataSend) {
+      WS.send(dataSend);
+      ev.preventDefault();
+    }
+    // a command to write in input field
+    const dataInput = ev.target.getAttribute('data-input');
+    if (dataInput) {
+      const userInput = document.getElementById('userInput');
+      userInput.value = dataInput;
+      userInput.focus();
+      document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    }
+  };
 
   document.body.onkeydown = function (ev) {
     // Full expand map
@@ -242,12 +288,6 @@ async function startWS() {
   // };
 }
 
-window.whoisPlayer = function whoisPlayer(elem) {
-  const id = elem.dataset.id;
-  console.log(`WHOIS: ${id}`);
-  WS.send(`WHOIS ${id}`);
-};
-
 window.probeItem = function probeItem(event, elem) {
   const id = elem.dataset.id;
   const isDeniz = elem.classList.contains('denizen');
@@ -314,7 +354,7 @@ function displayRoom(data) {
     room += `<h5>${window.ROOM.players.length} Players here:</h5>`;
     for (const x of window.ROOM.players) {
       // Level X Race, Color based on city
-      room += `<p data-id="${x.name}" class="roomPlayer ${x.cls}" title="${x.fullname}" onclick="whoisPlayer(this)">- ${x.name}</p>`;
+      room += `<p data-id="${x.name}" class="roomPlayer ${x.cls}" aria-label="${x.fullname}" data-input="WHOIS ${x.name}">- ${x.name}</p>`;
     }
   }
 
@@ -337,7 +377,7 @@ function displayRoom(data) {
       let cls = 'denizen roomItem';
       if (x.id === battleTgtID) cls += ' c-red';
       // On-click, probe denizen
-      room += `<p data-id="${x.id}" class="${cls}" title="[${x.id}] ${x.name}" onclick="probeItem(event,this)">- ${x.name}</p>`;
+      room += `<p data-id="${x.id}" class="${cls}" aria-label="[${x.id}] ${x.name}" onclick="probeItem(event,this)">- ${x.name}</p>`;
     }
   } else {
     room += `<h5>No denizens here</h5>`;
@@ -346,7 +386,7 @@ function displayRoom(data) {
     room += `<h5>${items.length} Items here:</h5> - `;
     for (const x of items) {
       // On-click, probe item
-      room += `<span data-id="${x.id}" class="roomItem" title="[${x.id}] ${x.name}" onclick="probeItem(event,this)">${x.name}</span>; `;
+      room += `<span data-id="${x.id}" class="roomItem" aria-label="[${x.id}] ${x.name}" onclick="probeItem(event,this)">${x.name}</span>; `;
     }
   } else {
     room += `<h5>No items here</h5>`;
@@ -364,7 +404,7 @@ function displayMyself(data) {
 
   if (data.maxhp - data.hp > 1) {
     const p = Math.floor((parseInt(data.hp) / parseInt(data.maxhp)) * 100);
-    hpNow.title = `${data.hp} / ${data.maxhp}`;
+    hpNow.setAttribute('aria-label', `${data.hp} / ${data.maxhp}`);
     hpNow.style.width = `${p}%`;
     hpNow.innerText = `${p}%`;
     if (data.hp <= data.maxhp / 2) {
@@ -374,13 +414,13 @@ function displayMyself(data) {
       hpNow.style.boxShadow = '';
     }
   } else {
-    hpNow.title = '';
+    hpNow.setAttribute('aria-label', '');
     hpNow.innerText = '';
     hpNow.style.width = '100%';
   }
   if (data.maxmp - data.mp > 1) {
     const p = Math.floor((parseInt(data.mp) / parseInt(data.maxmp)) * 100);
-    mpNow.title = `${data.mp} / ${data.maxmp}`;
+    mpNow.setAttribute('aria-label', `${data.mp} / ${data.maxmp}`);
     mpNow.style.width = `${p}%`;
     mpNow.innerText = `${p}%`;
     if (data.mp <= data.maxmp / 2) {
@@ -390,17 +430,15 @@ function displayMyself(data) {
       mpNow.style.boxShadow = '';
     }
   } else {
-    mpNow.title = '';
+    mpNow.setAttribute('aria-label', '');
     mpNow.innerText = '';
     mpNow.style.width = '100%';
   }
   if (data.maxep - data.ep > 9) {
     const p = Math.floor((parseInt(data.ep) / parseInt(data.maxep)) * 100);
-    epNow.title = `${data.ep} / ${data.maxep}`;
     epNow.style.width = `${p}%`;
     epNow.innerText = `${p}%`;
   } else {
-    epNow.title = '';
     epNow.innerText = '';
     epNow.style.width = '100%';
   }
@@ -410,7 +448,6 @@ function displayMyself(data) {
     wpNow.style.width = `${p}%`;
     wpNow.style.borderRight = '1px solid #999';
   } else {
-    wpNow.title = '';
     wpNow.innerText = '';
     wpNow.style.width = '100%';
     wpNow.style.borderRight = 'none';
@@ -421,7 +458,7 @@ function displayMyself(data) {
   if (data.defences.length) {
     html += '<h5>Defences:</h5> - ';
     for (const x of data.defences) {
-      html += `<span class="playerDef" title="${x.desc}">${x.name}</span>; `;
+      html += `<span class="playerDef" aria-label="${x.desc}">${x.name}</span>; `;
     }
   } else {
     html += '<h5>No defences</h5>';
@@ -429,7 +466,7 @@ function displayMyself(data) {
   if (data.afflictions.length) {
     html += '<h5>Afflictions:</h5> - ';
     for (const x of data.afflictions) {
-      html += `<span class="playerAff" title="${x.desc}">${x.name}</span>; `;
+      html += `<span class="playerAff" aria-label="${x.desc}">${x.name}</span>; `;
     }
   } else {
     html += '<h5>No afflictions</h5>';
@@ -520,6 +557,9 @@ const moon = {
 
 function displayDateTime() {
   const elem = document.getElementById('dateTimeWrap');
+  if (window.TIME.time) {
+    elem.setAttribute('aria-label', window.TIME.time);
+  }
   if (elem.dataset['human']) {
     elem.innerHTML = `${window.TIME.hhour} | ${window.TIME.season}`;
     return;
