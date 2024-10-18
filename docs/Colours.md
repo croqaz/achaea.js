@@ -7,7 +7,7 @@ By default, there are a few available fonts:
 - Monego (a Monaco monospaced font, recreated with bold and italic variants -- https://github.com/cseelus/monego)
 - Mononoki (a font for programming and code review -- https://github.com/madmalik/mononoki)
 
-All the code and styles are located in `achaea/themes/`.
+All the default code and styles are located in `achaea/themes/`, but you can add your own styles in `custom/static/`.
 
 To regenerate the styles with your favorite font, run:
 
@@ -53,8 +53,10 @@ When you open the `url(...)` in your browser, you'll see lots of `@font-face {..
 Now you can regenerate the styles with your custom font:
 
 ```sh
-bun achaea/themes/gen.ts --fonts robotoMono --output achaea/static/style.css
+bun achaea/themes/gen.ts --fonts robotoMono
 ```
+
+The default output is `custom/static/style.css`, so you don't need to specify it.
 
 ## DYI colors
 
@@ -67,7 +69,7 @@ Keep in mind that the styles were never tested with light themes, only with dark
 To regenerate the styles with your custom style #1, run:
 
 ```sh
-bun achaea/themes/gen.ts --theme custom1 --output achaea/static/style.css
+bun achaea/themes/gen.ts --theme custom1
 ```
 
 To start a test/ simulation mode and view your colors, open the fake mode:
