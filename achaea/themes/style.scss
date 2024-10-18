@@ -30,7 +30,6 @@ html, body, canvas, main, aside, div, span, pre, input {
 }
 p, b, i, small, span, pre, h5 {
   margin: 0;
-  width: max-content;
   line-height: 1.6rem;
   font-family: $font-norm;
   font-size: $font-size;
@@ -135,6 +134,13 @@ body {
   border-right: 1px solid $dark2;
   min-height: 99.5vh;
   max-height: 99.9vh;
+}
+
+#room >*, #player >* {
+  width: max-content;
+}
+#main >* {
+  max-width: 120ch;
 }
 
 /* Left side: map, room, player */
