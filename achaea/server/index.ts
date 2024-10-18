@@ -54,7 +54,6 @@ export default async function startServer(port = 18888, hostname = '127.0.0.1') 
       '/dbex': await stf('dbex.html'),
       '/map': await stf('map.html'),
       '/client.js': await stf2('client.js'),
-      '/paper.js': await stf('paper.js'),
       '/map.js': await stf('map.js'),
       '/search.js': await stf('search.js'),
       '/style.css': await stf2('style.css'),
@@ -114,8 +113,6 @@ export default async function startServer(port = 18888, hostname = '127.0.0.1') 
             return await stf('map.html');
           case '/client.js':
             return await stf2('client.js');
-          case '/paper.js':
-            return await stf('paper.js');
           case '/map.js':
             return await stf('map.js');
           case '/search.js':
