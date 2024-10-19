@@ -97,6 +97,30 @@ A cosy forest hollow.
        # *,/ *** \\,* **.*`);
   expect(result[1]).toBe('You enter the subdivision.\nA cosy forest hollow.');
 
+  result = p.validWildMap(`<span class="c-yellow">Small hills.</span><span class="c-lightGray">
+    </span><span class="c-cyan bg-blue">www</span><span class="c-lightGray c-bright bg-lightGray">...@@@@@@@@@</span><span class="c-yellow">nnnnnMMMMM</span><span class="c-lightGray">
+    </span><span class="c-cyan bg-blue">www</span><span class="c-lightGray c-bright bg-lightGray">..@@@@@@@@@</span><span class="c-yellow">nnnnnnMMMMM</span><span class="c-lightGray">
+    </span><span class="c-cyan bg-blue">www</span><span class="c-lightGray c-bright bg-lightGray">..@@@@@@@@@</span><span class="c-yellow">nnnnnMMMMMM</span><span class="c-lightGray">
+    </span><span class="c-cyan bg-blue">wwww</span><span class="c-lightGray c-bright bg-lightGray">@@@@@@@@@</span><span class="c-yellow">nnnnnMMMMMMM</span><span class="c-lightGray">
+    </span><span class="c-cyan bg-blue">wwww</span><span class="c-lightGray c-bright bg-lightGray">@@@@@@@@@</span><span class="c-yellow">nnnnMMMMMMMM</span><span class="c-lightGray">
+    </span><span class="c-cyan bg-blue">www</span><span class="c-lightGray c-bright bg-lightGray">@@@@@@@@@</span><span class="c-yellow">nnnnMMMMMMMMM</span><span class="c-lightGray">
+    </span><span class="c-cyan bg-blue">ww</span><span class="c-lightGray c-bright bg-lightGray">@@@@@@@@@</span><span class="c-yellow">nnnnMMMMMMMMMM</span><span class="c-lightGray">
+    </span><span class="c-cyan bg-blue">w</span><span class="c-lightGray c-bright bg-lightGray">@@@@@@@@@?</span><span class="c-yellow">nnnnMMMMMMMMMM</span><span class="c-lightGray">
+    </span><span class="c-cyan bg-blue">w</span><span class="c-lightGray c-bright bg-lightGray">@@@@@@@@@@</span><span class="c-yellow">n</span><span class="c-lightGray c-bright">@</span><span class="c-yellow">nnMMMMMMMMMM</span><span class="c-lightGray">
+    </span><span class="c-cyan bg-blue">w</span><span class="c-lightGray c-bright bg-lightGray">@@@@@@@</span><span class="c-yellow">nnnnnnMMMMMMMMMMM</span><span class="c-lightGray">
+    </span><span class="c-cyan bg-blue">ww</span><span class="c-lightGray c-bright bg-lightGray">.@@@@@</span><span class="c-yellow">nnnnnnMMMMMMMMMMM</span><span class="c-lightGray">
+    </span><span class="c-cyan bg-blue">wwwww</span><span class="c-lightGray c-bright bg-lightGray">@@@</span><span class="c-yellow">nnnnnMMMMMMMMMMMM</span><span class="c-lightGray">
+    </span><span class="c-cyan bg-blue">ww</span><span class="c-lightGray c-bright bg-lightGray">.......</span><span class="c-yellow">nnnnMMMMMMMMMMMn</span><span class="c-lightGray">
+    </span><span class="c-cyan bg-blue">ww</span><span class="c-lightGray c-bright bg-lightGray">........</span><span class="c-yellow">nnnMMMMMMMMMMMn</span><span class="c-lightGray">
+    </span><span class="c-cyan bg-blue">w</span><span class="c-lightGray c-bright bg-lightGray">.........</span><span class="c-yellow">nnnnMMMMMMMMMMn</span><span class="c-lightGray">
+    </span><span class="c-cyan bg-blue">w</span><span class="c-lightGray c-bright bg-lightGray">.........</span><span class="c-yellow">nnnnMMMMMMMMMnn</span><span class="c-lightGray">
+    </span><span class="c-lightGray c-bright bg-lightGray">...........</span><span class="c-yellow">nnnMMMMMMMMMnn</span><span class="c-lightGray">
+    Weathered and grass-clad, these hills sweep across the land like the bones of giants.</span>`);
+  expect(result[1]).toContain('Small hills');
+  expect(result[1]).toContain(
+    'Weathered and grass-clad, these hills sweep across the land like the bones of giants',
+  );
+
   // Negative testing
   result = p.validWildMap(`Proprietor: Rurin, the Crafter.
 --------(Item)------(Description)------------------------------(Stock)--(Price)

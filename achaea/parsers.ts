@@ -35,10 +35,9 @@ export function validWildMap(text: string): string[] | null {
    */
   const parts = text.trim().split('\n');
   if (parts.length < 8) return null;
-  if (parts[3].length > 75) return null;
   const title = parts[0].replace(/\r$/, '');
   if (!(title.endsWith('.') || parts[0].includes('.</span><span'))) return null;
-  const re = /^[ #&%?*';,.\/;@MXYjnw\\|\+-~^]+\r?$/;
+  const re = /^[ #&%?*';,.\/;@MXYjnw\\|\+\-~^]+\r?$/;
   let map = [];
   let desc = [parts.shift()];
   if (
@@ -48,7 +47,7 @@ export function validWildMap(text: string): string[] | null {
   ) {
     desc.push(parts.shift());
   }
-  const len = parts[1].length;
+  let len = 0;
   for (let line of parts) {
     // all map lines must have the same length,
     // and must have the correct ASCII letters
@@ -56,7 +55,8 @@ export function validWildMap(text: string): string[] | null {
       .replace(/\r$/, '')
       .replaceAll('</span>', '')
       .replace(/<span class="[a-zA-Z -]+">/g, '');
-    if (txt.length === len && re.test(txt)) map.push(line);
+    if (len === 0 && txt.length < 60 && re.test(txt)) len = txt.length;
+    if (txt.length === len && txt.length < 60 && re.test(txt)) map.push(line);
     else desc.push(line);
   }
   if (map.length >= 8 && desc.length > 0) return [map.join('\n'), desc.join('\n')];
