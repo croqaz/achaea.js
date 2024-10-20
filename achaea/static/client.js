@@ -1,5 +1,6 @@
 import { computePosition, flip, shift, offset } from 'https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.x/+esm';
 
+// import * as icons from './icons.js';
 import * as map from './map.js';
 window.TIME = {};
 window.BATTLE = { tgtID: null };
@@ -316,7 +317,7 @@ function displayRoom(data) {
   if (data && data.details) {
     const mapElem = document.getElementById('map');
     const wildMap = document.getElementById('wildMap');
-    if (data.details.includes('wildMap')) {
+    if (data.wild) {
       wildMap.style.display = 'flex';
       mapElem.style.display = 'none';
     } else if (mapElem.style.display === 'none') {

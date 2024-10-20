@@ -573,6 +573,8 @@ export function gmcpProcessRoomInfo(_type: string, data: T.GmcpRoom) {
       STATE.Room.details?.push('subdivision');
     }
     STATE.Room.wild = true;
+  } else {
+    STATE.Room.wild = false;
   }
   ee.emit('room:update', STATE.Room);
 }
