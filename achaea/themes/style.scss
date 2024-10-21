@@ -28,7 +28,7 @@ html, body, canvas, main, aside, div, span, pre, input {
   font-size: $font-size;
   font-family: $font-norm;
 }
-p, b, i, small, span, pre, h5 {
+p, b, i, small, span, pre, h5, h6 {
   margin: 0;
   line-height: 1.6rem;
   font-family: $font-norm;
@@ -320,6 +320,21 @@ body {
 #targetHpnow:hover {
   color: $bright-foreground;
   font-family: $font-bold;
+}
+
+#icons {
+  height: 2rem;
+  background: $dark4;
+  border-top: 1px solid $dark2;
+  display: inline-grid;
+  grid-template-columns: repeat(auto-fit, 2rem);
+  text-align: center;
+  z-index: 99;
+}
+#icons > * {
+  border-right: 1px solid $dark2;
+  place-content: center;
+  text-align: center;
 }
 
 #statBar {

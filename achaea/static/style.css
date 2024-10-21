@@ -364,6 +364,22 @@ body {
   font-family: monospace, monospace;
 }
 
+#icons {
+  height: 2rem;
+  background: #4c566a;
+  border-top: 1px solid #3b4252;
+  display: inline-grid;
+  grid-template-columns: repeat(auto-fit, 2rem);
+  text-align: center;
+  z-index: 99;
+}
+
+#icons > * {
+  border-right: 1px solid #3b4252;
+  place-content: center;
+  text-align: center;
+}
+
 #statBar {
   height: 1rem;
   display: flex;

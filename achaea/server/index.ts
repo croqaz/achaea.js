@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import * as R from 'remeda';
 
+import * as T from '../types.ts';
 import ee from '../events/index.ts';
 import * as m from '../maps/index.ts';
 import * as db from '../extra/leveldb.ts';
@@ -54,7 +55,6 @@ export default async function startServer(port = 18888, hostname = '127.0.0.1') 
       '/dbex': await stf('dbex.html'),
       '/map': await stf('map.html'),
       '/client.js': await stf2('client.js'),
-      '/icons.js': await stf('icons.js'),
       '/map.js': await stf('map.js'),
       '/search.js': await stf('search.js'),
       '/style.css': await stf2('style.css'),
@@ -114,15 +114,20 @@ export default async function startServer(port = 18888, hostname = '127.0.0.1') 
             return await stf('map.html');
           case '/client.js':
             return await stf2('client.js');
-          case '/icons.js':
-            return await stf('icons.js');
           case '/map.js':
             return await stf('map.js');
           case '/search.js':
             return await stf('search.js');
           case '/style.css':
             return await stf2('style.css');
+          case '/rpg-icons.css':
+            return await stf('rpg-icons.css');
         }
+      }
+
+      if (pth.startsWith('/fonts/')) {
+        const f = pth.split('/').slice(1).join('/');
+        return await stf(f);
       }
 
       // handle WebSockets
@@ -146,62 +151,66 @@ export default async function startServer(port = 18888, hostname = '127.0.0.1') 
         ee.on('game:html', (text: string) => {
           // ignore junk
           if (typeof text !== 'string' || text.length <= 1) return;
-          ws.send(JSON.stringify({ textType: 'gameText', text }));
+          ws.send(JSON.stringify({ type: 'game:html', text }));
         });
         // Game comm channels
         // type GmcpChannelText
         ee.on('channel:text', (data: Record<string, any>) => {
-          data.textType = 'channelText';
+          data.type = 'channel:text';
           ws.send(JSON.stringify(data));
         });
         // GMCP Time.List or Time.Update
         // type sealed StateTime
-        ee.on('time:update', (data: Record<string, any>) => {
-          ws.send(JSON.stringify({ ...data, textType: 'timeUpdate' }));
+        ee.on('time:update', (data: T.StateTime) => {
+          ws.send(JSON.stringify({ ...data, type: 'time:update' }));
         });
 
         //
         // send CLI & auto-text (aliases, triggers)
         ee.on('user:text', (text: string) => {
-          ws.send(JSON.stringify({ textType: 'userText', text }));
+          ws.send(JSON.stringify({ type: 'user:text', text }));
         });
         // Display text, not related to the Telnet output;
         ee.on('sys:text', (text: string) => {
-          ws.send(JSON.stringify({ textType: 'sysText', text }));
+          ws.send(JSON.stringify({ type: 'sys:text', text }));
         });
         // Display HTML, not related to the Telnet output;
-        ee.on('sys:html', (text: string) => {
-          ws.send(JSON.stringify({ textType: 'sysHtml', text }));
+        ee.on('sys:html', (html: string) => {
+          ws.send(JSON.stringify({ type: 'sys:html', html }));
+        });
+        // Update user's icons
+        ee.on('ico:update', (data: Record<string, any>) => {
+          ws.send(JSON.stringify({ ...data, type: 'ico:update' }));
         });
 
         //
         // GMCP Room.Info
-        ee.on('room:update', (data) => {
+        ee.on('room:update', (data: T.StateRoom) => {
           ws.send(JSON.stringify(data));
         });
         // GMCP Char.Items.*
-        ee.on('items:update', (items) => {
-          ws.send(JSON.stringify({ textType: 'roomItems', items }));
+        ee.on('items:update', (items: T.GmcpItem[]) => {
+          ws.send(JSON.stringify({ type: 'items:update', items }));
         });
         // GMCP Room.Players ...
-        ee.on('players:update', (players) => {
-          ws.send(JSON.stringify({ textType: 'roomPlayers', players }));
+        ee.on('players:update', (players: T.GmcpPlayer[]) => {
+          ws.send(JSON.stringify({ type: 'players:update', players }));
         });
         // Wilderness map
         ee.on('wild:map', (map: string) => {
-          ws.send(JSON.stringify({ textType: 'wildMap', map }));
+          ws.send(JSON.stringify({ type: 'wild:map', map }));
         });
 
         //
         // Player info
-        ee.on('myself:update', (data) => {
+        ee.on('myself:update', (data: T.StateMe) => {
           ws.send(JSON.stringify(data));
         });
-        ee.on('battle:update', (battle) => {
-          ws.send(JSON.stringify({ textType: 'battleUpdate', battle }));
+        ee.on('battle:update', (battle: T.StateBattle) => {
+          ws.send(JSON.stringify({ type: 'battle:update', battle }));
         });
         ee.on('battle:stop', () => {
-          ws.send(JSON.stringify({ textType: 'battleStop' }));
+          ws.send(JSON.stringify({ type: 'battle:stop' }));
         });
 
         //
@@ -217,6 +226,7 @@ export default async function startServer(port = 18888, hostname = '127.0.0.1') 
         // Push info from the server
         if (STATE.Me.level) ee.emit('myself:update', STATE.Me);
         if (STATE.Room.num) ee.emit('room:update', STATE.Room);
+        if (STATE.Room.num) ee.emit('ico:update', STATE.Icons);
       },
       close(ws) {
         const ip = ws.remoteAddress;

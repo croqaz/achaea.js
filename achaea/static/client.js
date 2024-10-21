@@ -1,7 +1,7 @@
 import { computePosition, flip, shift, offset } from 'https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.x/+esm';
 
-// import * as icons from './icons.js';
 import * as map from './map.js';
+window.ME = {};
 window.TIME = {};
 window.BATTLE = { tgtID: null };
 const ASCII_INPUT = /^[/'"0-9a-z]$/i;
@@ -184,98 +184,122 @@ async function startWS() {
 
   window.WS.onmessage = async function (event) {
     const gameLog = document.getElementById('gameLog');
+    const icoElem = document.getElementById('icons');
     const data = JSON.parse(event.data);
     // console.log(data); // DEBUG
-    let text = data.text;
 
-    // This should be a Room update
-    // num: .., name: .., plane: .., environment: ..,
-    // details: [], exits: {}, items: [], players: []
-    if (data.num && data.name && data.room) {
-      window.ROOM.id = data.num;
-      // Current Z level
-      window.ROOM.level = data.room.coord ? data.room.coord.z : 0;
-      // Always mark current room as visited
-      if (AREA.rooms[data.num]) {
-        AREA.rooms[data.num].visited = true;
-      }
-      if (data.room && data.room.area) {
-        await map.fetchMap(data);
-        map.drawMap(data);
-      }
-      return displayRoom(data);
-    }
-    if (data.textType === 'roomItems' && data.items) {
-      window.ROOM.items = data.items;
-      return displayRoom();
-    }
-    if (data.textType === 'roomPlayers' && data.players) {
-      window.ROOM.players = data.players;
-      return displayRoom();
-    }
-    if (data.textType === 'battleUpdate' && data.battle) {
-      window.BATTLE = data.battle;
-      return displayBattle(data.battle);
-    } else if (data.textType === 'battleStop') {
-      document.getElementById('battleWrap').style.display = 'none';
-      window.BATTLE = { tgtID: null };
-      return;
-    }
+    switch (data.type) {
+      case 'user:text':
+      case 'game:html':
+      case 'sys:text':
+        let text = data.text;
+        if (data.type === 'user:text') {
+          text = `> ${text}`;
+        }
+        const txt = document.createElement('p');
+        txt.classList.add(data.type.replace(':', '-'));
+        txt.innerHTML = text;
 
-    // This should be Player info
-    // name: .., race: .., level: .., xp: .., class: .., city: ..,
-    // hp: .. maxhp: .. mp: .. maxmp: .. ep: .. maxep: .. wp: .. maxwp: ..
-    // bal: '1', eq: '1', rift: [], items: [], afflictions: [], defences: []
-    if (data.name && data.race && data.level) {
-      return displayMyself(data);
-    }
+        // Check if user has scrolled manually
+        // (before adding the new element)
+        const notScrolled = Math.abs(gameLog.scrollHeight - gameLog.scrollTop - gameLog.clientHeight) <= 10;
+        gameLog.append(txt);
+        if (notScrolled) {
+          // Jump scroll new element into view
+          txt.scrollIntoView();
+        }
+        break;
 
-    // This should be a social/channel text
-    // channel: .., talker .., text: ..
-    if (data.channel && data.talker) {
-      return displayChannel(data);
-    }
+      case 'channel:text':
+        // This is a social/channel text
+        // channel: .., talker .., text: ..
+        return displayChannel(data);
 
-    if (data.textType === 'timeUpdate' && data.day && data.month) {
-      window.TIME = data;
-      return displayDateTime();
-    }
+      case 'time:update':
+        window.TIME = data;
+        return displayDateTime();
 
-    if (data.textType === 'wildMap') {
-      const wildMap = document.getElementById('wildMap');
-      wildMap.innerHTML = `<div>${data.map}</div>`;
-      return;
-    }
+      case 'sys:html':
+        const div = document.createElement('div');
+        div.classList.add(data.type.replace(':', '-'));
+        div.innerHTML = data.html;
+        return gameLog.append(div);
 
-    // Reject unknown messages
-    if (!text || !data.textType) {
-      return console.warn(`Unknown message format:`, data);
-    }
+      case 'ico:update':
+        delete data.type;
+        let html = '';
+        for (const [k, ico] of Object.entries(data)) {
+          console.log(k, '::', ico);
+          let label = '';
+          if (ico && ico.label) {
+            label = `aria-label="${ico.label}"`;
+          }
+          // if empty display data
+          if (!ico || !(ico.text || ico.html)) {
+            html += `<div ${label}> </div>`;
+          } else if (ico.text) {
+            html += `<div ${label}>${ico.text}</div>`;
+          } else if (ico.html) {
+            html += ico.html;
+          }
+        }
+        icoElem.innerHTML = html;
+        break;
 
-    if (data.textType === 'sysHtml') {
-      const div = document.createElement('div');
-      div.classList.add(data.textType);
-      div.innerHTML = text;
-      return gameLog.append(div);
-    }
+      case 'items:update':
+        window.ROOM.items = data.items;
+        return displayRoom();
 
-    // Echo user's input text
-    const txt = document.createElement('p');
-    if (data.textType === 'userText') {
-      text = `> ${text}`;
-    }
-    txt.innerHTML = text;
-    txt.classList.add(data.textType);
+      case 'players:update':
+        window.ROOM.players = data.players;
+        return displayRoom();
 
-    // Check if user has scrolled manually
-    // (before adding the new element)
-    const notScrolled = Math.abs(gameLog.scrollHeight - gameLog.scrollTop - gameLog.clientHeight) <= 10;
+      case 'wild:map':
+        document.getElementById('wildMap').innerHTML = `<div>${data.map}</div>`;
+        break;
 
-    gameLog.append(txt);
+      case 'battle:update':
+        window.BATTLE = data.battle;
+        return displayBattle(data.battle);
 
-    if (notScrolled) {
-      // Jump scroll new element into view
-      txt.scrollIntoView();
+      case 'battle:stop':
+        document.getElementById('battleWrap').style.display = 'none';
+        window.BATTLE = { tgtID: null };
+        break;
+
+      default:
+        //
+        // This should be Player info
+        // name: .., race: .., level: .., xp: .., class: .., city: ..,
+        // hp: .. maxhp: .. mp: .. maxmp: .. ep: .. maxep: .. wp: .. maxwp: ..
+        // bal: '1', eq: '1', rift: [], items: [], afflictions: [], defences: []
+        if (data.name && data.race && data.level) {
+          window.ME = data;
+          return displayMyself(data);
+        }
+
+        //
+        // This should be a Room update
+        // num: .., name: .., plane: .., environment: ..,
+        // details: [], exits: {}, items: [], players: []
+        if (data.num && data.name && data.room) {
+          window.ROOM.id = data.num;
+          window.ROOM.name = data.name;
+          // Current Z level
+          window.ROOM.level = data.room.coord ? data.room.coord.z : 0;
+          // Always mark current room as visited
+          if (AREA.rooms[data.num]) {
+            AREA.rooms[data.num].visited = true;
+          }
+          if (data.room && data.room.area) {
+            await map.fetchMap(data);
+            map.drawMap(data);
+          }
+          return displayRoom(data);
+        }
+
+        // Reject unknown messages
+        return console.warn(`Unknown message format:`, data);
     }
   };
 
@@ -454,8 +478,7 @@ function displayMyself(data) {
     wpNow.style.borderRight = 'none';
   }
 
-  let displayRace = data.displayRace ? `<i>${data.displayRace}</i> ` : '';
-  let html = `<h5>${data.name} (Lvl ${data.level}<span class="thin">+${data.xp}</span> ${displayRace}${data.class})</h5>`;
+  let html = `<h5>${data.name} (Lvl ${data.level}<span class="thin">+${data.xp}</span> ${data.class})</h5>`;
   if (data.defences.length) {
     html += '<h5>Defences:</h5> - ';
     for (const x of data.defences) {
