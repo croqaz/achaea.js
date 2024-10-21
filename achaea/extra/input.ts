@@ -5,6 +5,7 @@ import * as db from './leveldb.js';
 import * as comm from '../core/common.ts';
 import { millInks } from './mill.ts';
 import { htmlTable } from './table.ts';
+import { throttle } from '../core/util.ts';
 import processMapAliases from './map.ts';
 
 import { displayNote, displayText } from '../core/index.ts';
@@ -33,6 +34,30 @@ try {
 } catch (err) {
   console.warn('Cannot load user input function!', err);
 }
+
+const postBug = throttle(async (content: string) => {
+  const url =
+    'https://discord.com/api/webhooks/1298008461342146641/M_tmxlcM-jhkDVVLQKKwRNLPhZhmAUOnA3Gblko9DpE5T0gBu7_bjxGrjEJELn9D-VcD';
+  await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ content }),
+    method: 'POST',
+  });
+}, 60_000);
+
+const postIdea = throttle(async (content: string) => {
+  const url =
+    'https://discord.com/api/webhooks/1298007055612772474/Srvxu4loxTn78auDDizP-3QUPBF7spXvOmbgUdyg463bL1qutmLs-Rm4cN1IGpGXTJYp';
+  await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ content }),
+    method: 'POST',
+  });
+}, 60_000);
 
 export default function extraProcessUserInput(text: string, parts: string[]): string | void {
   /*
@@ -218,8 +243,9 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
           ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Nothing found!</i>');
         } else ee.emit('sys:html', htmlTable(arr));
       };
-      //
-      // eg: DB find herb pear
+      /*
+       * eg: DB find herb pear
+       */
       if (secondWord === 'herb' || secondWord === 'plant') {
         const r = comm.findHerb(lower);
         displayText(JSON.stringify(r, null, 2) + '\n---\n');
@@ -254,9 +280,10 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
       // eg: DB find npc Seasone
       else if (secondWord === 'npc' || secondWord === 'deniz') {
         db.denizenFind(lower).then(toTable);
-      } //
-      // eg: DB find item umbrella
-      else if (secondWord === 'item') {
+      } else if (secondWord === 'item') {
+        /*
+         * eg: DB find item umbrella
+         */
         db.roomItemFind(lower).then(toTable);
       }
       return;
@@ -274,6 +301,16 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
         }
       }
       return;
+    } else if (process.env.NODE_ENV !== 'test' && firstWord === '//bug') {
+      /*
+       * post in #bugs
+       */
+      postBug(parts.slice(1).join(' '));
+    } else if (process.env.NODE_ENV !== 'test' && firstWord === '//idea') {
+      /*
+       * post in #ideas
+       */
+      postIdea(parts.slice(1).join(' '));
     }
 
     // If map aliases are found...
