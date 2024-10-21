@@ -208,7 +208,7 @@ To restore the defaults, enter CONFIG COLOUR DEFAULT
       "hp": "${fakeHP}", "maxhp": "1500", "mp": "${fakeMP}", "maxmp": "1200",
       "ep": "3800", "maxep": "3800", "wp": "3545", "maxwp": "3545", "nl": "66",
       "bal": "1", "eq": "1", "string": "H:1150/1150 M:1099/1099 E:3800/3800 W:3545/3545 NL:66/100 ",
-      "charstats": [ "Bleed: 0", "Rage: 0", "Morph: None" ]
+      "charstats": [ "Bleed: 0", "Rage: 0", "Morph: Basilisk" ]
     }`,
     );
 
@@ -220,6 +220,20 @@ To restore the defaults, enter CONFIG COLOUR DEFAULT
     else fakeMP = fakeMP - 100;
     if (fakeMP === 100 || fakeMP === 1200) mpGrowing = !mpGrowing;
   }, 2000);
+
+  ee.emit(
+    'game:gmcp',
+    `Char.Items.List { "location": "inv", "items": [
+    { "id": "12", "name": "a sword", "icon": "weapon" },
+    { "id": "34", "name": "a cleaver", "icon": "lamp" }
+  ]}`,
+  );
+  ee.emit(
+    'game:gmcp',
+    `Char.Items.Update {
+    "location": "inv", "item": { "id": "34", "name": "a cleaver", "icon": "lamp", "attrib": "L"
+  }}`,
+  );
 
   await sleep(0.33);
   ee.emit(

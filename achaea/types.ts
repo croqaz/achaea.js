@@ -5,6 +5,7 @@ export interface StateType {
   Time: StateTime;
   Stats: StateStats;
   Misc: Record<string, any>;
+  Icons: Record<string, any>;
   Custom: Record<string, any>;
   Queue: Record<string, string[]>;
 }
@@ -179,6 +180,7 @@ export interface GmcpItem {
   name: string;
   icon?: string;
   attrib?: string;
+  type?: string;
 }
 
 export interface GmcpItemUpd {

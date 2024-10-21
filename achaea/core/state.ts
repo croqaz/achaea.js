@@ -4,6 +4,7 @@ import * as R from 'remeda';
 import * as T from '../types.ts';
 import ee from '../events/index.ts';
 import { MAP } from '../maps/index.ts';
+import { weaponType } from './common.ts';
 import * as t from './time.ts';
 
 /*
@@ -53,10 +54,6 @@ export var STATE: T.StateType = Object.seal({
     skills: {} as Record<string, any>,
     wieldedL: {} as T.GmcpItem,
     wieldedR: {} as T.GmcpItem,
-
-    // A display race, eg:
-    // druid morph, Viridian, Chaos Lord...
-    displayRace: '',
   }),
   //
   Room: Object.seal({
@@ -147,6 +144,11 @@ export var STATE: T.StateType = Object.seal({
     quitting: false,
   },
   //
+  Icons: {
+    // user's icons
+    // ...
+  },
+  //
   Custom: {
     // user's config
     // ...
@@ -202,6 +204,13 @@ function updateMyself(meta: Record<string, any>) {
   }
 }
 
+export function updateIcons(meta: Record<string, any>) {
+  for (const k of Object.keys(meta)) {
+    STATE.Icons[k] = meta[k];
+  }
+  ee.emit('ico:update', STATE.Icons);
+}
+
 export function findInventory(name: string) {
   // Find one item in the inventory, by name
   name = name.toLowerCase();
@@ -213,9 +222,11 @@ function syncWieldedWpn(item: T.GmcpItem) {
   // Overwrite whatever weapons are already wielded
   if (item.attrib) {
     if (item.attrib.includes('l')) {
+      item.type = weaponType(item.name);
       // l' = wielded_left
       STATE.Me.wieldedL = item;
     } else if (item.attrib.includes('L')) {
+      item.type = weaponType(item.name);
       // 'L' = wielded_right
       STATE.Me.wieldedR = item;
     }
@@ -325,14 +336,6 @@ export function gmcpProcessChar(_: string, data: T.GmcpChar) {
               STATE.Battle.bals[k] = true;
             }
           }
-        }
-      } //
-      // Special display race for Metamorphs
-      // TODO: more classes
-      else if (cs.startsWith('Morph:')) {
-        const [, r] = cs.split(': ');
-        if (r && r !== 'None') {
-          STATE.Me.displayRace = r;
         }
       }
     }

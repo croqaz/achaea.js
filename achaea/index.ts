@@ -32,9 +32,9 @@ export function connect(player: string) {
     // Auto-type the password from ENVIRON
     const e = `${player.toUpperCase()}_PASSWD`;
     if (process.env[e]) {
-      ee.emit('user:text', process.env[e]);
+      ee.emit('user:text', process.env[e], false);
     }
-  }, 1000);
+  }, 500);
 
   // negociate connection options
   telnet.on('will', (option) => {
@@ -116,9 +116,9 @@ ee.on('user:gmcp', (buff: Buffer) => {
   telnet.writeSub(telOpts.TELNET_GMCP, buff);
 });
 
-ee.on('user:text', (text: string) => {
+ee.on('user:text', (text: string, log = true) => {
   if (!telnet) return;
   text = text.trim() + '\n';
   telnet.write(text);
-  logWrite('\n$ ' + text);
+  if (log) logWrite('\n$ ' + text);
 });

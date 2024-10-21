@@ -655,6 +655,8 @@ export function weaponType(text: string): string {
     return 'warhammer';
   } else if (text.endsWith(' spear')) {
     return 'spear';
+  } else if (text.endsWith(' trident')) {
+    return 'trident';
   } else if (text.includes(' Orcsplitter ') || text.includes('Logosian Battleaxe')) {
     return 'battleaxe';
   } else if (text.includes('Scimitar of ')) {
@@ -665,8 +667,12 @@ export function weaponType(text: string): string {
     text.includes(`Thoth's Fang`)
   ) {
     return 'dirk';
+  } else if (text.includes(' blackjack ')) {
+    return 'blackjack';
   } else if (text.endsWith(' cleaver')) {
     return 'cleaver';
+  } else if (text.endsWith(' shield')) {
+    return 'shield';
   }
   return '';
 }
