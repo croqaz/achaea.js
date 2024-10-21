@@ -44,7 +44,7 @@ export var STATE: T.StateType = Object.seal({
     bal: true, // physical balance
     eq: true, // mental equilibrium
     eb: true, // bal & eq
-    round: 0, // Global, rounds of bal & eq
+    round: 0, // Global round of bal & eq
 
     rift: [],
     items: [],
@@ -85,6 +85,7 @@ export var STATE: T.StateType = Object.seal({
     // each target has: id, name, hp, defs, affs...
     tgts: {},
     bals: {
+      // rage balances
       a1: true,
       a2: true,
       a3: true,
@@ -111,10 +112,11 @@ export var STATE: T.StateType = Object.seal({
   Stats: Object.seal({
     begDt: new Date(), // starting time
     endDt: null, // finish time
+    perf: performance.now(),
+    ping: 0, // response time (float)
     gold: 0, // starting inv gold
     bank: 0, // starting bank gold
     kills: 0, // hunting counter
-    ping: 0,
     bal: null, // physical balance
     eq: null, // mental equilibrium
     eat: null, // herb or mineral

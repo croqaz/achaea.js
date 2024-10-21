@@ -107,8 +107,9 @@ ee.on('tel:text', (rawText: string) => {
 });
 
 // On raw GMCP text
-ee.on('game:gmcp', (subText: string) => {
-  logWrite('\n:GMCP: ' + subText + '\n');
+ee.on('game:gmcp', (text: string) => {
+  if (text.startsWith('IRE.Time')) return;
+  logWrite('\n:GMCP: ' + text + '\n');
 });
 
 ee.on('user:gmcp', (buff: Buffer) => {

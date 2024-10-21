@@ -10,33 +10,37 @@ export interface StateType {
   Queue: Record<string, string[]>;
 }
 
+/*
+ * Compared with Nexus variables:
+ * https://nexus.ironrealms.com/Predefined_variables
+ */
 export interface StateMe {
   name: string;
   race: string;
   gender: string;
   level: number;
-  xp: string;
+  xp: string; // @my_nl = Your experience percentage to next level, eg: 23%
   class: string;
   city: string;
   house: string;
   gold: number;
   bank: number;
 
-  hp: number;
-  oldhp: number;
-  maxhp: number;
-  mp: number;
+  hp: number; // @my_hp = Your current health
+  oldhp: number; // use it to calculate diff between old and new values
+  maxhp: number; // @my_maxhp = Your maximum health points
+  mp: number; // @my_mp = Your current mana points
   oldmp: number;
-  maxmp: number;
-  ep: number;
-  maxep: number;
-  wp: number;
-  maxwp: number;
+  maxmp: number; // @my_maxmp = Your maximum mana points
+  ep: number; // @my_ep 	Your current endurance points
+  maxep: number; // @my_maxep = Your maximum endurance points
+  wp: number; // @my_wp = Your current willpower points
+  maxwp: number; // @my_maxwp = Your maximum willpower points
 
   round: number;
-  bal: boolean;
-  eq: boolean;
-  eb: boolean;
+  bal: boolean; // @my_bal = If you currently have balance
+  eq: boolean; // @my_eq = If you currently have equilibrium
+  eb: boolean; // balance + equilibrium
 
   rift: GmcpItem[];
   items: GmcpItem[];
@@ -84,12 +88,13 @@ export interface StateBattle {
 }
 
 export interface StateStats {
-  begDt?: Date;
-  endDt?: Date;
+  begDt: Date; // game start time
+  endDt?: Date; // game end time
+  perf: number; // used to calc ping
+  ping: number; // ping/response time
   gold: number;
   bank: number;
   kills: number;
-  ping: number;
   bal?: Date;
   eq?: Date;
   eat?: Date;

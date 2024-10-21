@@ -19,6 +19,9 @@ export const Config = {
   //
   // auto-walk delay
   WALK_DELAY: 0.5,
+  //
+  // how often to date/ping
+  PING_INTERVAL: 10_000,
 
   //
   // Ignore some minerals from extract

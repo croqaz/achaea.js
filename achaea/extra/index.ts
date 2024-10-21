@@ -10,6 +10,9 @@ import './rooms.ts';
 import './triggers.ts';
 import './stats.ts';
 
+import ee from '../events/index.ts';
+import { Config } from './config.ts';
+
 try {
   // @ts-ignore: Types
   await import('../../custom/index.ts');
@@ -17,3 +20,14 @@ try {
 } catch {
   // console.error('Custom user folder not found');
 }
+
+ee.once('game:start', () => {
+  const { STATE } = require('../core/state.ts');
+  const { gmcpTime } = require('../core/gmcp.ts');
+  // Call GMCP time every X sec
+  // and measure the response time
+  setInterval(() => {
+    STATE.Stats.perf = performance.now();
+    ee.emit('user:gmcp', gmcpTime());
+  }, Config.PING_INTERVAL);
+});

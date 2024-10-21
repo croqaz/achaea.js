@@ -13,12 +13,13 @@ export function gmcpPing() {
 }
 
 export function gmcpSupports() {
-  const value = `"Char 1", "Char.Vitals 1", "Char.Skills 1", "Char.Items 1", "IRE.Rift 1",
-    "IRE.Target 1", "Room 1", "Comm.Channel 1", "IRE.Time 1"`;
+  const value = `"Char 1", "Char.Vitals 1", "Char.Skills 1", "Char.Items 1",
+    "IRE.Rift 1", "IRE.Target 1", "Room 1", "Comm.Channel 1", "IRE.Time 1"`;
   return Buffer.from(`Core.Supports.Set [ ${value} ]`);
 }
 
 export function gmcpTime() {
+  S.STATE.Stats.ping = performance.now() - S.STATE.Stats.perf;
   return Buffer.from('IRE.Time.Request');
 }
 
@@ -122,8 +123,6 @@ export function processGMCP(text: string) {
     setTimeout(() => ee.emit('user:gmcp', gmcpRiftItems()), 500);
     // Game has started, enable user logic
     setTimeout(() => ee.emit('game:start'), 750);
-    // Repeat GMCP time every X sec
-    setInterval(() => ee.emit('user:gmcp', gmcpTime()), 180_000);
     return;
   }
 

@@ -224,8 +224,11 @@ To restore the defaults, enter CONFIG COLOUR DEFAULT
   ee.emit(
     'game:gmcp',
     `Char.Items.List { "location": "inv", "items": [
+    { "id": "01", "name": "an amethyst vial", "icon": "potion", "attrib": "f" },
     { "id": "12", "name": "a sword", "icon": "weapon" },
-    { "id": "34", "name": "a cleaver", "icon": "lamp" }
+    { "id": "34", "name": "a cleaver", "icon": "lamp" },
+    { "id": "56", "name": "a pair of Landstrider's boots", "icon": "clothing", "attrib": "w", "wearslot": "feet" },
+    { "id": "69", "name": "a massive suit of spiked full plate", "icon": "armor", "attrib": "w" }
   ]}`,
   );
   ee.emit(
