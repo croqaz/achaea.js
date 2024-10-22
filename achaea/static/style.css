@@ -36,7 +36,7 @@ html, body, canvas, main, aside, div, span, pre, input {
   font-family: monospace, monospace;
 }
 
-p, b, i, small, span, pre, h5 {
+p, b, i, small, span, pre, h5, h6 {
   margin: 0;
   line-height: 1.6rem;
   font-family: monospace, monospace;
@@ -365,18 +365,20 @@ body {
 }
 
 #icons {
-  height: 2rem;
+  display: none;
   background: #4c566a;
+  margin-bottom: -1px;
   border-top: 1px solid #3b4252;
-  display: inline-grid;
   grid-template-columns: repeat(auto-fit, 2rem);
   text-align: center;
   z-index: 99;
 }
 
 #icons > * {
+  height: 2rem;
   border-right: 1px solid #3b4252;
-  place-content: center;
+  border-bottom: 1px solid #3b4252;
+  place-content: center center;
   text-align: center;
 }
 

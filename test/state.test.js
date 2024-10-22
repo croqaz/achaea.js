@@ -31,8 +31,10 @@ test('char status & vitals', () => {
   expect(s.STATE.Me.wp).toBe('3300');
 
   expect(s.STATE.Me.bleed).toBe(1);
-  expect(s.STATE.Me.sunlight).toBe(0);
+  expect(s.STATE.Me.devotion).toBeNull();
+  expect(s.STATE.Me.essence).toBeNull();
   expect(s.STATE.Me.morph).toBeNull();
+  expect(s.STATE.Me.sunlight).toBe(0);
 });
 
 test('char defences state', () => {

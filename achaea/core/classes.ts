@@ -5,7 +5,7 @@ import * as T from '../types.ts';
 /*
  * Player! Myself, yourself.
  *
- * Compared with Nexus variables:
+ * Compared to Nexus variables:
  * https://nexus.ironrealms.com/Predefined_variables
  */
 export class Player {
@@ -74,7 +74,53 @@ export class Player {
   }
 
   /*
-   * The current animal spirit.
+   * The current Angel power.
+   * Priest class only.
+   */
+  get angelpower(): number {
+    for (const cs of this.charstats) {
+      if (cs.startsWith('Angelpower:')) {
+        const [, x] = cs.split(': ');
+        return parseInt(x);
+      }
+    }
+    return 0;
+  }
+
+  /*
+   * The current Devotional essence.
+   * Priest and Paladin classes only.
+   * @my_devotion in Nexus: Remaining devotion percent (Devotion)
+   * Example: Devotion: 59%
+   */
+  get devotion(): string | null {
+    for (const cs of this.charstats) {
+      if (cs.startsWith('Devotion:')) {
+        const [, x] = cs.split(': ');
+        return x;
+      }
+    }
+    return null;
+  }
+
+  /*
+   * The current Life essence.
+   * Necromancy classes only.
+   * @my_essence in Nexus: Remaining life essence percent (Necromancy)
+   * Example: Essence: 59%
+   */
+  get essence(): string | null {
+    for (const cs of this.charstats) {
+      if (cs.startsWith('Essence:')) {
+        const [, x] = cs.split(': ');
+        return x;
+      }
+    }
+    return null;
+  }
+
+  /*
+   * The current Animal spirit.
    * Metamporh classes only.
    */
   get morph(): string | null {
@@ -90,8 +136,9 @@ export class Player {
   }
 
   /*
-   * The current grove sunlight.
+   * The current Grove sunlight.
    * Druid and Sylvan classes only.
+   * Example: Sunlight: 5950
    */
   get sunlight(): number {
     for (const cs of this.charstats) {

@@ -323,17 +323,19 @@ body {
 }
 
 #icons {
-  height: 2rem;
+  display: none; // inline-grid
   background: $dark4;
+  margin-bottom: -1px;
   border-top: 1px solid $dark2;
-  display: inline-grid;
   grid-template-columns: repeat(auto-fit, 2rem);
   text-align: center;
   z-index: 99;
 }
 #icons > * {
+  height: 2rem;
   border-right: 1px solid $dark2;
-  place-content: center;
+  border-bottom: 1px solid $dark2;
+  place-content: center center;
   text-align: center;
 }
 

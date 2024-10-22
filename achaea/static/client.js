@@ -6,6 +6,10 @@ window.TIME = {};
 window.BATTLE = { tgtID: null };
 const ASCII_INPUT = /^[/'"0-9a-z]$/i;
 
+function elemHidden(elem) {
+  return !elem.style.display || elem.style.display === 'none';
+}
+
 window.addEventListener('load', function () {
   const history = restoreHistory();
   let historyIndex = history.length - 1;
@@ -75,7 +79,7 @@ window.addEventListener('load', function () {
       if (rightElem.classList.contains('big')) {
         rightElem.classList.remove('big');
       }
-      const mapView = mapElem.style.display === 'none' ? wildMap : mapElem;
+      const mapView = elemHidden(mapElem) ? wildMap : mapElem;
       mapView.classList.toggle('big');
       // Force Paper.js to resize & recalculate
       // https://github.com/paperjs/paper.js/issues/662
@@ -229,21 +233,23 @@ async function startWS() {
         delete data.type;
         let html = '';
         for (const [k, ico] of Object.entries(data)) {
-          console.log(k, '::', ico);
           let label = '';
           if (ico && ico.label) {
             label = `aria-label="${ico.label}"`;
           }
           // if empty display data
           if (!ico || !(ico.text || ico.html)) {
-            html += `<div ${label}> </div>`;
+            html += `<div data-name="${k}" ${label}> </div>`;
           } else if (ico.text) {
-            html += `<div ${label}>${ico.text}</div>`;
+            html += `<div data-name="${k}" ${label}>${ico.text}</div>`;
           } else if (ico.html) {
             html += ico.html;
           }
         }
         icoElem.innerHTML = html;
+        if (html && elemHidden(icoElem)) {
+          icoElem.style.display = 'inline-grid';
+        }
         break;
 
       case 'items:update':
@@ -344,7 +350,7 @@ function displayRoom(data) {
     if (data.wild) {
       wildMap.style.display = 'flex';
       mapElem.style.display = 'none';
-    } else if (mapElem.style.display === 'none') {
+    } else if (elemHidden(mapElem)) {
       mapElem.style.display = 'block';
       wildMap.style.display = 'none';
       map.autoCenterMap();
