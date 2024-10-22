@@ -1,3 +1,5 @@
+// deno-lint-ignore-file no-node-globals no-process-globals
+
 // import process from 'node:process';
 import * as T from '../types.ts';
 import * as S from './state.ts';
@@ -6,10 +8,6 @@ import { ansi2Html } from '../ansi';
 
 export function gmcpHello() {
   return Buffer.from(`Core.Hello {"Client":"node","Version":"${process.version}"}`);
-}
-
-export function gmcpPing() {
-  return Buffer.from('Core.Ping');
 }
 
 export function gmcpSupports() {
@@ -41,10 +39,11 @@ export function processGMCP(text: string) {
    * Reference: https://nexus.ironrealms.com/GMCP
    * And: https://nexus.ironrealms.com/GMCP_Data
    */
-  const type = text.slice(0, text.indexOf(' '));
+  const type = text.split(' ', 1).pop();
   //
   // Ignore some states from the start
   if (
+    !type ||
     type === 'Client.Map' ||
     type === 'Char.Defences.InfoList' ||
     type === 'Comm.Channel.List' ||
@@ -58,7 +57,7 @@ export function processGMCP(text: string) {
 
   let data = {};
   try {
-    data = JSON.parse(text.slice(text.indexOf(' ') + 1));
+    data = JSON.parse(text.slice(type.length + 1));
   } catch {
     return;
   }

@@ -77,3 +77,25 @@ test('find weapon type', () => {
   expect(c.weaponType('a Dawnrender bastard sword')).toBe('bastard sword');
   expect(c.weaponType(`a Stonesmith's Maul`)).toBe('warhammer');
 });
+
+test('weapon type', () => {
+  expect(c.weaponType('a Delosian bastard sword')).toBe('bastard sword');
+  expect(c.weaponType('an etched, Vashnari sword')).toBe('bastard sword');
+  expect(c.weaponType('a thin, Delosian sword')).toBe('bastard sword');
+
+  expect(c.weaponType('a formidable, Eleusian spear')).toBe('spear');
+  expect(c.weaponType('a primitive, flame-wreathed spear')).toBe('spear');
+
+  expect(c.weaponType('a devastating, monstrous trident')).toBe('trident');
+  expect(c.weaponType('a vicious, razor-sharp trident')).toBe('trident');
+
+  expect(c.weaponType('a devastating, monstrous battleaxe')).toBe('battleaxe');
+  expect(c.weaponType('a double-sided, sturdy battleaxe')).toBe('battleaxe');
+  expect(c.weaponType('an etched, Vashnari battleaxe')).toBe('battleaxe');
+
+  expect(c.weaponType('a blackened spiked tower shield')).toBe('shield');
+  expect(c.weaponType('a mighty Eleusian banded shield')).toBe('shield');
+  expect(c.weaponType('a savage Eleusian kite shield')).toBe('shield');
+  expect(c.weaponType('a sinister blackened tower shield')).toBe('shield');
+  expect(c.weaponType('a sinister unnerving cavalry shield')).toBe('shield');
+});

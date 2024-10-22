@@ -1,3 +1,5 @@
+// deno-lint-ignore-file no-node-globals no-process-globals
+
 import ee from './events/index.ts';
 import { PROMPT } from './core/output.ts';
 import { ansi2Html, ansiStrip } from './ansi';

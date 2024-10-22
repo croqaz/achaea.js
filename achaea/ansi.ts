@@ -8,6 +8,8 @@
  * https://misc.flogisoft.com/bash/tip_colors_and_formatting
  */
 
+// deno-lint-ignore-file no-explicit-any no-control-regex
+
 const colorCodes = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'lightGray', '', 'default'],
   colorCodesLight = [
     'darkGray',
@@ -326,7 +328,7 @@ function* parseAnsi(rawSpansIterator: Generator<Span>): Generator<Span> {
   let color = new Color();
   let bgColor = new Color(true /* background */);
   let brightness = undefined;
-  let styles = new Set();
+  const styles = new Set();
 
   function reset() {
     color = new Color();

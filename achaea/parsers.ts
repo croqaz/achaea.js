@@ -1,3 +1,5 @@
+// deno-lint-ignore-file no-explicit-any
+
 import * as T from './types.ts';
 import { STATE } from './core/state.ts';
 import { Config } from './extra/config.ts';
@@ -38,8 +40,8 @@ export function validWildMap(text: string): string[] | null {
   const title = parts[0].replace(/\r$/, '');
   if (!(title.endsWith('.') || parts[0].includes('.</span><span'))) return null;
   const re = /^[ #&%?*';,.\/;@MXYjnw\\|\+\-~^]+\r?$/;
-  let map = [];
-  let desc = [parts.shift()];
+  const map = [];
+  const desc = [parts.shift()];
   if (
     title === 'You enter the subdivision.' ||
     title.startsWith('You begin to flap your wings powerfully,') ||
@@ -48,7 +50,7 @@ export function validWildMap(text: string): string[] | null {
     desc.push(parts.shift());
   }
   let len = 0;
-  for (let line of parts) {
+  for (const line of parts) {
     // all map lines must have the same length,
     // and must have the correct ASCII letters
     const txt = line
@@ -114,7 +116,7 @@ function parseWaresLine(line: string): T.DBWares {
   return { id, stock, price, name, owner: '' };
 }
 
-export function parseElixList(text: string): any[] {
+export function parseElixList(text: string): Record<string, any>[] {
   const lines = text.split('\n').filter((x) => !!x);
   if (lines.length < 3 || !lines[1].includes('-------')) return [];
   const head1 = /Vial[ ]+Fluid[ ]+Sips[ ]+Months/;

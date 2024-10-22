@@ -1,5 +1,7 @@
+// deno-lint-ignore-file no-explicit-any
+
 /** Splits a string into space separated words. */
-export function words(str: string, divider = /\s+/) {
+export function words(str: string, divider = /\s+/): string[] {
   if (!str) return [];
   return str.trim().split(divider);
 }
@@ -34,6 +36,7 @@ export function sleep(sec: number) {
 export function throttle<T, Args extends unknown[]>(fn: (...args: Args) => T, t: number) {
   /*
    * Throttle based on the args of the wrapped function.
+   * Returns a result only when it runs; result not cached.
    * Eg:
    * const throttled1 = throttle(() => 1, 5000)
    * throttled1('a') // would immediately run
@@ -43,7 +46,7 @@ export function throttle<T, Args extends unknown[]>(fn: (...args: Args) => T, t:
    */
   const __cache = new Map<string, any>();
   return function (...args: Args) {
-    const argString = args.join('_');
+    const argString = JSON.stringify(args);
     if (!__cache.has(argString)) {
       __cache.set(argString, true);
       setTimeout(() => {
@@ -58,6 +61,7 @@ export function throttle<T, Args extends unknown[]>(fn: (...args: Args) => T, t:
 export function debounce<T, Args extends unknown[]>(fn: (...args: Args) => T, t: number) {
   /*
    * Delay run based on the args of the wrapped function.
+   * Doesn't return anything, because the call is delayed.
    * Eg:
    * const debounced1 = debounce(() => 1, 5000)
    * debounced1('a') // would not run, you need to wait 5s
@@ -67,9 +71,9 @@ export function debounce<T, Args extends unknown[]>(fn: (...args: Args) => T, t:
    */
   const __cache = new Map<string, any>();
   return function (...args: Args) {
-    const argString = args.join('_');
+    const argString = JSON.stringify(args);
     if (!__cache.has(argString)) {
-      let timeoutId = setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         __cache.delete(argString);
         // the cb result is lost
         fn(...args);

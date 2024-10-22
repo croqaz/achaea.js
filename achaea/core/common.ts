@@ -644,7 +644,9 @@ export function weaponType(text: string): string {
     text.includes(' Dreadblade ') ||
     text.includes(' Soulreaver ') ||
     text.includes(' Dawnrender ') ||
-    text.includes(' bastard sword')
+    text.includes(' bastard sword') ||
+    text.endsWith(' Vashnari sword') ||
+    text.endsWith(' Delosian sword')
   ) {
     return 'bastard sword';
   } else if (
@@ -657,7 +659,11 @@ export function weaponType(text: string): string {
     return 'spear';
   } else if (text.endsWith(' trident')) {
     return 'trident';
-  } else if (text.includes(' Orcsplitter ') || text.includes('Logosian Battleaxe')) {
+  } else if (
+    text.includes(' Orcsplitter ') ||
+    text.includes('Logosian Battleaxe') ||
+    text.endsWith(' battleaxe')
+  ) {
     return 'battleaxe';
   } else if (text.includes('Scimitar of ')) {
     return 'scimitar';

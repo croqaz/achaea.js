@@ -306,11 +306,13 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
        * post in #bugs
        */
       postBug(parts.slice(1).join(' '));
+      return;
     } else if (process.env.NODE_ENV !== 'test' && firstWord === '//idea') {
       /*
        * post in #ideas
        */
       postIdea(parts.slice(1).join(' '));
+      return;
     }
 
     // If map aliases are found...

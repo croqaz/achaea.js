@@ -1,15 +1,23 @@
 import * as T from '../types.ts';
 import ee from '../events/index.ts';
-import { dbSave } from './leveldb.ts';
 import { STATE } from '../core/state.ts';
+import { dbGet, dbSave } from './leveldb.ts';
 import { isoDate } from '../core/util.ts';
 import { logWrite } from '../logs/index.ts';
 
 async function onRoomInfoUpdate(data: Record<string, string>) {
   if (!data.num || !data.name) return;
 
+  let dbRoom = {};
+  try {
+    dbRoom = await dbGet('room', data.num);
+  } catch {
+    /* -- */
+  }
+
   const dt = isoDate();
   const room = {
+    ...dbRoom,
     id: data.num,
     name: data.name,
     desc: data.desc,

@@ -55,10 +55,10 @@ export default function processUserInput(text: string): string | void {
       state.resetDefaultState();
       ee.emit('sys:text', '[SYS] PANIC!!');
       return;
-    }
-
-    // Debug commands
-    else if (cmd === 'setup') {
+    } else if (cmd === 'setup') {
+      /*
+       * Debug commands
+       */
       ee.emit('user:text', 'config AdvancedCuring on');
       ee.emit('user:text', 'config AutoOpenDoors on');
       ee.emit('user:text', 'config CommandSeparator &&');
