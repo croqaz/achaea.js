@@ -2,7 +2,7 @@ import ee from '../events/index.ts';
 import { STATE } from '../core/state.ts';
 import { gmcpHello, gmcpSupports } from './gmcp.ts';
 
-export default function processTriggers(text: string, normText: string) {
+export default function processTriggers(_: string, normText: string) {
   /*
    * Process game text to enable triggers
    */
@@ -15,7 +15,7 @@ export default function processTriggers(text: string, normText: string) {
 
   // First thing after correct login
   //
-  if (STATE.Me.round === 0 && normText.includes('Password correct. Welcome to Achaea.')) {
+  if (STATE.Stats.round === 0 && normText.includes('Password correct. Welcome to Achaea.')) {
     // Say hello & Subscribe to GMCP messages
     ee.emit('user:gmcp', gmcpHello());
     setTimeout(() => ee.emit('user:gmcp', gmcpSupports()), 1000);

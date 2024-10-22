@@ -1,7 +1,6 @@
 import { expect, test } from 'bun:test';
 import * as g from '../achaea/core/gmcp.js';
 import * as s from '../achaea/core/state.js';
-import { sleep } from '../achaea/core/util.js';
 
 test('char status & vitals', () => {
   g.processGMCP(`Char.Status {
@@ -23,13 +22,17 @@ test('char status & vitals', () => {
   g.processGMCP(`Char.Vitals {
     "hp": "1000", "maxhp": "1005", "mp": "1100", "maxmp": "1155", "ep": "3100", "maxep": "3175",
     "wp": "3300", "maxwp": "3400", "nl": "54", "bal": "1", "eq": "1",
-    "charstats": [ "Bleed: 0", "Rage: 0" ]
+    "charstats": [ "Bleed: 1", "Rage: 0" ]
   }`);
 
   expect(s.STATE.Me.hp).toBe(1000);
   expect(s.STATE.Me.mp).toBe(1100);
   expect(s.STATE.Me.ep).toBe('3100');
   expect(s.STATE.Me.wp).toBe('3300');
+
+  expect(s.STATE.Me.bleed).toBe(1);
+  expect(s.STATE.Me.sunlight).toBe(0);
+  expect(s.STATE.Me.morph).toBeNull();
 });
 
 test('char defences state', () => {
@@ -175,9 +178,9 @@ test('room players state', async () => {
   expect(s.STATE.Room.players.length).toBeFalsy();
 
   g.processGMCP('Room.AddPlayer { "name": "Abc", "fullname": "The Abc" }');
-  await sleep(0.1);
+  await Bun.sleep(1);
   g.processGMCP('Room.AddPlayer { "name": "Abc", "fullname": "The Abc" }');
-  await sleep(0.1);
+  await Bun.sleep(1);
   expect(s.STATE.Room.players.length).toBe(1);
   expect(s.STATE.Room.players[0].name).toBe('Abc');
 
@@ -189,7 +192,7 @@ test('room players state', async () => {
   expect(s.STATE.Room.players.length).toBeFalsy();
 });
 
-test('test room items state', () => {
+test('players state items state', () => {
   expect(s.STATE.Room.items.length).toBeFalsy();
 
   g.processGMCP(`Char.Items.Add {
@@ -226,7 +229,7 @@ test('test room items state', () => {
   expect(s.STATE.Room.items.length).toBeFalsy();
 });
 
-test('test room corpse state', () => {
+test('room corpse state', () => {
   expect(s.STATE.Me.items.length).toBeFalsy();
   g.processGMCP(`Char.Items.List {
     "location": "room", "items": [ { "id": "254273", "name": "a spiny toad", "icon": "animal", "attrib": "m"
@@ -246,7 +249,7 @@ test('test room corpse state', () => {
   expect(s.STATE.Me.items.length).toBeFalsy();
 });
 
-test('test room rats state', () => {
+test('room rats state', () => {
   expect(s.STATE.Room.items.length).toBeFalsy();
 
   g.processGMCP(`Char.Items.Add { "location": "room", "item": {

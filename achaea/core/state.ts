@@ -5,6 +5,7 @@ import * as T from '../types.ts';
 import ee from '../events/index.ts';
 import { MAP } from '../maps/index.ts';
 import { weaponType } from './common.ts';
+import * as C from './classes.ts';
 import * as t from './time.ts';
 
 /*
@@ -16,45 +17,9 @@ import * as t from './time.ts';
  * - the third source of truth, is from user input or logic, to store flags & such
  * Most of the STATE tree is frozen (read-only)!
  */
-export var STATE: T.StateType = Object.seal({
-  Me: Object.seal({
-    //
-    name: 'Name',
-    race: 'Race',
-    gender: 'Gender',
-    level: 0,
-    xp: 'Experience To Next Level',
-    class: 'Class',
-    city: 'City',
-    house: 'House',
-    gold: 0,
-    bank: 0,
-
-    hp: 0,
-    oldhp: 0,
-    maxhp: 0,
-    mp: 0,
-    oldmp: 0,
-    maxmp: 0,
-    ep: 0,
-    maxep: 0,
-    wp: 0,
-    maxwp: 0,
-
-    bal: true, // physical balance
-    eq: true, // mental equilibrium
-    eb: true, // bal & eq
-    round: 0, // Global round of bal & eq
-
-    rift: [],
-    items: [],
-    charstats: [],
-    afflictions: [],
-    defences: [],
-    skills: {} as Record<string, any>,
-    wieldedL: {} as T.GmcpItem,
-    wieldedR: {} as T.GmcpItem,
-  }),
+export const STATE: T.StateType = Object.seal({
+  //
+  Me: new C.Player({}),
   //
   Room: Object.seal({
     num: 0,
@@ -78,9 +43,9 @@ export var STATE: T.StateType = Object.seal({
     active: false,
     combat: false, // PVP
     auto: false,
-    tgtID: null,
-    tgtHP: null,
-    target: null, // attack target name
+    tgtID: 0,
+    tgtHP: '',
+    target: '', // attack target name
     // battle targets, NPCs & Players
     // each target has: id, name, hp, defs, affs...
     tgts: {},
@@ -110,6 +75,7 @@ export var STATE: T.StateType = Object.seal({
   }),
   //
   Stats: Object.seal({
+    round: 0, // Global round of bal & eq
     begDt: new Date(), // starting time
     endDt: null, // finish time
     perf: performance.now(),
@@ -196,16 +162,6 @@ function remFromStateList(key: string, list: string, value: any) {
   }
 }
 
-function updateMyself(meta: Record<string, any>) {
-  for (const k of Object.keys(meta)) {
-    // Ignore inexistent fields
-    if (STATE.Me[k] === undefined) {
-      continue;
-    }
-    STATE.Me[k] = meta[k];
-  }
-}
-
 export function updateIcons(meta: Record<string, any>) {
   for (const k of Object.keys(meta)) {
     STATE.Icons[k] = meta[k];
@@ -254,7 +210,7 @@ export function stateStartBattle() {
 }
 
 export function stateStopBattle() {
-  STATE.Battle.tgtID = null;
+  STATE.Battle.tgtID = 0;
   STATE.Battle.rounds = 0;
   STATE.Battle.active = false;
   STATE.Battle.combat = false;
@@ -286,7 +242,7 @@ export function gmcpProcessChar(_: string, data: T.GmcpChar) {
     if (data.eq && data.eq !== STATE.Me.eq) ee.emit('have:eq');
   }
   if (data.bal && data.eq && (data.bal !== STATE.Me.bal || data.eq !== STATE.Me.eq)) {
-    STATE.Me.round++;
+    STATE.Stats.round++;
     STATE.Me.eb = true;
     ee.emit('have:eb');
   } else if (data.bal === false || data.eq === false) {
@@ -343,7 +299,7 @@ export function gmcpProcessChar(_: string, data: T.GmcpChar) {
     }
   }
 
-  updateMyself(data);
+  STATE.Me.update(data);
   ee.emit('myself:update', STATE.Me);
 }
 
@@ -362,7 +318,7 @@ export function gmcpProcessTarget(type: string, data) {
 
 export function gmcpProcessDefences(type: string, data) {
   if (type === 'Char.Defences.List') {
-    updateMyself({ defences: data });
+    STATE.Me.update({ defences: data });
   } else if (type === 'Char.Defences.Add') {
     const tsData = data as T.GmcpDefence;
     ee.emit('sys:text', `<i class="c-magenta">Defences ++ ${tsData.name}</i>`);
@@ -378,7 +334,7 @@ export function gmcpProcessDefences(type: string, data) {
 
 export function gmcpProcessAfflictions(type: string, data) {
   if (type === 'Char.Afflictions.List') {
-    updateMyself({ afflictions: data });
+    STATE.Me.update({ afflictions: data });
   } else if (type === 'Char.Afflictions.Add') {
     //
     // (black magic = HACK)
@@ -434,7 +390,7 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
         item.id = parseInt(item.id as string);
         syncWieldedWpn(item);
       }
-      updateMyself({ items: tsData.items });
+      STATE.Me.update({ items: tsData.items });
     } else if (tsData.location === 'room') {
       STATE.Room.items = [];
       STATE.Battle.tgts = {};
@@ -496,7 +452,7 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
         STATE.Battle.active = false;
         // Reset the target only if the NPC is dead
         if (data.item.attrib && data.item.attrib.includes('d')) {
-          STATE.Battle.tgtID = null;
+          STATE.Battle.tgtID = 0;
           STATE.Battle.tgtHP = null;
         }
       }
@@ -512,7 +468,7 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
 
 export function gmcpProcessRift(type: string, data: any) {
   if (type === 'IRE.Rift.List') {
-    updateMyself({ rift: data });
+    STATE.Me.update({ rift: data });
   } else if (type === 'IRE.Rift.Add') {
     addToStateList('Me', 'rift', data);
   } else if (type === 'IRE.Rift.Remove') {
@@ -573,8 +529,9 @@ export function gmcpProcessRoomInfo(_type: string, data: T.GmcpRoom) {
   }
   // wilderness, subdivision and ships
   if (data.ohmap) {
-    if (!data.area && !STATE.Room.details?.includes('wilderness')) STATE.Room.details?.push('wilderness');
-    else if (data.area && !STATE.Room.details?.includes('subdivision')) {
+    if (!data.area && !STATE.Room.details?.includes('wilderness')) {
+      STATE.Room.details?.push('wilderness');
+    } else if (data.area && !STATE.Room.details?.includes('subdivision')) {
       STATE.Room.details?.push('subdivision');
     }
     STATE.Room.wild = true;
@@ -593,7 +550,7 @@ export function gmcpProcessRoomPlayers(type: string, data) {
       const p = await dbGet('whois', name.toLowerCase());
       p.name = name;
       if (fullname) p.fullname = fullname;
-      let city = p.city ? p.city.toLowerCase() : 'rogue';
+      const city = p.city ? p.city.toLowerCase() : 'rogue';
       if (city === 'rogue') p.cls = 'c-yellow';
       else if (city === 'ashtan') p.cls = 'c-magenta';
       else if (city === 'cyrene') p.cls = 'c-cyan c-bright';
