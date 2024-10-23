@@ -11,29 +11,28 @@ import processMapAliases from './map.ts';
 import { displayNote, displayText } from '../core/index.ts';
 import { listDenizens, STATE, stateStopBattle } from '../core/state.ts';
 
-let customProcessUserInput;
-try {
-  // @ts-ignore: Types
-  customProcessUserInput = require('../../custom/input.ts').default;
-
-  // Watch for changes in this file and live reload
-  const fileWatcher = chokidar.watch('./custom/input.ts', {
-    depth: 1,
-    persistent: true,
-    ignoreInitial: true,
-  });
-  fileWatcher.on('change', async () => {
-    console.log('Custom user input CHANGED!');
-    for (const m of Object.keys(require.cache)) {
-      if (/custom\/input/.test(m)) {
-        delete require.cache[m];
-      }
+let customProcessUserInput = null;
+// Watch for changes in this file and live reload
+const fileWatcher = chokidar.watch('./custom/input.ts', {
+  depth: 1,
+  atomic: true,
+  persistent: true,
+});
+fileWatcher.on('change', async () => {
+  for (const m of Object.keys(require.cache)) {
+    if (/custom\/input/.test(m)) {
+      delete require.cache[m];
     }
+  }
+  try {
+    // @ts-ignore: Types
     customProcessUserInput = require('../../custom/input.ts').default;
-  });
-} catch (err) {
-  console.warn('Cannot load user input function!', err);
-}
+    displayNote('INFO: User input function reloaded.');
+  } catch (err) {
+    customProcessUserInput = null;
+    displayNote(`ERROR: Canot load user input function! ${err}`);
+  }
+});
 
 const postBug = throttle(async (content: string) => {
   const url =

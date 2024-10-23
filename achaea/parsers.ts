@@ -39,7 +39,7 @@ export function validWildMap(text: string): string[] | null {
   if (parts.length < 8) return null;
   const title = parts[0].replace(/\r$/, '');
   if (!(title.endsWith('.') || parts[0].includes('.</span><span'))) return null;
-  const re = /^[ #&%?*';,.\/;@MXYjnw\\|\+\-~^]+\r?$/;
+  const re = /^[ #&%?*';,.\/;@IMXYjnw\\|\+\-~^]+\r?$/;
   const map = [];
   const desc = [parts.shift()];
   if (

@@ -27,6 +27,7 @@ ee.once('game:start', () => {
   // Call GMCP time every X sec
   // and measure the response time
   setInterval(() => {
+    // high-res timestamp in milliseconds
     STATE.Stats.perf = performance.now();
     ee.emit('user:gmcp', gmcpTime());
   }, Config.PING_INTERVAL);

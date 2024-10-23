@@ -7,17 +7,20 @@ import ee from '../events/index.ts';
 import { ansi2Html } from '../ansi';
 
 export function gmcpHello() {
-  return Buffer.from(`Core.Hello {"Client":"node","Version":"${process.version}"}`);
+  // Core.Hello {"client":"Mudlet", "version":"4.12.0"}
+  // Core.Hello {"Client":"IRE-Nexus","Version":"3.0.1"}
+  return Buffer.from(`Core.Hello {"Client":"Tinyfugue","Version":"${process.version}"}`);
 }
 
 export function gmcpSupports() {
-  const value = `"Char 1", "Char.Vitals 1", "Char.Skills 1", "Char.Items 1",
+  const value = `"Core 1","Char 1", "Char.Vitals 1","Char.Skills 1","Char.Items 1",
     "IRE.Rift 1", "IRE.Target 1", "Room 1", "Comm.Channel 1", "IRE.Time 1"`;
   return Buffer.from(`Core.Supports.Set [ ${value} ]`);
 }
 
 export function gmcpTime() {
-  S.STATE.Stats.ping = performance.now() - S.STATE.Stats.perf;
+  // high resolution timestamp in milliseconds diff
+  S.STATE.Stats.ping = (performance.now() - S.STATE.Stats.perf) * 1000;
   return Buffer.from('IRE.Time.Request');
 }
 

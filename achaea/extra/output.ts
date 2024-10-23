@@ -1,31 +1,31 @@
 import chokidar from 'chokidar';
-import * as p from '../parsers.ts';
 import ee from '../events/index.ts';
+import * as p from '../parsers.ts';
 import { STATE } from '../core/state.ts';
+import { displayNote } from '../core/index.ts';
 
-let customProcessDisplayText;
-try {
-  // @ts-ignore: Types
-  customProcessDisplayText = require('../../custom/output.ts').default;
-
-  // Watch for changes in this file and live reload
-  const fileWatcher = chokidar.watch('./custom/output.ts', {
-    depth: 1,
-    persistent: true,
-    ignoreInitial: true,
-  });
-  fileWatcher.on('change', async () => {
-    console.log('Custom user output CHANGED!');
-    for (const m of Object.keys(require.cache)) {
-      if (/custom\/output/.test(m)) {
-        delete require.cache[m];
-      }
+let customProcessDisplayText = null;
+// Watch for changes in this file and live reload
+const fileWatcher = chokidar.watch('./custom/output.ts', {
+  depth: 1,
+  atomic: true,
+  persistent: true,
+});
+fileWatcher.on('change', async () => {
+  for (const m of Object.keys(require.cache)) {
+    if (/custom\/output/.test(m)) {
+      delete require.cache[m];
     }
+  }
+  try {
+    // @ts-ignore: Types
     customProcessDisplayText = require('../../custom/output.ts').default;
-  });
-} catch (err) {
-  console.warn('Canot load user output function!', err);
-}
+    displayNote('INFO: User output function reloaded.');
+  } catch (err) {
+    customProcessDisplayText = null;
+    displayNote(`ERROR: Canot load user output function! ${err}`);
+  }
+});
 
 export default function extraProcessDisplayText(html: string, text: string): string {
   /*
