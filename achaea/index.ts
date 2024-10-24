@@ -110,7 +110,9 @@ ee.on('tel:text', (rawText: string) => {
 
 // On raw GMCP text
 ee.on('game:gmcp', (text: string) => {
-  if (text.startsWith('IRE.Time')) return;
+  if (text.startsWith('Comm.Channel.Start ')) return;
+  else if (text.startsWith('Comm.Channel.End ')) return;
+  else if (text.startsWith('IRE.Time ')) return;
   logWrite('\n:GMCP: ' + text + '\n');
 });
 

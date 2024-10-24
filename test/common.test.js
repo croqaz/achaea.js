@@ -83,15 +83,18 @@ test('weapon type', () => {
   expect(c.weaponType('an etched, Vashnari sword')).toBe('bastard sword');
   expect(c.weaponType('a thin, Delosian sword')).toBe('bastard sword');
 
+  expect(c.weaponType('a devastating, monstrous battleaxe')).toBe('battleaxe');
+  expect(c.weaponType('a double-sided, sturdy battleaxe')).toBe('battleaxe');
+  expect(c.weaponType('an etched, Vashnari battleaxe')).toBe('battleaxe');
+
+  expect(c.weaponType('a Basilican mace')).toBe('mace');
+  expect(c.weaponType('a spiritual mace')).toBe('mace');
+
   expect(c.weaponType('a formidable, Eleusian spear')).toBe('spear');
   expect(c.weaponType('a primitive, flame-wreathed spear')).toBe('spear');
 
   expect(c.weaponType('a devastating, monstrous trident')).toBe('trident');
   expect(c.weaponType('a vicious, razor-sharp trident')).toBe('trident');
-
-  expect(c.weaponType('a devastating, monstrous battleaxe')).toBe('battleaxe');
-  expect(c.weaponType('a double-sided, sturdy battleaxe')).toBe('battleaxe');
-  expect(c.weaponType('an etched, Vashnari battleaxe')).toBe('battleaxe');
 
   expect(c.weaponType('a blackened spiked tower shield')).toBe('shield');
   expect(c.weaponType('a mighty Eleusian banded shield')).toBe('shield');

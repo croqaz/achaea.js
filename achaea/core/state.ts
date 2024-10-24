@@ -4,7 +4,6 @@ import * as R from 'remeda';
 import * as T from '../types.ts';
 import ee from '../events/index.ts';
 import { MAP } from '../maps/index.ts';
-import { weaponType } from './common.ts';
 import * as C from './classes.ts';
 import * as t from './time.ts';
 
@@ -173,28 +172,6 @@ export function findInventory(name: string) {
   // Find one item in the inventory, by name
   name = name.toLowerCase();
   return STATE.Me.items.filter((x) => x.name.toLowerCase() === name);
-}
-
-function syncWieldedWpn(item: T.GmcpItem) {
-  // Sync a wielded weapon
-  // Overwrite whatever weapons are already wielded
-  if (item.attrib) {
-    if (item.attrib.includes('l')) {
-      item.type = weaponType(item.name);
-      // l' = wielded_left
-      STATE.Me.wieldedL = item;
-    } else if (item.attrib.includes('L')) {
-      item.type = weaponType(item.name);
-      // 'L' = wielded_right
-      STATE.Me.wieldedR = item;
-    }
-  } // Unwield left weapon?
-  else if (STATE.Me.wieldedL && !item.attrib && item.id === STATE.Me.wieldedL.id) {
-    STATE.Me.wieldedL = {} as T.GmcpItem;
-  } // Unwield right weapon?
-  else if (STATE.Me.wieldedR && !item.attrib && item.id === STATE.Me.wieldedR.id) {
-    STATE.Me.wieldedR = {} as T.GmcpItem;
-  }
 }
 
 export function listDenizens(): string[] {
@@ -388,7 +365,7 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
       for (const item of tsData.items) {
         // item ID must be int
         item.id = parseInt(item.id as string);
-        syncWieldedWpn(item);
+        STATE.Me.syncWieldWorn(item);
       }
       STATE.Me.update({ items: tsData.items });
     } else if (tsData.location === 'room') {
@@ -412,7 +389,7 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
     data.item.id = itemID;
     let itm = null as T.GmcpItem;
     if (data.location === 'inv') {
-      syncWieldedWpn(data.item);
+      STATE.Me.syncWieldWorn(data.item);
       itm = STATE.Me.items.find((x) => x.id === itemID);
     } else if (data.location === 'room') {
       itm = STATE.Room.items.find((x) => x.id === itemID);

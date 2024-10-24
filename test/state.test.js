@@ -61,11 +61,18 @@ test('char afflictions state', () => {
   }`);
   expect(s.STATE.Me.afflictions[0].name).toBe('sleeping');
 
+  g.processGMCP(`Char.Afflictions.Add {
+    "name": "prone", "cure": "STAND", "desc": "Being knocked..."
+  }`);
+  expect(s.STATE.Me.afflictions[1].name).toBe('prone');
+  expect(s.STATE.Me.prone).toBeTrue();
+
   // try to remove inexistent thing
   g.processGMCP('Char.Afflictions.Remove [ "wrong" ]');
-  expect(s.STATE.Me.afflictions.length).toBe(1);
+  expect(s.STATE.Me.afflictions.length).toBe(2);
 
   g.processGMCP('Char.Afflictions.Remove [ "sleeping" ]');
+  g.processGMCP('Char.Afflictions.Remove [ "prone" ]');
   expect(s.STATE.Me.afflictions.length).toBeFalsy();
 });
 
@@ -115,8 +122,8 @@ test('char items state', () => {
 });
 
 test('char wielded state', () => {
-  expect(s.STATE.Me.wieldedL.id).toBeFalsy();
-  expect(s.STATE.Me.wieldedR.id).toBeFalsy();
+  expect(s.STATE.Me.wielded.left?.id).toBeFalsy();
+  expect(s.STATE.Me.wielded.right?.id).toBeFalsy();
 
   g.processGMCP(`Char.Items.List { "location": "inv", "items": [
     { "id": "12", "name": "a sword", "icon": "weapon" },
@@ -133,8 +140,8 @@ test('char wielded state', () => {
   } }`);
   expect(s.STATE.Me.items.length).toBe(2);
 
-  expect(s.STATE.Me.wieldedL.id).toBeFalsy();
-  expect(s.STATE.Me.wieldedR.id).toBe(34);
+  expect(s.STATE.Me.wielded.left?.id).toBeFalsy();
+  expect(s.STATE.Me.wielded.right?.id).toBe(34);
 
   g.processGMCP(`Char.Items.Update {
     "location": "inv", "item": { "id": "12", "name": "a sword", "icon": "weapon", "attrib": "l"
@@ -144,14 +151,14 @@ test('char wielded state', () => {
   } }`);
   expect(s.STATE.Me.items.length).toBe(2);
 
-  expect(s.STATE.Me.wieldedL.id).toBe(12);
-  expect(s.STATE.Me.wieldedR.id).toBeFalsy();
+  expect(s.STATE.Me.wielded.left?.id).toBe(12);
+  expect(s.STATE.Me.wielded.right?.id).toBeFalsy();
 
   g.processGMCP(`Char.Items.Update {
     "location": "inv", "item": { "id": "12", "name": "a sword"
   } }`);
-  expect(s.STATE.Me.wieldedL.id).toBeFalsy();
-  expect(s.STATE.Me.wieldedR.id).toBeFalsy();
+  expect(s.STATE.Me.wielded.left).toBeFalsy();
+  expect(s.STATE.Me.wielded.right).toBeFalsy();
 
   g.processGMCP(`Char.Items.Update {
     "location": "inv", "item": { "id": "12", "name": "a sword", "icon": "weapon", "attrib": "l"
@@ -159,8 +166,8 @@ test('char wielded state', () => {
   g.processGMCP(`Char.Items.Update {
     "location": "inv", "item": { "id": "34", "name": "a cleaver", "icon": "lamp", "attrib": "L"
   } }`);
-  expect(s.STATE.Me.wieldedL.id).toBe(12);
-  expect(s.STATE.Me.wieldedR.id).toBe(34);
+  expect(s.STATE.Me.wielded.left.id).toBe(12);
+  expect(s.STATE.Me.wielded.right.id).toBe(34);
 
   g.processGMCP(`Char.Items.Update {
     "location": "inv", "item": { "id": "12", "name": "a sword"
@@ -168,8 +175,47 @@ test('char wielded state', () => {
   g.processGMCP(`Char.Items.Update {
     "location": "inv", "item": { "id": "34", "name": "a cleaver"
   } }`);
-  expect(s.STATE.Me.wieldedL.id).toBeFalsy();
-  expect(s.STATE.Me.wieldedR.id).toBeFalsy();
+  expect(s.STATE.Me.wielded.left).toBeFalsy();
+  expect(s.STATE.Me.wielded.right).toBeFalsy();
+
+  // cleanup
+  g.processGMCP('Char.Items.List { "location": "inv", "items": [] }');
+  expect(s.STATE.Me.items.length).toBeFalsy();
+});
+
+test('char worn items state', () => {
+  expect(s.STATE.Me.worn.feet).toBeFalsy();
+  expect(s.STATE.Me.worn.armor).toBeFalsy();
+
+  g.processGMCP(`Char.Items.Add {
+    "location": "inv", "item": {
+    "id": "12", "name": "war boots", "icon": "clothing", "attrib": "W" } }`);
+  expect(s.STATE.Me.items.length).toBe(1);
+
+  g.processGMCP(`Char.Items.Update {
+    "location": "inv", "item": {
+    "id": "12", "name": "war boots", "icon": "clothing", "attrib": "W" }  }`);
+  g.processGMCP(`Char.Items.Update {
+    "location": "inv", "item": {
+    "id": "12", "name": "war boots", "icon": "clothing", "attrib": "w", "wearslot": "feet" } }`);
+  expect(s.STATE.Me.worn.feet.id).toBe(12);
+  g.processGMCP(`Char.Items.Update {
+    "location": "inv", "item": {
+    "id": "12", "name": "war boots", "icon": "clothing", "attrib": "W" }  }`);
+  expect(s.STATE.Me.worn.feet).toBeFalsy();
+
+  g.processGMCP(`Char.Items.Update {
+    "location": "inv", "item": {
+    "id": "35", "name": "a savage suit of chain mail", "icon": "armor", "attrib": "W" } }`);
+  expect(s.STATE.Me.worn.armor).toBeFalsy();
+  g.processGMCP(`Char.Items.Update {
+    "location": "inv", "item": {
+    "id": "35", "name": "a savage suit of chain mail", "icon": "armor", "attrib": "w" } }`);
+  expect(s.STATE.Me.worn.armor.id).toBe(35);
+  g.processGMCP(`Char.Items.Update {
+      "location": "inv", "item": {
+      "id": "35", "name": "a savage suit of chain mail", "icon": "armor", "attrib": "W" } }`);
+  expect(s.STATE.Me.worn.armor).toBeFalsy();
 
   // cleanup
   g.processGMCP('Char.Items.List { "location": "inv", "items": [] }');

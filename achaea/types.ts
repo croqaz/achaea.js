@@ -143,6 +143,7 @@ export interface GmcpItem {
   name: string;
   icon?: string;
   attrib?: string;
+  wearslot?: string;
   type?: string;
 }
 

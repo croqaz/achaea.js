@@ -1,9 +1,10 @@
 // deno-lint-ignore-file no-explicit-any
 
 import * as T from '../types.ts';
+import { weaponType } from './common.ts';
 
 /*
- * Player! Myself, yourself.
+ * Player class! Myself, yourself.
  *
  * Compared to Nexus variables:
  * https://nexus.ironrealms.com/Predefined_variables
@@ -37,8 +38,8 @@ export class Player {
 
   rift: T.GmcpItem[] = [];
   items: T.GmcpItem[] = [];
-  wieldedL: T.GmcpItem = {} as T.GmcpItem;
-  wieldedR: T.GmcpItem = {} as T.GmcpItem;
+  worn: Record<string, any> = {};
+  wielded: Record<string, any> = {};
 
   charstats: string[] = [];
   afflictions: T.GmcpAffliction[] = [];
@@ -60,7 +61,69 @@ export class Player {
   }
 
   /*
-   * The current amount of health you're bleeding for
+   * Internal function, don't use !
+   * Sync a wielded weapon, or a worn item
+   * Overwrite whatever items are already there
+   */
+  syncWieldWorn(item: T.GmcpItem) {
+    if (item.attrib) {
+      if (item.attrib.includes('l')) {
+        item.type = weaponType(item.name);
+        // attrib l = wielded_left
+        this.wielded.left = item;
+      } else if (item.attrib.includes('L')) {
+        item.type = weaponType(item.name);
+        // attrib L = wielded_right
+        this.wielded.right = item;
+      } else if (item.wearslot && item.attrib.includes('w')) {
+        // attrib w = worn
+        this.worn[item.wearslot] = item;
+      } else if (item.icon === 'armor' && item.attrib.includes('w')) {
+        // wear armor
+        this.worn[item.icon] = item;
+      } else if (item.attrib.includes('W')) {
+        // Remove worn item?
+        for (const [slot, worn] of Object.entries(this.worn)) {
+          if (item.id === worn.id) {
+            delete this.worn[slot];
+          }
+        }
+      }
+    } // Unwield left weapon?
+    else if (this.wielded.left && !item.attrib && item.id === this.wielded.left.id) {
+      delete this.wielded.left;
+    } // Unwield right weapon?
+    else if (this.wielded.right && !item.attrib && item.id === this.wielded.right.id) {
+      delete this.wielded.right;
+    }
+  }
+
+  /*
+   * True, if you are blind.
+   * @my_blind in Nexus
+   */
+  get blind(): boolean {
+    return this.defences.some((x) => x.name === 'blindness');
+  }
+
+  /*
+   * True, if you are deaf.
+   * @my_deaf in Nexus
+   */
+  get deaf(): boolean {
+    return this.defences.some((x) => x.name === 'deafness');
+  }
+
+  /*
+   * True, if you are prone/ fallen.
+   * @my_prone in Nexus
+   */
+  get prone(): boolean {
+    return this.afflictions.some((x) => x.name === 'prone');
+  }
+
+  /*
+   * The current amount of health you're bleeding for.
    * @my_bleed in Nexus
    */
   get bleed(): number {
@@ -121,7 +184,7 @@ export class Player {
 
   /*
    * The current Animal spirit.
-   * Metamporh classes only.
+   * Metamorph classes only.
    */
   get morph(): string | null {
     for (const cs of this.charstats) {
@@ -136,7 +199,23 @@ export class Player {
   }
 
   /*
-   * The current Shindo shin.
+   * The current Kaido kai energy.
+   * Monk class only.
+   * @my_kai in Nexus: What your kai level is at
+   * Example: Kai: 10
+   */
+  get kai(): number {
+    for (const cs of this.charstats) {
+      if (cs.startsWith('Kai:')) {
+        const [, x] = cs.split(': ');
+        return parseInt(x);
+      }
+    }
+    return 0;
+  }
+
+  /*
+   * The current Shindo shin energy.
    * Blademaster class only.
    * Example: Shin: 10
    */
@@ -153,6 +232,7 @@ export class Player {
   /*
    * The current TwoArts Stance.
    * Blademaster class only.
+   * @my_stance in Nexus: What stance you are currently in (Tekura, TwoArts)
    * Example: Stance: Thyr
    */
   get stance(): string | null {

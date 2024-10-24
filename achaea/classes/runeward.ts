@@ -1,6 +1,5 @@
 import ee from '../events/index.ts';
 import { STATE } from '../core/state.ts';
-import { weaponType } from '../core/common.ts';
 const { Battle } = STATE;
 
 /*
@@ -8,7 +7,7 @@ const { Battle } = STATE;
  * Requires bastard or hammer
  */
 export function breakShield(name: string | number): string | void {
-  const wpnType = weaponType(STATE.Me.wieldedL.name || '');
+  const wpnType = STATE.Me.wielded.left?.type;
   if (!wpnType) return;
   if (wpnType === 'bastard sword') {
     // Required: Bastard Sword

@@ -55,9 +55,10 @@ test('maps test', () => {
     .wwwww@@@nnnnnMMMMMMMMMMM
     www.......nnnnMMMMMMMMMMM
     www........nnnMMMMMMMMMMM
-    ww.........nnnnMMMMMMMMMM
+    IIIIIIIIII~~**.**********
     `);
   expect(result[1]).toBe('Small hills.');
+  expect(result[0]).toContain('IIIIIII');
 
   result = p.validWildMap(`Upon a glacier.
      wwww.....@@@@@@@nnnnnnMM
