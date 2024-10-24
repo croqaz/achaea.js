@@ -12,13 +12,17 @@ import { displayNote, displayText } from '../core/index.ts';
 import { listDenizens, STATE, stateStopBattle } from '../core/state.ts';
 
 let customProcessUserInput = null;
+try {
+  // @ts-ignore: Types
+  customProcessUserInput = require('../../custom/input.ts').default;
+} catch {
+  /* -- */
+}
 // Watch for changes in this file and live reload
 const fileWatcher = chokidar.watch('./custom/input.ts', {
   depth: 1,
-  atomic: true,
-  persistent: true,
 });
-fileWatcher.on('change', async () => {
+fileWatcher.on('change', () => {
   for (const m of Object.keys(require.cache)) {
     if (/custom\/input/.test(m)) {
       delete require.cache[m];

@@ -675,6 +675,8 @@ export function weaponType(text: string): string {
     return 'dirk';
   } else if (text.includes(' blackjack ')) {
     return 'blackjack';
+  } else if (text.endsWith(' mace')) {
+    return 'mace';
   } else if (text.endsWith(' cleaver')) {
     return 'cleaver';
   } else if (text.endsWith(' shield')) {

@@ -2,9 +2,6 @@ import ee from '../events/index.ts';
 import { STATE } from '../core/state.ts';
 const { Battle } = STATE;
 
-/*
- * Break shield skill.
- */
 export function breakShield(name: string | number): string {
   return `TOUCH HAMMER ${name}`;
 }

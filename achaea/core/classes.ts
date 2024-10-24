@@ -136,6 +136,38 @@ export class Player {
   }
 
   /*
+   * The current Shindo shin.
+   * Blademaster class only.
+   * Example: Shin: 10
+   */
+  get shin(): number {
+    for (const cs of this.charstats) {
+      if (cs.startsWith('Shin:')) {
+        const [, x] = cs.split(': ');
+        return parseInt(x);
+      }
+    }
+    return 0;
+  }
+
+  /*
+   * The current TwoArts Stance.
+   * Blademaster class only.
+   * Example: Stance: Thyr
+   */
+  get stance(): string | null {
+    for (const cs of this.charstats) {
+      if (cs.startsWith('Stance:')) {
+        const [, stance] = cs.split(': ');
+        if (stance && stance !== 'None') {
+          return stance;
+        }
+      }
+    }
+    return null;
+  }
+
+  /*
    * The current Grove sunlight.
    * Druid and Sylvan classes only.
    * Example: Sunlight: 5950

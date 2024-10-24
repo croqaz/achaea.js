@@ -5,13 +5,17 @@ import { STATE } from '../core/state.ts';
 import { displayNote } from '../core/index.ts';
 
 let customProcessDisplayText = null;
+try {
+  // @ts-ignore: Types
+  customProcessDisplayText = require('../../custom/output.ts').default;
+} catch {
+  /* -- */
+}
 // Watch for changes in this file and live reload
 const fileWatcher = chokidar.watch('./custom/output.ts', {
   depth: 1,
-  atomic: true,
-  persistent: true,
 });
-fileWatcher.on('change', async () => {
+fileWatcher.on('change', () => {
   for (const m of Object.keys(require.cache)) {
     if (/custom\/output/.test(m)) {
       delete require.cache[m];

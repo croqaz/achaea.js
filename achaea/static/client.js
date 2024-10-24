@@ -188,7 +188,7 @@ async function startWS() {
 
   window.WS.onmessage = async function (event) {
     const gameLog = document.getElementById('gameLog');
-    const icoElem = document.getElementById('icons');
+    const statBar = document.getElementById('statBar');
     const data = JSON.parse(event.data);
     // console.log(data); // DEBUG
 
@@ -246,9 +246,9 @@ async function startWS() {
             html += ico.html;
           }
         }
-        icoElem.innerHTML = html;
-        if (html && elemHidden(icoElem)) {
-          icoElem.style.display = 'inline-grid';
+        statBar.innerHTML = html;
+        if (html && elemHidden(statBar)) {
+          statBar.style.display = 'flex';
         }
         break;
 

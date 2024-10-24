@@ -2,13 +2,17 @@ import chokidar from 'chokidar';
 import { displayNote } from '../core/index.ts';
 
 let customUserConfig = null;
+try {
+  // @ts-ignore: Types
+  customUserConfig = require('../../custom/config.ts').default;
+} catch {
+  /* -- */
+}
 // Watch for changes in this file and live reload
 const fileWatcher = chokidar.watch('./custom/config.ts', {
   depth: 1,
-  atomic: true,
-  persistent: true,
 });
-fileWatcher.on('change', async () => {
+fileWatcher.on('change', () => {
   for (const m of Object.keys(require.cache)) {
     if (/custom\/config/.test(m)) {
       delete require.cache[m];

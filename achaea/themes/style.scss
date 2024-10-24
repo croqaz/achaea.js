@@ -322,24 +322,25 @@ body {
   font-family: $font-bold;
 }
 
-#icons {
-  display: none; // inline-grid
+#statBar {
+  display: none; // flex
+  flex-flow: row wrap;
   background: $dark4;
   margin-bottom: -1px;
   border-top: 1px solid $dark2;
-  grid-template-columns: repeat(auto-fit, 2rem);
   text-align: center;
   z-index: 99;
 }
-#icons > * {
+#statBar > * {
   height: 2rem;
+  min-width: 2rem;
+  max-width: 10rem;
+  text-align: center;
+  align-content: center;
   border-right: 1px solid $dark2;
   border-bottom: 1px solid $dark2;
-  place-content: center center;
-  text-align: center;
 }
-
-#statBar {
+#hpmnBar {
   height: 1rem;
   display: flex;
   border-top: 1px solid $dark2;

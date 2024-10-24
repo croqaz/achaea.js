@@ -51,6 +51,9 @@ export default function processDisplayText(html: string, text: string): string {
    */
   // console.time(`core-output-${count}`);
 
+  // fix space before list on newline
+  html = html.replace(/[\r\n ]+?\* </g, '\n* <');
+
   {
     const p = html.match(PROMPT);
     if (p) {
