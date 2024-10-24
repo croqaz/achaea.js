@@ -43,3 +43,17 @@ export function metaAnimal(): Record<string, string> {
     label: `Morph: ${STATE.Me.morph}`,
   };
 }
+
+export function pingIcon(): Record<string, string> {
+  return {
+    text: 'P',
+    label: `Response time: ${STATE.Stats.ping.toFixed(2)}μs`,
+  };
+}
+
+export function statGoldText(): Record<string, string> {
+  return {
+    text: `${STATE.Me.gold.toLocaleString('en-US')} 🪙`,
+    label: 'Gold in inventory',
+  };
+}

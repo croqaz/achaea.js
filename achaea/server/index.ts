@@ -226,7 +226,7 @@ export default async function startServer(port = 18888, hostname = '127.0.0.1') 
         // Push info from the server
         if (STATE.Me.level) ee.emit('myself:update', STATE.Me);
         if (STATE.Room.num) ee.emit('room:update', STATE.Room);
-        if (STATE.Room.num) ee.emit('ico:update', STATE.Icons);
+        if (STATE.Room.num) ee.emit('ico:update', STATE.StatBar);
       },
       close(ws) {
         const ip = ws.remoteAddress;

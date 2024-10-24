@@ -18,8 +18,13 @@ export class Player {
   xp: string = '0%'; // @my_nl = Your XP percentage to next level
   city: string = '';
   house: string = '';
+
   gold: number = 0; // gold in packs
   bank: number = 0; // gold in banks
+  boundcredits: number = 0; // Bound Credits
+  unboundcredits: number = 0; // Unbound Credits
+  mayancrowns: number = 0; // Unbound Mayan Crowns
+  boundmayancrowns: number = 0; // Bound Mayan Crowns
 
   hp: number = 0; // @my_hp = Your current health
   oldhp: number = 0; // use it to calculate diff between old and new values

@@ -7,7 +7,7 @@ export interface StateType {
   Time: StateTime;
   Stats: StateStats;
   Misc: Record<string, any>;
-  Icons: Record<string, any>;
+  StatBar: Record<string, any>;
   Custom: Record<string, any>;
   Queue: Record<string, string[]>;
 }

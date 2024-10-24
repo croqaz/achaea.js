@@ -111,7 +111,7 @@ export const STATE: T.StateType = Object.seal({
     quitting: false,
   },
   //
-  Icons: {
+  StatBar: {
     // user's icons
     // ...
   },
@@ -161,11 +161,11 @@ function remFromStateList(key: string, list: string, value: any) {
   }
 }
 
-export function updateIcons(meta: Record<string, any>) {
+export function updateStatBar(meta: Record<string, any>) {
   for (const k of Object.keys(meta)) {
-    STATE.Icons[k] = meta[k];
+    STATE.StatBar[k] = meta[k];
   }
-  ee.emit('ico:update', STATE.Icons);
+  ee.emit('ico:update', STATE.StatBar);
 }
 
 export function findInventory(name: string) {
