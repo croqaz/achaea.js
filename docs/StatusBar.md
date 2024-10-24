@@ -6,9 +6,9 @@ You can customize it to show lots of different things like: your weapons & armou
 
 ## How to
 
-You can find some presets to get you started, in [extra/statBarPresets.ts](achaea/extra/statBarPresets.ts).
+You can find some presets to get you started, in [extra/statBarPresets.ts](../achaea/extra/statBarPresets.ts).
 
-All you need to do is define some cells/icons in an object and call `updateStatBar(...)` with your cells, everytime the state changes, so you need to listen the relevant events.
+All you need to do is define an object that represents cells/icons in the bar and call `updateStatBar(...)` with your object everytime the relevant state changes.
 
 For example, create a file: `custom/statBar.ts` and don't forget to import it from `custom/index.ts`. In this file, enable a few cells/icons:
 
@@ -30,3 +30,20 @@ ee.on('myself:update', () => {
 In this example, you'll see 4 cells: one for the weapon wielded left and another for the weapon wielded right, your current armour and the Achaea server response time (ping). The refresh of the status bar will happen everytime the player data changes.
 
 If you want to refresh the status bar based on different events, for example room items or players, you'll have to listen on "items:update", or "players:update" events and call `updateStatBar(...)` in those functions.
+
+## Custom cells
+
+A custom cell, or icon in the status bar is just an object. At minimum, you can just return a text, eg:
+
+```ts
+def boringIcon() {
+  return { text: 'a' }
+}
+```
+
+The following properties are supported:
+
+* text -- very short emoji, SVG, or plain text for this cell
+* label -- a tooltip that will show up on hover (only when you use text)
+* cmd -- a command that is sent to the game, when you click the icon (only when you use text)
+* html -- custom HTML which can include pretty much anything. Use this INSTEAD of text!
