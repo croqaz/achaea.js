@@ -47,18 +47,18 @@ export interface StateBattle {
 export interface StateStats {
   round: number;
   begDt: Date; // game start time
-  endDt?: Date; // game end time
+  endDt: Date | null; // game end time
   perf: number; // used to calc ping
   ping: number; // ping/response time
   gold: number;
   bank: number;
   kills: number;
-  bal?: Date;
-  eq?: Date;
-  eat?: Date;
-  drink?: Date;
-  apply?: Date;
-  smoke?: Date;
+  bal?: Date | null;
+  eq?: Date | null;
+  eat?: Date | null;
+  drink?: Date | null;
+  apply?: Date | null;
+  smoke?: Date | null;
 }
 
 export interface BattleTarget {

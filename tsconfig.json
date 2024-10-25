@@ -1,0 +1,20 @@
+{
+  "include": ["achaea/*.ts"],
+  "compilerOptions": {
+    "lib": ["ESNext", "ES6"],
+    "module": "esnext",
+    "target": "esnext",
+    "allowImportingTsExtensions": true,
+    "strict": true,
+    "downlevelIteration": true,
+    "skipLibCheck": true,
+    "jsx": "preserve",
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "noEmit": true,
+    "types": [
+      "bun-types" // add Bun global
+    ]
+  }
+}

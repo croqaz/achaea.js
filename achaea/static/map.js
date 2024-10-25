@@ -313,13 +313,15 @@ export function drawMap(data) {
 
   // drag the map with the mouse
   tool.onMouseDrag = (event) => {
+    if (!mainLayer) return;
     mainLayer.translate(event.delta);
   };
 }
 
 export function autoCenterMap() {
-  const mapElem = document.getElementById('map');
-  if (mapElem.style.display === 'none') return;
+  if (!mainLayer) return;
+  const mapDisplay = document.getElementById('map').style.display;
+  if (mapDisplay === '' || mapDisplay === 'none') return;
 
   const { view } = window.PAPER;
 

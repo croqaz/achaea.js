@@ -2,7 +2,7 @@
 
 import ee from './events/index.ts';
 import { PROMPT } from './core/output.ts';
-import { ansi2Html, ansiStrip } from './ansi';
+import { ansi2Html, ansiStrip } from './ansi.ts';
 import processDisplayText from './core/output.ts';
 import { TelnetSocket, telOpts } from './telnet/index.ts';
 import { logDestroy, logSetup, logWrite } from './logs/index.ts';
@@ -112,7 +112,7 @@ ee.on('tel:text', (rawText: string) => {
 ee.on('game:gmcp', (text: string) => {
   if (text.startsWith('Comm.Channel.Start ')) return;
   else if (text.startsWith('Comm.Channel.End ')) return;
-  else if (text.startsWith('IRE.Time ')) return;
+  else if (text.startsWith('IRE.Time.')) return;
   logWrite('\n:GMCP: ' + text + '\n');
 });
 

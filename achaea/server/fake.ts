@@ -1,5 +1,5 @@
 import ee from '../events/index.ts';
-import { Colors, ansi2Html } from '../ansi.ts';
+import { ansi2Html, Colors } from '../ansi.ts';
 
 const { bgRed, bgGreen, bgBlue, bgBlack, bgCyan, bgWhite } = Colors;
 
@@ -75,7 +75,7 @@ export default async function fakeEvents() {
     `Char.Status {
       "name": "Sarapis", "fullname": "Sarapis the Logos", "age": "999", "race": "God", "level": "999 (99%)", "xp": "99%", "xprank": "1",
       "class": "Druid", "city": "Eleusis (1)", "house": "(None)", "order": "(None)", "boundcredits": "68", "unboundcredits": "0",
-      "lessons": "0", "explorerrank": "a Vagabond", "mayancrowns": "0", "boundmayancrowns": "0", "gold": "162", "bank": "0",
+      "lessons": "0", "explorerrank": "a Vagabond", "mayancrowns": "3", "boundmayancrowns": "0", "gold": "162", "bank": "0",
       "unread_news": "43658", "unread_msgs": "0", "target": "None", "gender": "male"
     }`,
   );
@@ -197,6 +197,7 @@ To restore the defaults, enter CONFIG COLOUR DEFAULT
     if (dayNight > 199) dayNight = 1;
   }, 2500);
 
+  let gold = 162;
   let fakeHP = 1500;
   let hpGrowing = false;
   let fakeMP = 100;
@@ -205,12 +206,14 @@ To restore the defaults, enter CONFIG COLOUR DEFAULT
     ee.emit(
       'game:gmcp',
       `Char.Vitals {
-      "hp": "${fakeHP}", "maxhp": "1500", "mp": "${fakeMP}", "maxmp": "1200",
+      "hp": "${fakeHP}", "maxhp": "1500", "mp": "${fakeMP}", "maxmp": "1200", "gold": "${gold}",
       "ep": "3800", "maxep": "3800", "wp": "3545", "maxwp": "3545", "nl": "66",
       "bal": "1", "eq": "1", "string": "H:1150/1150 M:1099/1099 E:3800/3800 W:3545/3545 NL:66/100 ",
       "charstats": [ "Bleed: 0", "Rage: 0", "Morph: Basilisk" ]
     }`,
     );
+
+    gold++;
 
     if (hpGrowing) fakeHP = fakeHP + 100;
     else fakeHP = fakeHP - 100;

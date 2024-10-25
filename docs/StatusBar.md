@@ -47,3 +47,26 @@ The following properties are supported:
 * label -- a tooltip that will show up on hover (only when you use text)
 * cmd -- a command that is sent to the game, when you click the icon (only when you use text)
 * html -- custom HTML which can include pretty much anything. Use this INSTEAD of text!
+
+## Icons
+
+There are 2 icon packs already included:
+
+- Font-Awesome v6 : https://fontawesome.com/v6/search?m=free
+- RPG-Awesome : https://nagoshiashumari.github.io/Rpg-Awesome
+
+So, for example if you want to use the icon "Home" from Font-Awesome, you could return:
+
+```ts
+def homeIcon() {
+  return { html: '<i class="fa-solid fa-house"></i>' }
+}
+```
+
+Or, if you would want a "Spear" icon from RPG-Awesome, you could return:
+
+```ts
+def spearIcon() {
+  return { html: '<i class="ra ra-spear-head"></i>' }
+}
+```

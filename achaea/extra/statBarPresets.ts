@@ -46,8 +46,7 @@ export function metaAnimal(): Record<string, string> {
 
 export function pingIcon(): Record<string, string> {
   return {
-    text: 'P',
-    label: `Response time: ${STATE.Stats.ping.toFixed(2)}μs`,
+    html: `<i class="fa-solid fa-signal" aria-label="Response time: ${STATE.Stats.ping.toFixed(2)}μs"></i>`,
   };
 }
 

@@ -3,9 +3,10 @@
 import * as R from 'remeda';
 import * as T from '../types.ts';
 import ee from '../events/index.ts';
-import { MAP } from '../maps/index.ts';
-import * as C from './classes.ts';
 import * as t from './time.ts';
+import * as C from './classes.ts';
+import { MAP } from '../maps/index.ts';
+import { debounce } from './util.ts';
 
 /*
  * The STATE tree represents everything we know about the game and is
@@ -161,11 +162,19 @@ function remFromStateList(key: string, list: string, value: any) {
   }
 }
 
+const emitIcoUpdate = debounce(
+  function __emitIcoUpdate() {
+    ee.emit('ico:update', STATE.StatBar);
+  },
+  333,
+  false,
+);
+
 export function updateStatBar(meta: Record<string, any>) {
   for (const k of Object.keys(meta)) {
     STATE.StatBar[k] = meta[k];
   }
-  ee.emit('ico:update', STATE.StatBar);
+  emitIcoUpdate();
 }
 
 export function findInventory(name: string) {

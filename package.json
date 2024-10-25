@@ -15,6 +15,7 @@
     "remeda": "2.x"
   },
   "devDependencies": {
+    "@types/bun": "1.x",
     "@types/node": "22.x",
     "prettier": "3.x",
     "sass": "1.x",

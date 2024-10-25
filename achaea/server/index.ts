@@ -12,6 +12,8 @@ import processUserInput from '../core/input.ts';
 const STATIC = path.normalize(__dirname + '/../static/');
 const CUSTOM = path.normalize(__dirname + '/../../custom/static/');
 
+const OMIT_PLAYER_FIELDS = Object.seal(['rift', 'items', 'wielded', 'worn', 'skills']);
+
 function mime(pth: string): string {
   const ext = pth.split('.').pop();
   switch (ext) {
@@ -73,19 +75,21 @@ export default async function startServer(port = 18888, hostname = '127.0.0.1') 
       // console.debug('Request:', pth);
 
       // maps API
-      if (pth === '/map.json')
+      if (pth === '/map.json') {
         // For DEBUG only: see the whole map
         return Response.json(m.MAP, {
           headers: {
             'Cache-control': 'public, max-age=3600',
           },
         });
-      if (pth === '/room.json')
+      }
+      if (pth === '/room.json') {
         return Response.json(R.omit(STATE.Room, ['items', 'players']), {
           headers: {
             'Cache-control': 'public, max-age=1',
           },
         });
+      }
       if (pth === '/area.json') {
         const area = await m.getArea(params.get('id'), true);
         return Response.json(area, {
@@ -203,8 +207,8 @@ export default async function startServer(port = 18888, hostname = '127.0.0.1') 
 
         //
         // Player info
-        ee.on('myself:update', (data: T.StateMe) => {
-          ws.send(JSON.stringify(data));
+        ee.on('myself:update', (player) => {
+          ws.send(JSON.stringify(R.omit(player, OMIT_PLAYER_FIELDS)));
         });
         ee.on('battle:update', (battle: T.StateBattle) => {
           ws.send(JSON.stringify({ type: 'battle:update', battle }));

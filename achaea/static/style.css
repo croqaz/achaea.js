@@ -380,6 +380,8 @@ body {
   max-width: 10rem;
   text-align: center;
   align-content: center;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   border-right: 1px solid #3b4252;
   border-bottom: 1px solid #3b4252;
 }
