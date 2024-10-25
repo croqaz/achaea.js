@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import { ClassicLevel } from 'classic-level';
 import { dateDiff, isoDate } from '../core/util.ts';
 

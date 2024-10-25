@@ -1,3 +1,5 @@
+// deno-lint-ignore-file
+
 import ee from '../events/index.ts';
 import { ansi2Html, Colors } from '../ansi.ts';
 

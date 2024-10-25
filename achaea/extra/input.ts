@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-process-globals
 import chokidar from 'chokidar';
 
 import ee from '../events/index.ts';

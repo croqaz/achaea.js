@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-process-globals
 import * as T from '../types.ts';
 import ee from '../events/index.ts';
 import { STATE } from '../core/state.ts';

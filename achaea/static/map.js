@@ -1,3 +1,4 @@
+// deno-lint-ignore-file
 window.AREA = { rooms: {} };
 window.ROOM = { id: 0, items: [], players: [] };
 

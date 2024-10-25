@@ -1,3 +1,5 @@
+// deno-lint-ignore-file no-explicit-any
+
 function __rowFunc(key: string, row: Record<string, any>): string {
   return `<td>${row[key] || '?'}</td>`;
 }

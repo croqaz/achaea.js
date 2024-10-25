@@ -1,3 +1,4 @@
+// deno-lint-ignore-file
 import { computePosition, flip, shift, offset } from 'https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.x/+esm';
 
 import * as map from './map.js';

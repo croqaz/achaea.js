@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-process-globals
 import * as T from '../types.ts';
 import ee from '../events/index.ts';
 import * as p from '../parsers.ts';
@@ -68,7 +69,7 @@ export async function saveQuickWho(text: string) {
     }
     const data = await fetchWhois(name);
     if (!data) continue;
-    // @ts-ignore
+    // @ts-ignore: Types
     data.level = parseInt(data.level || '');
     if (Number.isNaN(data.level) || data.level < 10) continue;
     data.dt = dt;
@@ -92,7 +93,7 @@ export async function saveWhois(user: T.DBPlayer) {
     const newWhois = await fetchWhois(user.id);
     whois = mergeWhois(user, newWhois);
   }
-  // @ts-ignore
+  // @ts-ignore: Types
   whois.level = parseInt(whois.level || '');
   if (Number.isNaN(whois.level) || whois.level < 10) return;
   await dbSave('whois', whois);
@@ -117,7 +118,7 @@ export async function fetchOnline(): Promise<string[]> {
     const resp = await fetch('https://api.achaea.com/characters.json', {
       headers: { 'Content-Type': 'application/json' },
     });
-    const { count, characters } = await resp.json();
+    const { _count, characters } = await resp.json();
     // count is the actual number of players,
     // including hidden
     return characters.map((x) => x.name);

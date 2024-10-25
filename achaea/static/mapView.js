@@ -1,3 +1,4 @@
+// deno-lint-ignore-file
 import * as map from './map.js';
 
 window.AREA = { rooms: {} };

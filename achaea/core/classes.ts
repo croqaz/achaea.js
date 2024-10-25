@@ -1,5 +1,4 @@
 // deno-lint-ignore-file no-explicit-any
-
 import * as T from '../types.ts';
 import { weaponType } from './common.ts';
 

@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import * as T from './types.ts';
 import * as m from './maps.ts';
 import { dbGet } from '../extra/leveldb.js';
@@ -33,7 +34,7 @@ export async function getArea(uid: string, enhance = false): Promise<T.MapArea> 
     area.rooms[x.id] = room;
     levels.add(room.coord.z || 0);
   }
-  // @ts-ignore
+  // @ts-ignore: Types
   area.levels = [...levels].sort((a, b) => a - b);
   // console.timeEnd('get-area');
   return area;

@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-node-globals
 import { Transform } from 'node:stream';
 
 import telOpts from './telOpts.ts';

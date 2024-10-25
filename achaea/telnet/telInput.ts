@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-node-globals
 import { Transform } from 'node:stream';
 
 import ee from '../events/index.ts';
@@ -72,7 +73,6 @@ export default class TelnetInput extends Transform {
             this.dataBuf[this.dataBufIndex] = chunkData;
             return this.dataBufIndex++;
         }
-        break;
 
       case TELNET_COMMAND:
         switch (chunkData) {
@@ -122,7 +122,6 @@ export default class TelnetInput extends Transform {
           default:
             return this._handleSub(chunkData);
         }
-        break;
 
       case TELNET_SUBNEG_CMD:
         switch (chunkData) {

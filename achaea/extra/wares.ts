@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-process-globals
 import ee from '../events/index.ts';
 import * as p from '../parsers.ts';
 import { dbSave } from './leveldb.ts';

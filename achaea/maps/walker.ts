@@ -49,7 +49,7 @@ export function parseDirections(line: string, parts: string[]) {
   return dirs;
 }
 
-export function smartMove(dir: string, currRoom: string, nextRoom: string) {
+export function smartMove(dir: string, _currRoom: string, _nextRoom: string) {
   /*
    * TODO: Based on the Next Room, it needs to handle
    * swim in water

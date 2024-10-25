@@ -1,3 +1,5 @@
+// deno-lint-ignore-file no-explicit-any
+
 export interface MapType {
   areas?: Record<string, MapArea>;
   environments?: Record<string, MapEnv>;

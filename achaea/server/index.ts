@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any no-process-globals
 import fs from 'node:fs';
 import path from 'node:path';
 import * as R from 'remeda';
@@ -236,7 +237,7 @@ export default async function startServer(port = 18888, hostname = '127.0.0.1') 
         const ip = ws.remoteAddress;
         console.log('[WS] Client disconnected', ip ? `from: ${ip}` : '');
       },
-      message(ws, line: string) {
+      message(_ws, line: string) {
         // input from the browser client
         // basically the user's commands
         line = line.toString().trim();
@@ -251,7 +252,7 @@ export default async function startServer(port = 18888, hostname = '127.0.0.1') 
           console.error(`Error processing input! ${err}`);
         }
       },
-      error(ws, err) {
+      error(_ws, err) {
         console.error('[WS] error:', err);
       },
     },
