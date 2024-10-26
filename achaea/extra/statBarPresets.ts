@@ -27,8 +27,7 @@ export function wornArmour(): Record<string, string> {
     };
   }
   return {
-    text: STATE.Me.worn.armor.name[0],
-    label: `Armour: ${STATE.Me.worn.armor.name}`,
+    html: `<i class="ra ra-vest" aria-label="Armour: ${STATE.Me.worn.armor.name}"></i>`,
   };
 }
 

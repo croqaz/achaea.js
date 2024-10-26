@@ -61,6 +61,35 @@ export default function processTriggers(text: string, normText: string) {
     ee.emit('user:text', 'CURING PRIORITY DEFENCE AIRPOCKET RESET');
   }
 
+  if (
+    normText.includes('You begin to flap your wings powerfully, and rise quickly up into the firmament.') ||
+    normText.includes('You are already soaring through the sky, free as a bird.')
+  ) {
+    // DEF: You are soaring high above the ground.
+    STATE.Me.flying = true;
+  } else if (
+    normText.includes(
+      'You begin to descend, the wind whistling past you as the earth draws ever closer. You land easily',
+    ) ||
+    normText.includes('You are not flying, my friend.')
+  ) {
+    STATE.Me.flying = false;
+  }
+
+  if (
+    normText.includes('You easily vault onto the back of a ') ||
+    normText.includes('You climb up on a ') ||
+    normText.includes('You must dismount before you can mount anything else.')
+  ) {
+    // DEF: You are riding a ...
+    STATE.Me.riding = true;
+  } else if (
+    normText.includes('You step down off of a ') ||
+    normText.includes('You are not currently riding anything.')
+  ) {
+    STATE.Me.riding = false;
+  }
+
   // Fill all elixirs
   //
   if (STATE.Misc.filla && text.includes('  Fluid  ')) {

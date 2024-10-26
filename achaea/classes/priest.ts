@@ -68,8 +68,8 @@ export function rageBreakShield(name: string | number): string {
 // Cooldown:          34.00 seconds
 // Resource:          29 rage
 // Details:
-// Summon a rite of terrible visions that causes your target to
-// flee uncontrollably for several seconds.
+// Summon a rite of terrible visions that causes your target
+// to flee uncontrollably for several seconds.
 // -------------------------------------------------------------------------------
 //
 export function battleRage(rage: number, force = false): void {
@@ -81,5 +81,41 @@ export function battleRage(rage: number, force = false): void {
   // Hammer      Obliterate your target with an overpowering smash.
   // Horrify     A rite of dire visions that cause your opponent to flee.
   //
-  //   ...
+  if (rage >= 14 && (force || Battle.bals.a1)) {
+    setTimeout(() => (Battle.bals.a1 = true), 16_200);
+    Battle.rage -= 14;
+    Battle.bals.a1 = false;
+    ee.emit('user:text', 'ANGEL TORMENT');
+    return;
+  }
+
+  if (rage >= 36 && (force || Battle.bals.a4)) {
+    setTimeout(() => (Battle.bals.a4 = true), 23_200);
+    Battle.rage -= 36;
+    Battle.bals.a4 = false;
+    ee.emit('user:text', `PERFORM RITE OF DESOLATION ON ${Battle.tgtID}`);
+    return;
+  }
+
+  if (rage >= 25 && (force || Battle.bals.a5)) {
+    setTimeout(() => (Battle.bals.a5 = true), 23_200);
+    Battle.rage -= 25;
+    Battle.bals.a5 = false;
+    ee.emit('user:text', 'HAMMER');
+    return;
+  }
+
+  //
+  // Incense and Horrify are afflict abilities,
+  // and I want to use them more rarely
+  //
+
+  // 18 rage normally
+  if (rage >= 25 && (force || Battle.bals.a2)) {
+    setTimeout(() => (Battle.bals.a2 = true), 25_200); // 19s normally
+    Battle.rage -= 18;
+    Battle.bals.a2 = false;
+    ee.emit('user:text', 'ANGEL INCENSE');
+    return;
+  }
 }

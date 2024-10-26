@@ -50,6 +50,13 @@ export class Player {
   defences: T.GmcpDefence[] = [];
   skills: T.GmcpSkillList = {} as T.GmcpSkillList;
 
+  // Don't change manually
+  // these are set in triggers
+  // @my_flying = Whether you are currently flying
+  flying: boolean = false;
+  // True when riding something
+  riding: boolean = false;
+
   constructor(args: Record<string, any>) {
     this.update(args);
   }
@@ -116,6 +123,14 @@ export class Player {
    */
   get deaf(): boolean {
     return this.defences.some((x) => x.name === 'deafness');
+  }
+
+  /*
+   * If you have the Cloak (tattoo) defence
+   * @my_cloak in Nexus
+   */
+  get cloak(): boolean {
+    return this.defences.some((x) => x.name === 'cloak');
   }
 
   /*
