@@ -11,7 +11,7 @@ import './triggers.ts';
 import './stats.ts';
 
 import ee from '../events/index.ts';
-import { Config } from './config.ts';
+import { Config } from '../config.ts';
 
 try {
   // @ts-ignore: Types

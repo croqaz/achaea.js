@@ -67,9 +67,30 @@ export function metaAnimal(): Record<string, string> {
       html: '<h5 aria-label="Not morphed">H</h5>',
     };
   }
+  const m = STATE.Me.morph;
+  let cls = '';
+  let txt = '';
+  switch (m) {
+    case 'Basilisk':
+      cls = 'ra-sea-serpent';
+      break;
+    case 'Hydra':
+      cls = 'ra-hydra';
+      break;
+    case 'Wyvern':
+      cls = 'ra-wyvern';
+      break;
+    case 'Bear':
+      cls = 'ra-pawprint';
+      break;
+    case 'Wolf':
+      cls = 'ra-wolf-head';
+      break;
+    default:
+      txt = m.slice(0, 3);
+  }
   return {
-    text: STATE.Me.morph[0],
-    label: `Morph: ${STATE.Me.morph}`,
+    html: `<i class="ra ${cls}" aria-label="Morph: ${m}">${txt}</i>`,
   };
 }
 
@@ -80,8 +101,14 @@ export function pingIcon(): Record<string, string> {
 }
 
 export function statGoldText(): Record<string, string> {
+  let gold = STATE.Me.gold;
+  if (gold > 100_000) {
+    gold = Math.round(gold / 1000) + 'k';
+  } else {
+    gold = gold.toLocaleString('en-US');
+  }
   return {
-    text: `${STATE.Me.gold.toLocaleString('en-US')} 🪙`,
-    label: 'Gold in inventory',
+    text: `${gold} 🪙`,
+    label: `${STATE.Me.gold.toLocaleString('en-US')} Gold in inventory`,
   };
 }

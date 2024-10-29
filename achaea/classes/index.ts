@@ -8,8 +8,8 @@ import * as pariah from './pariah.ts';
 import * as priest from './priest.ts';
 import * as runeward from './runeward.ts';
 import * as sentinel from './sentinel.ts';
-import { Config } from '../extra/config.ts';
 import { STATE } from '../core/state.ts';
+import { Config } from '../config.ts';
 import ee from '../events/index.ts';
 
 export function cls() {

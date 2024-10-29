@@ -1,8 +1,12 @@
 import ee from '../events/index.ts';
 import * as state from './state.ts';
 import { STATE } from './state.ts';
+import { Config } from '../config.ts';
 import { queueCmd } from './queue.ts';
-import extraProcessUserInput from '../extra/input.ts';
+
+// optionally, import extras
+let extraProcessUserInput = null;
+if (Config.EXTRA) extraProcessUserInput = await import('../extra/input.ts');
 
 // let count = 1;
 
@@ -91,16 +95,20 @@ export default function processUserInput(text: string): string | void {
     STATE.Misc.quitting = true;
   }
 
-  const extra = extraProcessUserInput(text, parts);
+  if (extraProcessUserInput) {
+    const extra = extraProcessUserInput.default(text, parts);
 
-  // Intercept unprocessed special cmds
-  if (extra && extra.startsWith('//')) return;
+    // console.timeEnd(`core-input-${count}`);
+    // count++;
 
-  // Input intentionally ignored
-  if (extra === '') return;
+    // Intercept unprocessed special cmds
+    if (extra && extra.startsWith('//')) return;
 
-  // console.timeEnd(`core-input-${count}`);
-  // count++;
+    // Input intentionally ignored
+    if (extra === '') return;
 
-  return extra;
+    return extra;
+  } else {
+    return text;
+  }
 }

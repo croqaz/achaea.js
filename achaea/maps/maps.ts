@@ -3,7 +3,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 import * as T from './types.ts';
-import { Config } from '../extra/config.ts';
+import { Config } from '../config.ts';
 
 export const EXITS = Object.freeze({
   north: 'n',

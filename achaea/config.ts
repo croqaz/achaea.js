@@ -1,5 +1,5 @@
 import chokidar from 'chokidar';
-import { displayNote } from '../core/index.ts';
+import { displayNote } from './core/index.ts';
 
 let customUserConfig = null;
 try {
@@ -60,4 +60,7 @@ export const Config = {
   //
   // Ignore some gathering materials
   EXCLUDE_MATERIAL: ['fruit', 'vegetable'],
+  //
+  // Enable extra features?
+  EXTRA: true,
 };

@@ -1,8 +1,8 @@
 // deno-lint-ignore-file no-explicit-any
 
 import * as T from './types.ts';
+import { Config } from './config.ts';
 import { STATE } from './core/state.ts';
-import { Config } from './extra/config.ts';
 import { CITIES, HERBS, MATERIALS, MINERALS } from './core/common.ts';
 
 export function parseSurvey(text: string) {

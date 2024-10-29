@@ -7,14 +7,16 @@ import processDisplayText from './core/output.ts';
 import { TelnetSocket, telOpts } from './telnet/index.ts';
 import { logDestroy, logSetup, logWrite } from './logs/index.ts';
 import { escapeHtml, isoDate, normText } from './core/util.ts';
+import { Config } from './config.ts';
 // import { teloptFmt } from './telnet/util.ts';
 
 // import core stuff
 import './core/queue.ts';
 import './core/triggers.ts';
-import './extra/index.ts';
+// optionally, import extras
+if (Config.EXTRA) await import('./extra/index.ts');
 
-let telnet;
+let telnet: TelnetSocket;
 
 export function connect(player: string) {
   //

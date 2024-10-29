@@ -1,5 +1,9 @@
 import { STATE } from './state.ts';
-import extraProcessDisplayText from '../extra/output.ts';
+import { Config } from '../config.ts';
+
+// optionally, import extras
+let extraProcessDisplayText = null;
+if (Config.EXTRA) extraProcessDisplayText = await import('../extra/output.ts');
 
 const CRITIC_LEVELS = [
   // You have scored a CRITICAL hit // no need for Stars
@@ -94,7 +98,9 @@ export default function processDisplayText(html: string, text: string): string {
     }
   }
 
-  html = extraProcessDisplayText(html, text);
+  if (extraProcessDisplayText) {
+    html = extraProcessDisplayText.default(html, text);
+  }
 
   // console.timeEnd(`core-output-${count}`);
   // count++;

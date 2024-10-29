@@ -1,8 +1,8 @@
 // deno-lint-ignore-file no-process-globals
 import ee from '../events/index.ts';
 import * as p from '../parsers.ts';
+import { Config } from '../config.ts';
 import { STATE } from '../core/state.ts';
-import { Config } from '../extra/config.ts';
 import { queueCmd } from '../core/queue.ts';
 import { logWrite } from '../logs/index.ts';
 
@@ -14,7 +14,7 @@ export function gatherTriggers(text: string) {
    * ga = gather all   (Gathering skill)
    * gh = gather & harvest
    */
-  const userInput = STATE.Misc.input;
+  const userInput = STATE.Misc.input.toLowerCase();
   const env = STATE.Room.environment.toLowerCase();
 
   if (STATE.Misc.getMinerals && (userInput === '//ea' || userInput === '//ggg')) {

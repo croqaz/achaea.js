@@ -223,8 +223,15 @@ export function drawMap(data) {
       roomTitle.visible = false;
       titleBorder.remove();
     };
+
     // On room double-click, auto-walk
+    let clicked = false;
     group.onDoubleClick = function () {
+      if (clicked) return;
+      clicked = true;
+      setTimeout(() => {
+        clicked = false;
+      }, 1000);
       this.fillColor = COLOR.amber;
       WS.send(`//go ${this.data.id}`);
     };
