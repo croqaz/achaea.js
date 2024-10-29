@@ -13,10 +13,40 @@ export function wieldedIcon(hand: string): Record<string, string> {
     };
   }
   const { name, type } = STATE.Me.wielded[hand];
-  const text = type === 'shield' ? '🛡️' : '⚔️';
+  let cls = '';
+  switch (type) {
+    case 'battleaxe':
+      cls = 'ra ra-axe';
+      break;
+    case 'bastard sword':
+      cls = 'ra ra-sword';
+      break;
+    case 'cleaver':
+      cls = 'ra ra-bone-knife';
+      break;
+    case 'dirk':
+      cls = 'ra ra-knife';
+      break;
+    case 'mace':
+      cls = 'ra ra-spiked-mace';
+      break;
+    case 'shield':
+      cls = 'ra ra-shield';
+      break;
+    case 'spear':
+      cls = 'ra ra-spear-head';
+      break;
+    case 'trident':
+      cls = 'ra ra-trident';
+      break;
+    case 'warhammer':
+      cls = 'ra ra-large-hammer';
+      break;
+    default:
+      cls = 'ra ra-crossed-swords';
+  }
   return {
-    text,
-    label: `${Hand}: ${name}`,
+    html: `<i class="${cls}" aria-label="${Hand}: ${name}"></i>`,
   };
 }
 

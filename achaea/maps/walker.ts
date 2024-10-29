@@ -5,7 +5,7 @@ import * as mi from './index.ts';
 import * as ex from './explore.ts';
 import * as T from './types.ts';
 import { STATE } from '../core/state.ts';
-import { userText, displayText, sleep } from '../core/index.ts';
+import { displayText, sleep, userText } from '../core/index.ts';
 
 // Reversed exits
 export const REV_EXITS = Object.freeze({
@@ -49,14 +49,31 @@ export function parseDirections(line: string, parts: string[]) {
   return dirs;
 }
 
-export function smartMove(dir: string, _currRoom: string, _nextRoom: string) {
+export function smartMove(dir: string, currID: string, nextID?: string) {
   /*
    * TODO: Based on the Next Room, it needs to handle
    * swim in water
    * jump over stone/ ice walls
    * special actions, need to twist/push/pull, or say something
    */
-  return userText(dir);
+  // const room = m.MAP.rooms[currID];
+  // let nextRoom = {};
+  // if (!room || !room.environment) {
+  //   return userText(dir);
+  // }
+  // if (!nextID) {
+  //   const nextExit = room.exits.find((x) => m.EXITS[x.direction] === dir);
+  //   nextID = nextExit.target;
+  // }
+  // nextRoom = m.MAP.rooms[nextID] || {};
+  // if (
+  //   room.environment === m.MAP_ENVS.water ||
+  //   room.environment === m.MAP_ENVS.river ||
+  //   room.environment === m.MAP_ENVS.freshwater
+  // ) {
+  //   return userText(`SWIM ${dir}`);
+  // }
+  userText(dir);
 }
 
 //

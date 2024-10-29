@@ -70,7 +70,7 @@ export default function extraProcessDisplayText(html: string, text: string): str
   // Prism tattoo
   html = html.replace(
     'A beam of prismatic light suddenly shoots into the room.',
-    'A beam of PRISMATIC light ✨ suddenly shoots into the room !!',
+    'A beam of 🌈 PRISMATIC light ✨ suddenly shoots into the room !!',
   );
 
   // Make shield auras more visible

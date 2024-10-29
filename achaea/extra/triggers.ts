@@ -30,6 +30,7 @@ export default function processTriggers(text: string, normText: string) {
    * The first triggers are THE MOST IMPORTANT
    */
   text = text.trim();
+  const userInput = STATE.Misc.input.toLowerCase();
 
   // Auto diagnose on Loki
   if (text.includes('You are confused as to the effects of the venom.')) {
@@ -62,16 +63,25 @@ export default function processTriggers(text: string, normText: string) {
   }
 
   if (
-    normText.includes('You begin to flap your wings powerfully, and rise quickly up into the firmament.') ||
-    normText.includes('You are already soaring through the sky, free as a bird.')
+    normText.includes('has the following venoms or magical effects on it:') &&
+    normText.includes('Walk on water')
+  ) {
+    STATE.Me.waterWalk = true;
+  }
+
+  if (
+    userInput === 'fly' &&
+    (normText.includes('You begin to flap your wings powerfully, and rise quickly up into the firmament.') ||
+      normText.includes('You are already soaring through the sky, free as a bird.'))
   ) {
     // DEF: You are soaring high above the ground.
     STATE.Me.flying = true;
   } else if (
-    normText.includes(
+    userInput === 'land' &&
+    (normText.includes(
       'You begin to descend, the wind whistling past you as the earth draws ever closer. You land easily',
     ) ||
-    normText.includes('You are not flying, my friend.')
+      normText.includes('You are not flying, my friend.'))
   ) {
     STATE.Me.flying = false;
   }

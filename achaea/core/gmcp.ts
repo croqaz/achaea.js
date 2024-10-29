@@ -4,7 +4,7 @@
 import * as T from '../types.ts';
 import * as S from './state.ts';
 import ee from '../events/index.ts';
-import { ansi2Html } from '../ansi';
+import { ansi2Html } from '../ansi.ts';
 
 export function gmcpHello() {
   // Core.Hello {"client":"Mudlet", "version":"4.12.0"}

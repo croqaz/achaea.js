@@ -56,6 +56,9 @@ export class Player {
   flying: boolean = false;
   // True when riding something
   riding: boolean = false;
+  // True if your boots have waterWalk
+  waterWalk: boolean = false;
+  // -----
 
   constructor(args: Record<string, any>) {
     this.update(args);
