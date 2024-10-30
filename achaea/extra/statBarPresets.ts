@@ -22,7 +22,7 @@ export function wieldedIcon(hand: string): Record<string, string> {
       cls = 'ra ra-sword';
       break;
     case 'cleaver':
-      cls = 'ra ra-bone-knife';
+      cls = 'ra ra-bone-knife flipY';
       break;
     case 'dirk':
       cls = 'ra ra-knife';
@@ -34,7 +34,7 @@ export function wieldedIcon(hand: string): Record<string, string> {
       cls = 'ra ra-shield';
       break;
     case 'spear':
-      cls = 'ra ra-spear-head';
+      cls = 'ra ra-spear-head flipY';
       break;
     case 'trident':
       cls = 'ra ra-trident';
@@ -95,8 +95,11 @@ export function metaAnimal(): Record<string, string> {
 }
 
 export function pingIcon(): Record<string, string> {
+  const ping = STATE.Stats.ping;
+  const avg = ping.reduce((a, b) => a + b) / ping.length;
+  const label = `Response time: ${ping.at(-1)!.toFixed(2)}μs; Average: ${avg.toFixed(2)}μs`;
   return {
-    html: `<i class="fa-solid fa-signal" aria-label="Response time: ${STATE.Stats.ping.toFixed(2)}μs"></i>`,
+    html: `<i class="fa-solid fa-signal" aria-label="${label}"></i>`,
   };
 }
 

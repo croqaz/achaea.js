@@ -3,7 +3,7 @@ import { STATE } from '../core/state.ts';
 import { logWrite } from '../logs/index.ts';
 const Stats = STATE.Stats;
 
-function emitMsg(m) {
+function emitMsg(m: string) {
   console.log(m);
   ee.emit('sys:text', `<b>${m}</b>`);
   logWrite('\n' + m);

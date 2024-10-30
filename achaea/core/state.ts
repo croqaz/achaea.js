@@ -79,7 +79,7 @@ export const STATE: T.StateType = Object.seal({
     begDt: new Date(), // starting time
     endDt: null, // finish time
     perf: performance.now(),
-    ping: 0, // response time (float)
+    ping: [0], // response time (float)
     gold: 0, // starting inv gold
     bank: 0, // starting bank gold
     kills: 0, // hunting counter

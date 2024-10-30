@@ -76,6 +76,14 @@ small {
   font-weight: lighter !important;
 }
 
+.flipX {
+  transform: scaleX(-1);
+}
+
+.flipY {
+  transform: scaleY(-1);
+}
+
 input {
   font-weight: 500 !important;
 }

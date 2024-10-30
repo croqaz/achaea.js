@@ -49,7 +49,7 @@ export interface StateStats {
   begDt: Date; // game start time
   endDt: Date | null; // game end time
   perf: number; // used to calc ping
-  ping: number; // ping/response time
+  ping: number[]; // ping/response time
   gold: number;
   bank: number;
   kills: number;

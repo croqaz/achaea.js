@@ -20,7 +20,11 @@ export function gmcpSupports() {
 
 export function gmcpTime() {
   // high resolution timestamp in milliseconds diff
-  S.STATE.Stats.ping = (performance.now() - S.STATE.Stats.perf) * 1000;
+  const diff = (performance.now() - S.STATE.Stats.perf) * 1000;
+  S.STATE.Stats.ping.push(diff);
+  if (S.STATE.Stats.ping.length > 10) {
+    S.STATE.Stats.ping.shift();
+  }
   return Buffer.from('IRE.Time.Request');
 }
 
