@@ -177,33 +177,36 @@ export function parseHonours(text: string): T.DBPlayer {
   let name = lines[0].replace(/[\r .]*$/, '');
   const sexRace = name.match(/\(([a-z]+) ([ 'a-z]+?)\)/i);
   name = name.replace(/ \(.+?\)$/, '');
-  let age = null;
-  let city = '';
-  let clss = '';
+  const result = { id: null, fullname: name, city: '', class: '' };
   for (const line of lines) {
     const parts = line.split(' ').filter((x) => !!x);
     if (line.includes('years old, having been born')) {
-      age = parseInt(parts.at(2));
+      result.age = parseInt(parts.at(2));
       continue;
     }
-    if (line.includes(' is a member of the ')) {
-      clss = parts.at(-2);
+    if (line.includes('is a member of the Ivory Mark.')) {
+      result.mark = 'Ivory Mark';
+      continue;
+    } else if (line.includes('is a member of the Quisalis Mark.')) {
+      result.mark = 'Quisalis Mark';
+      continue;
+    }
+    if (line.includes('class.') && line.includes(' is a member of the ')) {
+      result.class = parts.at(-2);
       continue;
     }
     if (line.includes('is a') && line.includes('in')) {
       const m = text.match(`[SHFah]e is a.+ in (${CITIES.join('|')})`);
       if (m) {
-        city = m[1];
+        result.city = m[1];
       }
     }
   }
-  let sex = null;
-  let race = null;
   if (sexRace) {
-    sex = sexRace[1];
-    race = sexRace[2];
+    result.sex = sexRace[1];
+    result.race = sexRace[2];
   }
-  return { id: null, fullname: name, age, city, class: clss, sex, race };
+  return result;
 }
 
 const EXTRACT_MINERALS = Object.keys(MINERALS).filter((x) => !Config.EXCLUDE_MINERALS.includes(x));

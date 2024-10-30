@@ -1,6 +1,6 @@
 import ee from '../events/index.ts';
 import { STATE } from '../core/state.ts';
-const { Battle } = STATE;
+const { Battle, Me } = STATE;
 
 /*
  * Pariah smash shield/ rebound
@@ -68,7 +68,7 @@ export function battleRage(rage: number, force = false): void {
     return;
   }
 
-  if (rage >= 25 && (force || Battle.bals.a5)) {
+  if (rage >= 25 && Me.level >= 50 && (force || Battle.bals.a5)) {
     setTimeout(() => (Battle.bals.a5 = true), 23_200);
     Battle.rage -= 25;
     Battle.bals.a5 = false;
@@ -94,7 +94,7 @@ export function battleRage(rage: number, force = false): void {
   }
 
   // Level 100 required !
-  if (rage >= 32 && (force || Battle.bals.a6)) {
+  if (rage >= 32 && Me.level >= 100 && (force || Battle.bals.a6)) {
     setTimeout(() => (Battle.bals.a6 = true), 38_200);
     Battle.rage -= 32;
     Battle.bals.a6 = false;

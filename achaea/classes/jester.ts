@@ -1,6 +1,6 @@
 import ee from '../events/index.ts';
 import { STATE } from '../core/state.ts';
-const { Battle } = STATE;
+const { Battle, Me } = STATE;
 
 /*
  * Break shield skill.
@@ -113,7 +113,7 @@ export function battleRage(rage: number, force = false): void {
   //
 
   // 25 rage normally
-  if (rage >= 35 && (force || Battle.bals.a5)) {
+  if (rage >= 35 && Me.level >= 50 && (force || Battle.bals.a5)) {
     setTimeout(() => (Battle.bals.a5 = true), 30_500); // 23s normally
     Battle.rage -= 25;
     Battle.bals.a5 = false;
@@ -122,7 +122,7 @@ export function battleRage(rage: number, force = false): void {
   }
 
   // 26 rage normally
-  if (rage >= 36 && (force || Battle.bals.a6)) {
+  if (rage >= 36 && Me.level >= 65 && (force || Battle.bals.a6)) {
     setTimeout(() => (Battle.bals.a6 = true), 40_500); // 33s normally
     Battle.rage -= 26;
     Battle.bals.a6 = false;

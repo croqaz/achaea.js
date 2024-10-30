@@ -1,6 +1,6 @@
 import ee from '../events/index.ts';
 import { STATE } from '../core/state.ts';
-const { Battle } = STATE;
+const { Battle, Me } = STATE;
 
 /*
  * Break shield skill
@@ -92,7 +92,7 @@ export function battleRage(rage: number, force = false): void {
     return;
   }
 
-  if (rage >= 25 && (force || Battle.bals.a5)) {
+  if (rage >= 25 && Me.level >= 50 && (force || Battle.bals.a5)) {
     setTimeout(() => (Battle.bals.a5 = true), 23_200);
     Battle.rage -= 25;
     Battle.bals.a5 = false;
@@ -120,7 +120,7 @@ export function battleRage(rage: number, force = false): void {
 
   // I want recklessness/goad more rarely
   //
-  if (rage >= 18 && (force || Battle.bals.a6)) {
+  if (rage >= 18 && Me.level >= 65 && (force || Battle.bals.a6)) {
     setTimeout(() => (Battle.bals.a6 = true), 25_500);
     Battle.rage -= 18;
     Battle.bals.a6 = false;

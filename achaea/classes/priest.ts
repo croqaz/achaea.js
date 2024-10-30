@@ -1,6 +1,6 @@
 import ee from '../events/index.ts';
 import { STATE } from '../core/state.ts';
-const { Battle } = STATE;
+const { Battle, Me } = STATE;
 
 export function breakShield(name: string | number): string {
   return `TOUCH HAMMER ${name}`;
@@ -89,7 +89,7 @@ export function battleRage(rage: number, force = false): void {
     return;
   }
 
-  if (rage >= 36 && (force || Battle.bals.a4)) {
+  if (rage >= 36 && Me.level >= 35 && (force || Battle.bals.a4)) {
     setTimeout(() => (Battle.bals.a4 = true), 23_200);
     Battle.rage -= 36;
     Battle.bals.a4 = false;
@@ -97,7 +97,7 @@ export function battleRage(rage: number, force = false): void {
     return;
   }
 
-  if (rage >= 25 && (force || Battle.bals.a5)) {
+  if (rage >= 25 && Me.level >= 50 && (force || Battle.bals.a5)) {
     setTimeout(() => (Battle.bals.a5 = true), 23_200);
     Battle.rage -= 25;
     Battle.bals.a5 = false;
@@ -111,7 +111,7 @@ export function battleRage(rage: number, force = false): void {
   //
 
   // 18 rage normally
-  if (rage >= 25 && (force || Battle.bals.a2)) {
+  if (rage >= 25 && Me.level >= 10 && (force || Battle.bals.a2)) {
     setTimeout(() => (Battle.bals.a2 = true), 25_200); // 19s normally
     Battle.rage -= 18;
     Battle.bals.a2 = false;

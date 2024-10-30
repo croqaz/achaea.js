@@ -1,6 +1,6 @@
 import ee from '../events/index.ts';
 import { STATE } from '../core/state.ts';
-const { Battle } = STATE;
+const { Battle, Me } = STATE;
 
 export function breakShield(name: string | number): string {
   return `RAZE ${name}`;
@@ -88,11 +88,41 @@ export function battleRage(rage: number, force = false): void {
     return;
   }
 
-  if (rage >= 26 && (force || Battle.bals.a1)) {
-    setTimeout(() => (Battle.bals.a1 = true), 33_200);
+  if (rage >= 26 && (force || Battle.bals.a2)) {
+    setTimeout(() => (Battle.bals.a2 = true), 33_200);
     Battle.rage -= 26;
-    Battle.bals.a1 = false;
+    Battle.bals.a2 = false;
     ee.emit('user:text', 'SHIN DAZE');
+    return;
+  }
+
+  if (rage >= 36 && Me.level >= 35 && (force || Battle.bals.a4)) {
+    setTimeout(() => (Battle.bals.a4 = true), 23_200);
+    Battle.rage -= 36;
+    Battle.bals.a4 = false;
+    ee.emit('user:text', 'SPINSLASH');
+    return;
+  }
+
+  if (rage >= 25 && Me.level >= 50 && (force || Battle.bals.a5)) {
+    setTimeout(() => (Battle.bals.a5 = true), 23_200);
+    Battle.rage -= 25;
+    Battle.bals.a5 = false;
+    ee.emit('user:text', `STRIKE ${Battle.tgtID} HEAD`);
+    return;
+  }
+
+  //
+  // Nerveslash is an afflict ability,
+  // and I want to use it more rarely
+  //
+
+  // 22 rage normally
+  if (rage >= 30 && Me.level >= 65 && (force || Battle.bals.a6)) {
+    setTimeout(() => (Battle.bals.a6 = true), 35_200); // 31s normally
+    Battle.rage -= 22;
+    Battle.bals.a6 = false;
+    ee.emit('user:text', 'NERVESLASH');
     return;
   }
 }

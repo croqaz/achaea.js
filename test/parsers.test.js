@@ -177,6 +177,7 @@ His warcry: 'My greatest strength is that I have no weakness!'`);
   result = p.parseHonours(`Qaz Wsx (male Tash'la).
 His date of birth is hidden by the sand of Aeon.
 He is ranked 131st in Achaea.
+He is a member of the Ivory Mark.
 He is a Citizen in Cyrene.
 He is a Vashnarian Defender(5) in the army of Cyrene.
 He is a member of the Runewarden class.
@@ -186,9 +187,10 @@ He bears the arms: Or, a feather Sanguine.`);
   expect(result.fullname).toBe('Qaz Wsx');
   expect(result.city).toBe('Cyrene');
   expect(result.class).toBe('Runewarden');
+  expect(result.mark).toBe('Ivory Mark');
   expect(result.sex).toBe('male');
   expect(result.race).toBe("Tash'la");
-  expect(result.age).toBe(null);
+  expect(result.age).toBeFalsy();
 
   result = p.parseHonours(`Edc Ert (female Elder Black Dragon).
 She is 374 years old, having been born on the 1st of Glacian, 550 years after the fall of the Seleucarian Empire.
@@ -207,6 +209,7 @@ She is a mentor and able to take on proteges.`);
   result = p.parseHonours(`Bun Black (male Tsol'aa).
 Faes date of birth is hidden by the sand of Aeon.
 Fae is ranked 220th in Achaea.
+Fae is a member of the Quisalis Mark.
 Fae is a Burgher in Hashan.
 Fae is a Marshal of Darkness(5) in the army of Hashan.
 Fae is a formal ally of the Just Territories of Cyrene.
@@ -216,9 +219,10 @@ Fae is a mentor and able to take on proteges.`);
   expect(result.fullname).toBe('Bun Black');
   expect(result.city).toBe('Hashan');
   expect(result.class).toBe('Psion');
+  expect(result.mark).toBe('Quisalis Mark');
   expect(result.sex).toBe('male');
   expect(result.race).toBe("Tsol'aa");
-  expect(result.age).toBe(null);
+  expect(result.age).toBeFalsy();
 
   result = p.parseHonours(`Undead Drudge Eolnys (male Undead).
 He is 99 years old, having been born on the 4th of Aeguary, 909 years after the fall of the Seleucarian Empire.

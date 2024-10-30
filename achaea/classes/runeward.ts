@@ -1,6 +1,6 @@
 import ee from '../events/index.ts';
 import { STATE } from '../core/state.ts';
-const { Battle } = STATE;
+const { Battle, Me } = STATE;
 
 /*
  * Break shield skill
@@ -105,7 +105,7 @@ export function battleRage(rage: number, force = false): void {
     return;
   }
 
-  if (rage >= 25 && Battle.tgtID && (force || Battle.bals.a5)) {
+  if (rage >= 25 && Me.level >= 50 && Battle.tgtID && (force || Battle.bals.a5)) {
     setTimeout(() => (Battle.bals.a5 = true), 23_200);
     ee.emit('user:text', `ETCH RUNE AT ${Battle.tgtID}`);
     Battle.bals.a5 = false;
