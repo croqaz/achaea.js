@@ -6,7 +6,7 @@ Send a user command to the game. It is written in the Achaea Telnet connection  
 
 Example:
 
-```
+```ts
 import { userText } from '../achaea/core/index.ts';
 
 // ...
@@ -20,7 +20,7 @@ Display some info text in the main game log. The text is NOT sent to the game an
 
 Example:
 
-```
+```ts
 import { displayText } from '../achaea/core/index.ts';
 
 // ...
@@ -36,7 +36,7 @@ The difference from `displayText` function is that you would send a bigger HTML 
 
 Example:
 
-```
+```ts
 import { displayHtml } from '../achaea/core/index.ts';
 
 // ...
@@ -50,7 +50,7 @@ Similar to `displayText`, display a note on the left side communication panel. T
 
 Example:
 
-```
+```ts
 import { displayNote } from '../achaea/core/index.ts';
 
 // ...
@@ -64,7 +64,7 @@ Write some text in the LOG file. This is useful for later debug. The text is NOT
 
 Example:
 
-```
+```ts
 import { logWrite } from '../achaea/core/index.ts';
 
 // ...

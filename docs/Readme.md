@@ -12,6 +12,7 @@ Next, copy the folder `example/` and rename the copy to `custom/`. The structure
 - custom/
 - example/
 - logs/
+- ...
 
 Check the README in the `example/` folder and the `docs/` to see what to do next.
 

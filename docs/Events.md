@@ -26,7 +26,7 @@ This is useful to separate the triggers in different files, organized by type, e
 ### game:start
 
 Emitted after a successful login, and after the initial `GMCP Core.Supports`.
-You can use this once, eg: to call your defences-up.
+You can use this once, eg: to call your defences-up, or to setup the status bar.
 
 ### game:quit
 
@@ -38,7 +38,7 @@ You can use this to save some game states for next time, or stop any running bac
 This is cleaned game text (no ANSI escape codes) and you can **use it for triggers/ reflexes**.
 The first param is the clean game text, the second param is the normalized & cleaned game text
 (all duplicate spaces and newlines are removed).
-The second text is especially important if you want to capture long line of text, which can break
+The second text is especially important if you want to capture long text, which can break
 and span over multiple lines.
 
 ### class:update
@@ -52,7 +52,7 @@ or you can use it to prepare when switching classes, eg: wear armour, enable def
 
 Emitted after your vitals, experience, or any other player variable is updated.
 
-You probably don't need to use it like that; it is used by the interface to display your stats.
+It is used by the interface to display your stats.
 
 ### inv:update
 

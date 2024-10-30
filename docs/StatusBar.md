@@ -31,6 +31,8 @@ In this example, you'll see 4 cells: one for the weapon wielded left and another
 
 If you want to refresh the status bar based on different events, for example room items or players, you'll have to listen on "items:update", or "players:update" events and call `updateStatBar(...)` in those functions.
 
+If you play multiple characters, you can define different bars for each one, just return different cells based on `STATE.Me.name`.
+
 ## Custom cells
 
 A custom cell, or icon in the status bar is just an object. At minimum, you can just return a text, eg:

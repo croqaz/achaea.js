@@ -21,7 +21,9 @@ import { STATE } from '../core/state.ts';
 
 ## STATE.Me
 
-This contains info about the player. YOU! It contains your name, class, house, gold, hp, rift items, inventory items, wielded weapons, afflictions, defences, skills...
+This contains info about the player. YOU! It contains your name, class, house, gold, hp, rift items, inventory items, wielded weapons, afflictions, defences, skills... a ton more!
+
+All the [variables from Nexus](https://nexus.ironrealms.com/Predefined_variables) are also available in STATE.Me, but with different names.
 
 ## STATE.Room
 
@@ -43,7 +45,7 @@ Also tracks the times of different balance, to get a feeling of how long each on
 
 ## STATE.Queue
 
-It's a client queue, similar to the server-side queue. You can push events that will run when you have balance, equilibrium, or both.
+**Not completely finished**. It's a client queue, similar to the server-side queue. You can push events that will run when you have balance, equilibrium, or both.
 
 ## STATE.Misc
 

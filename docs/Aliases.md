@@ -42,6 +42,8 @@ A slightly more complex alias uses multiple words and joins them together, eg:
 ( this assumes you defined `&&` as a command separator in CONFIG CommandSeparator )
 
 ```ts
+// snip ...
+
 /*
  * Get 10 myrrh balls from rift and give them to Romeo
  * Example: og 10 myrrh Romeo
@@ -80,6 +82,8 @@ Another example that sends a command to the game and waits for a trigger to do s
 ( please don't re-implement this command, it is already available )
 
 ```ts
+// snip ...
+
 // Thief protection alias
 //
 if (text === 'greed') {
@@ -96,6 +100,8 @@ if (text === 'greed') {
 With this new state, this is what happens in the triggers:
 
 ```ts
+// snip ...
+
 // Thief protection trigger
 //
 if (STATE.Misc.greed && text.includes('A feeling of generosity spreads throughout you.')) {
@@ -107,6 +113,8 @@ Another complex alias with a command and a trigger:
 ( please don't re-implement this command, it is already available )
 
 ```ts
+// snip ...
+
 // Collect wares DB input
 //
 if (firstWord === 'wares' || (firstWord === 'cart' && secondWord === 'wares')) {
@@ -120,6 +128,8 @@ if (firstWord === 'wares' || (firstWord === 'cart' && secondWord === 'wares')) {
 With this new state, this is what happens in the triggers:
 
 ```ts
+// snip ...
+//
 // Collect wares DB trigger
 //
 if (
@@ -127,8 +137,6 @@ if (
     (userInput === 'wares' || userInput === 'cart wares') &&
     (normText.includes('Proprietor:') || normText.includes('[File continued via MORE]'))
 ) {
-    // snip ...
-    //
     if (normText.includes('[Type MORE if you wish to continue reading.')) {
       ee.emit('user:text', 'more');
     } else {
