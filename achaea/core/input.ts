@@ -1,3 +1,4 @@
+import * as R from 'remeda';
 import ee from '../events/index.ts';
 import * as state from './state.ts';
 import { STATE } from './state.ts';
@@ -69,21 +70,10 @@ export default function processUserInput(text: string): string | void {
       ee.emit('user:text', 'config ScreenWidth 0');
       ee.emit('user:text', 'config XTERM256 off');
       return;
-    } else if (cmd === 'me') {
-      const x = JSON.stringify(STATE.Me, null, 2);
-      ee.emit('sys:text', `ME: ${x}`);
-      return;
-    } else if (cmd === 'room') {
-      const x = JSON.stringify(STATE.Room, null, 2);
-      ee.emit('sys:text', `ROOM: ${x}`);
-      return;
-    } else if (cmd === 'battle') {
-      const x = JSON.stringify(STATE.Battle, null, 2);
-      ee.emit('sys:text', `BATTLE: ${x}`);
-      return;
-    } else if (cmd === 'stats') {
-      const x = JSON.stringify(STATE.Stats, null, 2);
-      ee.emit('sys:text', `STATS: ${x}`);
+    } else if (cmd.startsWith('state.')) {
+      const s = R.capitalize(cmd.split('.', 2).pop()!);
+      const j = JSON.stringify(STATE[s], null, 2);
+      ee.emit('sys:text', `STATE.${s}: ${j}`);
       return;
     }
 

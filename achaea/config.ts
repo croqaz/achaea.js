@@ -60,7 +60,15 @@ export const Config = {
   //
   // Ignore some gathering materials
   EXCLUDE_MATERIAL: ['fruit', 'vegetable'],
+
   //
-  // Enable extra features?
+  // Enable loading extra features?
+  // eg: extra input, output, triggers
   EXTRA: true,
+  //
+  // Enable auto-login?
+  LOGIN: true,
+  //
+  // Achaea telnet instance
+  ACHAEA: 'achaea.com',
 };

@@ -1,5 +1,4 @@
 // deno-lint-ignore-file no-node-globals no-process-globals
-
 import ee from './events/index.ts';
 import { PROMPT } from './core/output.ts';
 import { ansi2Html, ansiStrip } from './ansi.ts';
@@ -22,7 +21,7 @@ export function connect(player: string) {
   //
   // Telnet socket to Achaea
   telnet = new TelnetSocket({
-    host: 'achaea.com',
+    host: Config.ACHAEA,
     port: 23,
     noDelay: true,
     keepAlive: true,
@@ -59,7 +58,7 @@ export function connect(player: string) {
   });
 
   // Necessary to have a stream consumer!
-  telnet.on('data', (buff) => {
+  telnet.on('data', (buff: Buffer) => {
     if (!buff.length) return;
     const txt = buff.toString();
     if (!txt.trim()) return;
@@ -67,7 +66,7 @@ export function connect(player: string) {
     process.stdout.write(txt);
   });
 
-  // if the socket closes, terminate the program
+  // on socket closed, terminate the program
   telnet.on('close', () => {
     console.log('Telnet closed. Bye!');
     telnet.destroy();
