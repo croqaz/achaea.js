@@ -155,7 +155,7 @@ export default function processMapAliases(
               arr.push(room);
             }
           }
-          if (arr.length)
+          if (arr.length) {
             ee.emit(
               'sys:html',
               htmlTable(arr, (k, row) => {
@@ -163,7 +163,7 @@ export default function processMapAliases(
                 return `<td>${row[k] || '?'}</td>`;
               }),
             );
-          else ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: No notes found!</i>');
+          } else ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: No notes found!</i>');
         } catch {
           ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Cannot list notes!</i>');
         }
@@ -216,7 +216,7 @@ export default function processMapAliases(
         };
       });
       if (!arr.length) ee.emit('sys:text', '<i class="c-dim c-red"><b>[MAP]</b>: Room not found!</i>');
-      else
+      else {
         ee.emit(
           'sys:html',
           htmlTable(arr, (k, row) => {
@@ -224,6 +224,7 @@ export default function processMapAliases(
             return `<td>${row[k] || '?'}</td>`;
           }),
         );
+      }
     } else if (secondWord === 'area') {
       /*
        * Map find area

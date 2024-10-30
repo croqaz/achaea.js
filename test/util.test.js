@@ -38,6 +38,23 @@ test('throttle func', async () => {
   t1({ a: 1, b: null, c: 'c', d: { x: { y: 'z' } } });
   t1({ a: 2, b: NaN, c: '-c', d: { x: { y: 'z' } } });
   expect(calls).toBe(6);
+
+  // ignore func args
+  const t2 = u.throttle(
+    (x) => {
+      calls += 1;
+      return x;
+    },
+    10,
+    false,
+  );
+
+  calls = 0;
+  expect(t2('a')).toBe('a');
+  expect(t2('b')).toBeUndefined();
+  expect(t2('c')).toBeUndefined();
+  expect(t2('a')).toBeUndefined();
+  expect(calls).toBe(1);
 });
 
 test('debounce func', async () => {
@@ -69,6 +86,25 @@ test('debounce func', async () => {
   await Bun.sleep(10);
   expect(calls).toBe(6);
   expect(result).toEqual({ a: 2, b: NaN, c: '-c', d: { x: { y: 'z' } } });
+
+  // ignore func args
+  const t2 = u.debounce(
+    (x) => {
+      calls += 1;
+      result = x;
+    },
+    10,
+    false,
+  );
+
+  calls = 0;
+  expect(t2('a')).toBeUndefined();
+  expect(t2('b')).toBeUndefined();
+  expect(t2('c')).toBeUndefined();
+
+  await Bun.sleep(10);
+  expect(calls).toBe(1);
+  expect(result).toBe('c');
 });
 
 test('day-night to hour', () => {
