@@ -123,7 +123,8 @@ ee.on('user:gmcp', (buff: Buffer) => {
 });
 
 ee.on('user:text', (text: string, log = true) => {
-  if (!telnet) return;
+  // console.log('>', text);
+  if (!telnet || !text) return;
   text = text.trim() + '\n';
   telnet.write(text);
   if (log) logWrite('\n$ ' + text);

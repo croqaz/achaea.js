@@ -19,7 +19,6 @@ export default function processUserInput(text: string): string | void {
    */
   // console.time(`core-input-${count}`);
 
-  text = text.trim();
   const parts = text.split(' ').filter((x) => !!x);
 
   // Thief protection
@@ -47,7 +46,7 @@ export default function processUserInput(text: string): string | void {
     setTimeout(() => {
       STATE.Misc.greed = true;
     }, 1000);
-    return '';
+    return;
   }
 
   // Special commands
@@ -83,6 +82,7 @@ export default function processUserInput(text: string): string | void {
   // The user will quit
   if (text === 'quit') {
     STATE.Misc.quitting = true;
+    return 'quit';
   }
 
   if (extraProcessUserInput) {
@@ -93,9 +93,6 @@ export default function processUserInput(text: string): string | void {
 
     // Intercept unprocessed special cmds
     if (extra && extra.startsWith('//')) return;
-
-    // Input intentionally ignored
-    if (extra === '') return;
 
     return extra;
   } else {

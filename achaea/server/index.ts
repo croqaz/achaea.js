@@ -245,14 +245,12 @@ export default async function startServer(port = 18888, hostname = '127.0.0.1') 
         STATE.Misc.input = line;
         try {
           line = processUserInput(line);
-          if (typeof line === 'string' && line.length > 0) {
-            ee.emit('user:text', line);
-          }
+          if (line) ee.emit('user:text', line);
         } catch (err) {
           console.error(`Error processing input! ${err}`);
         }
       },
-      error(_ws, err) {
+      error(_ws, err: Error) {
         console.error('[WS] error:', err);
       },
     },

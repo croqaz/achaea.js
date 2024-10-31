@@ -4,6 +4,7 @@ import * as m from './maps.ts';
 import * as mi from './index.ts';
 import * as ex from './explore.ts';
 import * as T from './types.ts';
+import { Config } from '../config.ts';
 import { STATE } from '../core/state.ts';
 import { displayText, sleep, userText } from '../core/index.ts';
 
@@ -49,37 +50,56 @@ export function parseDirections(line: string, parts: string[]) {
   return dirs;
 }
 
-export function smartMove(dir: string, currID: string, nextID?: string) {
+export function smartMove(dir: string, currID: string, nextID?: string): string {
   /*
-   * TODO: Based on the Next Room, it needs to handle
-   * swim in water
+   * The function that decides the "move command".
+   * This is exported, so I can test it.
+   *
+   * TODO: Based on the Room, it needs to handle
    * jump over stone/ ice walls
    * special actions, need to twist/push/pull, or say something
    */
-  // const room = m.MAP.rooms[currID];
-  // let nextRoom = {};
-  // if (!room || !room.environment) {
-  //   return userText(dir);
-  // }
-  // if (!nextID) {
-  //   const nextExit = room.exits.find((x) => m.EXITS[x.direction] === dir);
-  //   nextID = nextExit.target;
-  // }
-  // nextRoom = m.MAP.rooms[nextID] || {};
-  // if (
-  //   room.environment === m.MAP_ENVS.water ||
-  //   room.environment === m.MAP_ENVS.river ||
-  //   room.environment === m.MAP_ENVS.freshwater
-  // ) {
-  //   return userText(`SWIM ${dir}`);
-  // }
-  userText(dir);
+
+  // When the player can walk on water,
+  // short-circuit, no need for extra checks
+  if (STATE.Me.waterWalk) {
+    return dir;
+  }
+
+  const room = m.MAP.rooms[currID];
+  if (!room?.environment) {
+    return dir;
+  }
+  if (!nextID) {
+    const nextExit = room.exits.find((x) => m.EXITS[x.direction] === dir);
+    if (nextExit?.target) {
+      nextID = nextExit.target;
+    }
+  }
+  const nextRoom = m.MAP.rooms[nextID];
+  if (!nextRoom?.environment) {
+    return dir;
+  }
+  // Swim, if we have to
+  if (
+    nextRoom.environment === m.MAP_ENVS.water ||
+    nextRoom.environment === m.MAP_ENVS.river ||
+    nextRoom.environment === m.MAP_ENVS.freshwater ||
+    room.environment === m.MAP_ENVS.water ||
+    room.environment === m.MAP_ENVS.river ||
+    room.environment === m.MAP_ENVS.freshwater
+  ) {
+    return `SWIM ${dir}`;
+  }
+
+  return dir;
 }
 
 //
 // TODO: NEEDS TO HANDLE
 // on the clouds / duanathar
 // "Now now, don't be so hasty!"
+// Sticky strands of webbing prevent you from moving.
 // You slip and fall on the ice as you try to leave ??
 // You stumble through the fog, attempting to find a way out.
 // Some crazy fast river washing you away
@@ -87,19 +107,18 @@ export function smartMove(dir: string, currID: string, nextID?: string) {
 // You spot a hidden exit to the in.
 //
 const INTERVAL = 250;
-const WALK_DELAY = 0.5;
+const MAX_WAIT_TIME = 5000; // 5 seconds
 //
 // Public, external, high level auto-walker
 //
 export async function autoWalker(
   fromID: string,
   toID: string,
-  { autoStart = true, type = '', explore = false, interval = INTERVAL, walkDelay = WALK_DELAY } = {},
+  { autoStart = true, type = '', explore = false, interval = INTERVAL, walkDelay = Config.WALK_DELAY } = {},
 ) {
   let walk = await innerWalker(fromID, toID, type, explore);
   if (!walk) return displayText('<i class="c-dim c-red"><b>[Path]</b>: No path was found!</i>');
 
-  const MAX_TIME = 5000 / INTERVAL; // 5 seconds
   let intID: ReturnType<typeof setTimeout> | null = null;
   let timer = 0;
 
@@ -113,10 +132,10 @@ export async function autoWalker(
         // Make sure to delete the Walker instance
         displayText('<b>[Path]</b>: You have arrived!');
         walk = null;
-      }, 750);
+      }, INTERVAL * 2);
       return pause();
     }
-    timer++;
+    timer += INTERVAL;
 
     // If we are in the room the walker is expecting, move again
     //
@@ -127,7 +146,8 @@ export async function autoWalker(
         timer = 0;
         await sleep(walkDelay);
         // "smart" logic to decide how to move into next room
-        return smartMove(nextRoom.dir, currRoom, nextRoom.uid);
+        const move = smartMove(nextRoom.dir, currRoom, nextRoom.uid);
+        return userText(move);
       } else {
         displayText('<i class="c-dim c-red"><b>[Path]</b>: Cannot move!</i>');
         return pause();
@@ -136,7 +156,7 @@ export async function autoWalker(
 
     // If we cannot move for a long time, abandon
     //
-    if (timer >= MAX_TIME) {
+    if (timer >= MAX_WAIT_TIME) {
       displayText('<i class="c-dim c-red"><b>[Path]</b>: I\'m stuck! Walk aborted!</i>');
       return pause();
     }
@@ -148,7 +168,7 @@ export async function autoWalker(
   const pause = () => {
     if (intID) clearInterval(intID);
     intID = null;
-    timer = MAX_TIME;
+    timer = MAX_WAIT_TIME;
   };
 
   const start = () => {
@@ -161,7 +181,9 @@ export async function autoWalker(
     // Take the first step ...
     const nextRoom = walk.next();
     if (nextRoom && nextRoom.dir) {
-      userText(nextRoom.dir);
+      // "smart" logic to decide how to move into next room
+      const move = smartMove(nextRoom.dir, STATE.Room.num.toString(), nextRoom.uid);
+      userText(move);
       start();
     } else {
       displayText('<i class="c-dim c-red"><b>[Path]</b>: Cannot move! No path to destination!</i>');

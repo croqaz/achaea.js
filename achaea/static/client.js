@@ -198,6 +198,7 @@ async function startWS() {
       case 'game:html':
       case 'sys:text':
         let text = data.text;
+        if (!text) return;
         if (data.type === 'user:text') {
           text = `> ${text}`;
         }

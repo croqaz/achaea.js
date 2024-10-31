@@ -99,7 +99,7 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
     return 'WRITHE';
   } else if (text === 'wwx' || text === 'wxx') {
     STATE.Misc.writhe = false;
-    return '';
+    return;
   }
 
   // Fill all vials that are not yet full
@@ -138,12 +138,12 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
     for (const d of listDenizens()) {
       ee.emit('user:text', `LOOK ${d}`);
     }
-    return '';
+    return;
   } else if (text === 'la') {
     for (const p of STATE.Room.players) {
       ee.emit('user:text', `LOOK ${p.name}`);
     }
-    return '';
+    return;
   }
 
   if (text === 'whim') {
