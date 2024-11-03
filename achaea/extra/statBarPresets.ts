@@ -72,25 +72,25 @@ export function metaAnimal(): Record<string, string> {
   let txt = '';
   switch (m) {
     case 'Basilisk':
-      cls = 'ra-sea-serpent';
+      cls = 'ra ra-sea-serpent';
       break;
     case 'Hydra':
-      cls = 'ra-hydra';
+      cls = 'ra ra-hydra';
       break;
     case 'Wyvern':
-      cls = 'ra-wyvern';
+      cls = 'ra ra-wyvern';
       break;
     case 'Bear':
-      cls = 'ra-pawprint';
+      cls = 'ra ra-pawprint';
       break;
     case 'Wolf':
-      cls = 'ra-wolf-head';
+      cls = 'ra ra-wolf-head';
       break;
     default:
       txt = m.slice(0, 3);
   }
   return {
-    html: `<i class="ra ${cls}" aria-label="Morph: ${m}">${txt}</i>`,
+    html: `<i class="${cls}" aria-label="Morph: ${m}">${txt}</i>`,
   };
 }
 

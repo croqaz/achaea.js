@@ -1,33 +1,6 @@
-import chokidar from 'chokidar';
-import { displayNote } from './core/index.ts';
-
-let customUserConfig = null;
-try {
-  // @ts-ignore: Types
-  customUserConfig = require('../../custom/config.ts').default;
-} catch {
-  /* -- */
-}
-// Watch for changes in this file and live reload
-const fileWatcher = chokidar.watch('./custom/config.ts', {
-  depth: 1,
-});
-fileWatcher.on('change', () => {
-  for (const m of Object.keys(require.cache)) {
-    if (/custom\/config/.test(m)) {
-      delete require.cache[m];
-    }
-  }
-  try {
-    // @ts-ignore: Types
-    customUserConfig = require('../../custom/config.ts').default;
-    displayNote('INFO: User config reloaded.');
-  } catch (err) {
-    customUserConfig = null;
-    displayNote(`ERROR: Canot load user config! ${err}`);
-  }
-});
-
+/*
+ * Global app config.
+ */
 export const Config = {
   //
   // Hunting attack name

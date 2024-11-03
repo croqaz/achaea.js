@@ -32,7 +32,6 @@ Hurl a precise blast of Shin energy at the eyes of your target, stunning it for 
 -------------------------------------------------------------------------------
 
 Shatter (a3)       (20 levels required)
--------------------------------------------------------------------------------
 Syntax:            SHIN SHATTER <target>
 Works on/against:  Denizens
 Resource:          17 rage

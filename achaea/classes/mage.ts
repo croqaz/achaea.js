@@ -1,6 +1,6 @@
 import ee from '../events/index.ts';
 import { STATE } from '../core/state.ts';
-const { Battle } = STATE;
+const { Battle, Me } = STATE;
 
 /*
  * Break shield skill.

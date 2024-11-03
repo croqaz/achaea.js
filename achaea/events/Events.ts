@@ -1,6 +1,4 @@
-// @ts-nocheck Ignore file
 // deno-lint-ignore-file no-explicit-any
-
 import Listener from './Listener';
 import type {
   EventTemplateT,

@@ -1,5 +1,4 @@
 // deno-lint-ignore-file no-explicit-any
-
 export default class Listener<
   Template extends EventTemplateT,
   Event extends TemplateEventT<Template>,
