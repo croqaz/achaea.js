@@ -4,9 +4,10 @@ import * as state from './state.ts';
 import { STATE } from './state.ts';
 import { Config } from '../config.ts';
 import { queueCmd } from './queue.ts';
+import { customUserInput } from './custom.ts';
 
 // optionally, import extras
-let extraProcessUserInput = null;
+let extraProcessUserInput: typeof module;
 if (Config.EXTRA) extraProcessUserInput = await import('../extra/input.ts');
 
 // let count = 1;
@@ -20,6 +21,9 @@ export default function processUserInput(text: string): string | void {
   // console.time(`core-input-${count}`);
 
   const parts = text.split(' ').filter((x) => !!x);
+  const firstWord = parts[0].toLowerCase();
+  const secondWord = parts[1] ? parts[1].toLowerCase() : '';
+  const otherWords = parts[2] ? parts.slice(2).join(' ') : '';
 
   // Thief protection
   //
@@ -85,17 +89,41 @@ export default function processUserInput(text: string): string | void {
     return 'quit';
   }
 
+  // Optional: run extra input processing
   if (extraProcessUserInput) {
-    const extra = extraProcessUserInput.default(text, parts);
-
-    // console.timeEnd(`core-input-${count}`);
-    // count++;
-
-    // Intercept unprocessed special cmds
-    if (extra && extra.startsWith('//')) return;
-
-    return extra;
-  } else {
-    return text;
+    const extraText = extraProcessUserInput.default({
+      text,
+      parts,
+      firstWord,
+      secondWord,
+      otherWords,
+    });
+    if (extraText !== text) return extraText;
   }
+
+  // Optional: run custom input processing
+  {
+    const customFunc = customUserInput();
+    if (customFunc) {
+      try {
+        const customText = customFunc({
+          text,
+          parts,
+          firstWord,
+          secondWord,
+          otherWords,
+        });
+        if (customText !== text) return customText;
+      } catch (err) {
+        console.error("Can't process custom user input:", err);
+      }
+    }
+  }
+
+  if (text.startsWith('//')) {
+    ee.emit('sys:text', `<i class="c-dim c-red"><b>[SYS]</b>: Invalid sys command!</i>`);
+    return;
+  }
+
+  return text;
 }

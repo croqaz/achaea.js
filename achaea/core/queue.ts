@@ -1,6 +1,12 @@
 import ee from '../events/index.ts';
 import { STATE } from '../core/state.ts';
 
+export function queueClear() {
+  for (const name of Object.keys(STATE.Queue)) {
+    STATE.Queue[name] = [];
+  }
+}
+
 /*
  * Example:
  * queueCmd('bal', 'DO SOMETHING ON BALANCE')

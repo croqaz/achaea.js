@@ -1,8 +1,9 @@
 import { STATE } from './state.ts';
 import { Config } from '../config.ts';
+import { customUserOutput } from './custom.ts';
 
 // optionally, import extras
-let extraProcessDisplayText = null;
+let extraProcessDisplayText: typeof module;
 if (Config.EXTRA) extraProcessDisplayText = await import('../extra/output.ts');
 
 const CRITIC_LEVELS = [
@@ -98,10 +99,22 @@ export default function processDisplayText(html: string, text: string): string {
     }
   }
 
+  // Optional: run extra output function
   if (extraProcessDisplayText) {
     html = extraProcessDisplayText.default(html, text);
   }
 
+  // Optional: run custom output function
+  {
+    const customFunc = customUserOutput();
+    if (customFunc) {
+      try {
+        html = customFunc(html, text);
+      } catch (err) {
+        console.error("Can't process custom user output:", err);
+      }
+    }
+  }
   // console.timeEnd(`core-output-${count}`);
   // count++;
 

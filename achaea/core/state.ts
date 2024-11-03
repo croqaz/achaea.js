@@ -285,6 +285,18 @@ export function gmcpProcessChar(_: string, data: T.GmcpChar) {
     }
   }
 
+  // Dead !!
+  if (data.hp < 1) {
+    STATE.Me.defences = [];
+    STATE.Me.afflictions = [];
+    STATE.Me.flying = false;
+    STATE.Me.riding = false;
+    STATE.Battle.auto = false;
+    STATE.Battle.active = false;
+    STATE.Battle.combat = false;
+    STATE.Misc.greed = false;
+  }
+
   STATE.Me.update(data);
   ee.emit('myself:update', STATE.Me);
 }

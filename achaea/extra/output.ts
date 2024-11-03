@@ -1,35 +1,6 @@
-import chokidar from 'chokidar';
 import ee from '../events/index.ts';
 import * as p from '../parsers.ts';
 import { STATE } from '../core/state.ts';
-import { displayNote } from '../core/index.ts';
-
-let customProcessDisplayText = null;
-try {
-  // @ts-ignore: Types
-  customProcessDisplayText = require('../../custom/output.ts').default;
-} catch {
-  /* -- */
-}
-// Watch for changes in this file and live reload
-const fileWatcher = chokidar.watch('./custom/output.ts', {
-  depth: 1,
-});
-fileWatcher.on('change', () => {
-  for (const m of Object.keys(require.cache)) {
-    if (/custom\/output/.test(m)) {
-      delete require.cache[m];
-    }
-  }
-  try {
-    // @ts-ignore: Types
-    customProcessDisplayText = require('../../custom/output.ts').default;
-    displayNote('INFO: User output function reloaded.');
-  } catch (err) {
-    customProcessDisplayText = null;
-    displayNote(`ERROR: Canot load user output function! ${err}`);
-  }
-});
 
 export default function extraProcessDisplayText(html: string, text: string): string {
   /*
@@ -183,11 +154,6 @@ export default function extraProcessDisplayText(html: string, text: string): str
   // Gag spammy output
   // If you return nothing, the output will be ignored
   //
-
-  // Run custom function
-  if (customProcessDisplayText) {
-    html = customProcessDisplayText(html, text);
-  }
 
   // Return the changed HTML to be displayed in the GUI
   return html;

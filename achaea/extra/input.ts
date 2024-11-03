@@ -1,6 +1,4 @@
 // deno-lint-ignore-file no-process-globals
-import chokidar from 'chokidar';
-
 import ee from '../events/index.ts';
 import * as db from './leveldb.js';
 import * as comm from '../core/common.ts';
@@ -11,33 +9,6 @@ import processMapAliases from './map.ts';
 
 import { displayNote, displayText } from '../core/index.ts';
 import { listDenizens, STATE, stateStopBattle } from '../core/state.ts';
-
-let customProcessUserInput = null;
-try {
-  // @ts-ignore: Types
-  customProcessUserInput = require('../../custom/input.ts').default;
-} catch {
-  /* -- */
-}
-// Watch for changes in this file and live reload
-const fileWatcher = chokidar.watch('./custom/input.ts', {
-  depth: 1,
-});
-fileWatcher.on('change', () => {
-  for (const m of Object.keys(require.cache)) {
-    if (/custom\/input/.test(m)) {
-      delete require.cache[m];
-    }
-  }
-  try {
-    // @ts-ignore: Types
-    customProcessUserInput = require('../../custom/input.ts').default;
-    displayNote('INFO: User input function reloaded.');
-  } catch (err) {
-    customProcessUserInput = null;
-    displayNote(`ERROR: Canot load user input function! ${err}`);
-  }
-});
 
 const postBug = throttle(async (content: string) => {
   const url =
@@ -63,15 +34,14 @@ const postIdea = throttle(async (content: string) => {
   });
 }, 60_000);
 
-export default function extraProcessUserInput(text: string, parts: string[]): string | void {
+export default function extraProcessUserInput(args): string | void {
   /*
    * [EXTRA] proces user text input, eg: aliases, custom commands
    * This function HAS TO BE SUPER FAST !!
    * The text returned from this function is sent to Achaea.
    */
-  const firstWord = parts[0].toLowerCase();
-  const secondWord = parts[1] ? parts[1].toLowerCase() : '';
-  const otherWords = parts[2] ? parts.slice(2).join(' ') : '';
+
+  let { text, parts, firstWord, secondWord, otherWords } = args;
 
   // Stop command to stop attacking, stop auto-walking
   // ... and possibly other stops in the future
@@ -329,17 +299,6 @@ export default function extraProcessUserInput(text: string, parts: string[]): st
 
     // end of special cmds; don't return here !!
     // the user can also implement custom // cmds
-  }
-
-  // Run custom function
-  if (customProcessUserInput) {
-    text = customProcessUserInput({
-      text,
-      parts,
-      firstWord,
-      secondWord,
-      otherWords,
-    });
   }
 
   return text;

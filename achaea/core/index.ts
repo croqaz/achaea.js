@@ -1,5 +1,7 @@
 import ee from '../events/index.ts';
 import { throttle } from './util.ts';
+// custom dir reload
+import './custom.ts';
 
 export { CITIES, CLASSES, HOUSES, RACES } from './common.ts';
 export { HERBS, MATERIALS, MINERALS, RUNES, VENOMS } from './common.ts';
