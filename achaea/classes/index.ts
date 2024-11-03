@@ -6,6 +6,7 @@ import * as druid from './druid.ts';
 import * as jester from './jester.ts';
 import * as pariah from './pariah.ts';
 import * as priest from './priest.ts';
+import * as psion from './psion.ts';
 import * as runeward from './runeward.ts';
 import * as sentinel from './sentinel.ts';
 import { STATE } from '../core/state.ts';
@@ -28,6 +29,8 @@ export function cls() {
       return pariah;
     case 'Priest':
       return priest;
+    case 'Psion':
+      return psion;
     case 'Runewarden':
       return runeward;
     case 'Sentinel':
