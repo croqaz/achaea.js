@@ -1,6 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
 import chokidar from 'chokidar';
 import ee from '../events/index.ts';
+import { debounce } from './util.ts';
 
 const eventTree: Record<string, number> = {};
 
@@ -42,7 +43,7 @@ fileWatcher.on('all', (event: string, path: string) => {
         `Comm.Channel.Text {"channel": "notes", "talker": "Scribe",
         "text": "INFO: Custom file RE-loaded: ${path}."}`,
       );
-      checkEventTree();
+      checkEventTree(path);
     } catch (err) {
       ee.emit(
         'game:gmcp',
@@ -86,26 +87,31 @@ function unRegister(fn: any) {
   }
 }
 
-function syncEventTree() {
-  setTimeout(function () {
-    // @ts-ignore: Types
-    for (const name of Object.keys(ee.events)) {
-      eventTree[name.toString()] = ee.listenerCount(name) || 0;
-    }
-  }, 20);
+function __syncEventTree() {
+  // @ts-ignore: Types
+  for (const name of ee.eventNames()) {
+    eventTree[name.toString()] = ee.listenerCount(name) || 0;
+  }
 }
 
-function checkEventTree() {
+export const syncEventTree = debounce(__syncEventTree, 2500, false);
+
+function __checkEventTree(path: string) {
+  // @ts-ignore: Types
   const eventNames = new Set([...Object.keys(eventTree), ...ee.eventNames()]);
-  for (const n of eventNames.values()) {
+  for (const n of eventNames) {
     const count = ee.listenerCount(n) || 0;
     if (eventTree[n] !== count) {
       ee.emit(
         'game:gmcp',
         `Comm.Channel.Text {"channel": "notes", "talker": "Scribe",
-        "text": "WARN: Event "${n}" had ${eventTree[n] || 0} hooks, now it has ${count} !!"}`,
+          "text": "WARN: Event '${n}' in file '${path}' had ${
+            eventTree[n] || 0
+          } hooks, now it has ${count} !!"}`,
       );
       eventTree[n] = count;
     }
   }
 }
+
+export const checkEventTree = debounce(__checkEventTree, 1000, false);
