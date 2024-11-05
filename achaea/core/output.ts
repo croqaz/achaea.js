@@ -103,7 +103,7 @@ export default function processDisplayText(html: string, text: string): string {
 
   {
     // Check for room title & description
-    const roomInfo = p.validRoomInfo(text);
+    const roomInfo = p.validRoomInfo(html);
     if (roomInfo) {
       STATE.Room.update2(roomInfo);
     }
@@ -119,6 +119,15 @@ export default function processDisplayText(html: string, text: string): string {
       html = desc;
     }
   }
+
+  // GAG junk
+  // Sad that I have to gag this, instead of disabling them from CONFIG
+  //
+  // System: Added Whatever to your Blah queue.
+  html = html.replace(
+    /^<span .+?>\[<\/span><span .+?>System<\/span><span .+?>\]<\/span><span .+?>: Added (.+?) to your (.+?) queue\.$/m,
+    '',
+  );
 
   // Optional: run extra output function
   if (extraProcessDisplayText) {

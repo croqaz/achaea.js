@@ -43,15 +43,15 @@ export function validRoomInfo(text: string): Record<string, any> | null {
   /*
    * Validate room title, description and features.
    */
-  const parts = text.trim().split('\n');
-  if (parts.length < 2 || parts.length > 4) return null;
-  let title = parts.at(-2).replace(/\r$/, '');
-  if (title.includes('>You see exits leading<') && title.includes(' and ')) {
+  if (text.includes('>You see exits leading<') && text.includes(' and ')) {
     return null;
-  } else if (title.includes('>You see a single exit leading<')) {
+  } else if (text.includes('>You see a single exit leading<')) {
     return null;
   }
-  if (!(title.endsWith('.') || title.includes('.</span><span'))) return null;
+  const parts = text.trim().split('\n');
+  if (parts.length < 2 || parts.length > 3) return null;
+  let title = parts.at(-2).replace(/\r$/, '');
+  if (!title.includes('.</span><span')) return null;
   let description = parts.at(-1).trim();
   if (!(description.endsWith('.') || description.includes('.</span><span'))) return null;
   description = description.replaceAll('</span>', '').replace(/<span class="[a-zA-Z -]+">/g, '');
@@ -60,7 +60,11 @@ export function validRoomInfo(text: string): Record<string, any> | null {
   if (description.includes('The area is ablaze!')) {
     features.push('fire');
   }
-  if (description.includes('A small wooden sign is here.') || description.includes('A sign here suggests you READ SIGN!')) {
+  if (
+    description.includes('A small wooden sign is here.') ||
+    description.includes('A sign here suggests you READ SIGN!') ||
+    description.includes('A small wooden sign is nailed crookedly to a post here.')
+  ) {
     features.push('sign');
   }
   if (description.includes('Lying flat on the ground is a key-shaped sigil.')) features.push('key-sigil');
@@ -119,9 +123,10 @@ export function validRoomInfo(text: string): Record<string, any> | null {
   } else if (description.includes('A noxious, red-hued fog overwhelms the area with a thick, palpable vapour.')) {
     features.push('Mhaldor');
   }
+
   if (features.length) {
     title = title.replaceAll('</span>', '').replace(/<span class="[a-zA-Z -]+">/g, '');
-    title = title.replace(/ \(.+?\)/, '').replace(/\.$/, '');
+    title = title.replace('. (', ' (').replace(/\.$/, '');
     return { title, description, features };
   }
   return null;

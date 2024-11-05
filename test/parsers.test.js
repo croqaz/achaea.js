@@ -20,9 +20,47 @@ This locale has fallen under the influence of the Eldritch Empire of Ruin.`);
   expect(result.area).toBe('Central Wilderness');
   expect(result.plane).toBe('Prime Material Plane');
   expect(result.environment).toBe('Constructed underground');
+  expect(result.influence).toBe('Eldritch Empire of Ruin');
+
+  result = p.parseSurvey(`You discern that you are in the Southern Wilderness.
+Your environment conforms to that of Road.
+You are in the Prime Material Plane.
+This location has been reclaimed for nature by Ficus.
+This locale has fallen under the influence of the Shining Territories of Targossas.`);
+  expect(result.area).toBe('Southern Wilderness');
+  expect(result.plane).toBe('Prime Material Plane');
+  expect(result.environment).toBe('Road');
+  expect(result.influence).toBe('Shining Territories of Targossas');
 });
 
-test('maps test', () => {
+test('room parse test', () => {
+  let result =
+    p.validRoomInfo(`<span class="c-yellow">Inside a large cottage.</span><span class="c-lightGray"> (indoors)
+</span><span class="c-green c-bright">Nature's fecundity floods the surrounds with the clamour of life in a chittering refrain. </span><span class="c-green">Vines have overtaken this location.</span><span class="c-cyan"> The stars glimmer down from a clear and cloudless sky, bathing the landscape in silvery light.</span>`);
+  expect(result.title).toBe('Inside a large cottage (indoors)');
+  expect(result.features).toEqual(['vines', 'Eleusis']);
+
+  result = p.validRoomInfo(`<span class="c-yellow"> You may ENTER the WILDERNESS map from here.</span>
+<span class="c-yellow">Dense thicket in Eastern Ithmia.</span><span class="c-lightGray">
+</span><span class="c-green c-bright">Nature's fecundity floods the surrounds with the clamour of life in a chittering refrain. </span><span class="c-green">Vines have overtaken this location.</span><span class="c-cyan"> The sun shines down warmly from the cloudless sky, standing at the apex of its arc through the heavens.</span><span class="c-cyan"> Light glints warmly off a golden honeycomb dripping with honey.</span><span class="c-cyan"> A lush, viridian plant flourishes amongst the surrounding vegetation.</span><span class="c-cyan"> Dangling in the air is a set of spooky windchimes.</span><span class="c-cyan"> A large beehive hangs down from the trees above.</span>`);
+  expect(result.title).toBe('Dense thicket in Eastern Ithmia');
+  expect(result.features).toEqual(['vines', 'grove', 'Eleusis']);
+  expect(result.description.includes('Dangling in the air is a set of spooky windchimes.')).toBeTrue();
+
+  result = p.validRoomInfo(`<span class="c-yellow">Shallam Road.</span><span class="c-lightGray"> (road)
+</span><span class="c-yellow c-bright">Radiant light joins with calescent heat, suffusing the area with a harsh, blinding mien. </span><span class="c-cyan"> Eyes keenly raised to the skies, a cowled bow-maiden plucks idly at her bowstring.</span><span class="c-cyan"> Ready for action, a Blackstone swordsman monitors the surrounds.</span><span class="c-cyan"> Poised for action, a Blackstone swordsman observes the surrounds.</span><span class="c-cyan"> Gripping a broadsword firmly, a Shornwall defender hunches slightly in anticipation.</span><span class="c-cyan"> A gilded pike with the decapitated heads of X has been erected here.</span><span class="c-cyan"> A runic totem is planted solidly in the ground.</span>`);
+  expect(result.title).toBe('Shallam Road (road)');
+  expect(result.features).toEqual(['totem', 'Targossas']);
+
+  // Too many lines
+  result = p.validRoomInfo(`Carefully getting your bearings, you set off southwest toward your goal.
+Blah.
+<span class="c-yellow">Amid cedar shadows.</span><span class="c-lightGray">
+</span><span class="c-green">Vines have overtaken this location.</span><span class="c-lightGray c-bright"> The fallen snow is lit by bright daylight, casting the pale drifts into brilliance.</span>`);
+  expect(result).toBe(null);
+});
+
+test('wild maps test', () => {
   let result = p.validWildMap(`Grasslands.
 .........................
 .......................**

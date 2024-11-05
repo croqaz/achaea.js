@@ -13,6 +13,7 @@ import {
   autoWalker,
   walkDirections,
   innerWalker,
+  smartMove,
   walkRooms,
   parseDirections,
 } from '../achaea/maps/walker.js';
@@ -51,6 +52,30 @@ test('directions parse', () => {
 
   dirs = parseDirections('3n -2se'); // negative not allowed
   expect(dirs).toBeFalsy();
+});
+
+test('smart move', () => {
+  // on the shore of a small pond
+  expect(smartMove('s', '16736')).toBe('SWIM s');
+  // a sparkling pond reflecting the skyline
+  expect(smartMove('e', '16806')).toBe('SWIM e');
+  expect(smartMove('n', '16806')).toBe('SWIM n');
+  expect(smartMove('s', '16806')).toBe('SWIM s');
+  // shallows of a sparkling pont
+  expect(smartMove('n', '17734')).toBe('SWIM n');
+  expect(smartMove('ne', '17734')).toBe('SWIM ne');
+
+  STATE.Me.waterWalk = true;
+  expect(smartMove('s', '16736')).toBe('s');
+  expect(smartMove('e', '16806')).toBe('e');
+  expect(smartMove('n', '16806')).toBe('n');
+  expect(smartMove('s', '16806')).toBe('s');
+  STATE.Me.waterWalk = false;
+
+  // invalid directions or movement
+  expect(smartMove('n', '16736')).toBe('n');
+  expect(smartMove('s', '17734')).toBe('s');
+  expect(smartMove('x', '99999')).toBe('x');
 });
 
 test('auto walk', async () => {
