@@ -105,9 +105,7 @@ function __checkEventTree(path: string) {
       ee.emit(
         'game:gmcp',
         `Comm.Channel.Text {"channel": "notes", "talker": "Scribe",
-          "text": "WARN: Event '${n}' in file '${path}' had ${
-            eventTree[n] || 0
-          } hooks, now it has ${count} !!"}`,
+          "text": "WARN: Event '${n}' in file '${path}' had ${eventTree[n] || 0} hooks, now it has ${count} !!"}`,
       );
       eventTree[n] = count;
     }

@@ -81,10 +81,7 @@ function globalFixtures(txt: string): string {
   // Global text replace; Affects all outputs, including triggers.
   // Don't overuse!!
   txt = txt.replace(/\s+You have recovered /, 'You have recovered ');
-  txt = txt.replace(
-    /\s+You see a sign indicating there are WARES/,
-    'You see a sign indicating there are WARES',
-  );
+  txt = txt.replace(/\s+You see a sign indicating there are WARES/, 'You see a sign indicating there are WARES');
   return txt;
 }
 

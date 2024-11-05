@@ -136,11 +136,7 @@ export async function whoisFind(key: string) {
 export async function roomFind(key: string) {
   const arr = [];
   for await (const room of dbValues('room')) {
-    if (
-      room.id.toString() === key ||
-      room.area.toLowerCase() === key ||
-      room.name.toLowerCase().includes(key)
-    ) {
+    if (room.id.toString() === key || room.area.toLowerCase() === key || room.name.toLowerCase().includes(key)) {
       if (room.name.length > 30) room.name = room.name.slice(0, 30) + '…';
       delete room.desc;
       arr.push(room);

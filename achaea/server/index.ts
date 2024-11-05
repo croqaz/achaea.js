@@ -13,16 +13,7 @@ import processUserInput from '../core/input.ts';
 const STATIC = path.normalize(__dirname + '/../static/');
 const CUSTOM = path.normalize(__dirname + '/../../custom/static/');
 
-const OMIT_PLAYER_FIELDS = Object.seal([
-  'rift',
-  'items',
-  'wielded',
-  'worn',
-  'skills',
-  'flying',
-  'riding',
-  'waterWalk',
-]);
+const OMIT_PLAYER_FIELDS = Object.seal(['rift', 'items', 'wielded', 'worn', 'skills', 'flying', 'riding', 'waterWalk']);
 
 function mime(pth: string): string {
   const ext = pth.split('.').pop();

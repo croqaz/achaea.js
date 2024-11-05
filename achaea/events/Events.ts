@@ -26,9 +26,7 @@ export class EventEmitter<Template extends EventTemplateT = EventTemplateT> {
    *
    * @param event
    */
-  public rawListeners<Event extends TemplateEventT<Template>>(
-    event: Event,
-  ): Listener<Template, Event, this>[] {
+  public rawListeners<Event extends TemplateEventT<Template>>(event: Event): Listener<Template, Event, this>[] {
     const listeners = this.events[event];
     if (listeners === undefined) return [];
     if (isSingleListener(listeners)) return [listeners];
@@ -40,9 +38,7 @@ export class EventEmitter<Template extends EventTemplateT = EventTemplateT> {
    *
    * @param event
    */
-  public listeners<Event extends TemplateEventT<Template>>(
-    event: Event,
-  ): TemplateListenerT<Template, Event, this>[] {
+  public listeners<Event extends TemplateEventT<Template>>(event: Event): TemplateListenerT<Template, Event, this>[] {
     const listeners = this.rawListeners(event);
     const length = listeners.length;
     if (length === 0) return [];
@@ -113,10 +109,11 @@ export class EventEmitter<Template extends EventTemplateT = EventTemplateT> {
    * @param listener
    * @param context - default: `this` (EventEmitter instance)
    */
-  public addListener<
-    Event extends TemplateEventT<Template>,
-    Context = TemplateListenerContextT<Template, Event, this>,
-  >(event: Event, listener: TemplateListenerT<Template, Event, Context>, context?: Context): this {
+  public addListener<Event extends TemplateEventT<Template>, Context = TemplateListenerContextT<Template, Event, this>>(
+    event: Event,
+    listener: TemplateListenerT<Template, Event, Context>,
+    context?: Context,
+  ): this {
     return this._addListener(event, listener, context, true, false);
   }
 
@@ -128,10 +125,11 @@ export class EventEmitter<Template extends EventTemplateT = EventTemplateT> {
    * @param listener
    * @param context - default: `this` (EventEmitter instance)
    */
-  public once<
-    Event extends TemplateEventT<Template>,
-    Context = TemplateListenerContextT<Template, Event, this>,
-  >(event: Event, listener: TemplateListenerT<Template, Event, Context>, context?: Context): this {
+  public once<Event extends TemplateEventT<Template>, Context = TemplateListenerContextT<Template, Event, this>>(
+    event: Event,
+    listener: TemplateListenerT<Template, Event, Context>,
+    context?: Context,
+  ): this {
     return this._addListener(event, listener, context, true, true);
   }
 
@@ -145,10 +143,11 @@ export class EventEmitter<Template extends EventTemplateT = EventTemplateT> {
    * @param listener
    * @param context - default: `this` (EventEmitter instance)
    */
-  public prependListener<
-    Event extends TemplateEventT<Template>,
-    Context = TemplateListenerContextT<Template, Event, this>,
-  >(event: Event, listener: TemplateListenerT<Template, Event, Context>, context?: Context): this {
+  public prependListener<Event extends TemplateEventT<Template>, Context = TemplateListenerContextT<Template, Event, this>>(
+    event: Event,
+    listener: TemplateListenerT<Template, Event, Context>,
+    context?: Context,
+  ): this {
     return this._addListener(event, listener, context, false, false);
   }
 
@@ -210,10 +209,7 @@ export class EventEmitter<Template extends EventTemplateT = EventTemplateT> {
     return this;
   }
 
-  protected _addListener<
-    Event extends TemplateEventT<Template>,
-    Context = TemplateListenerContextT<Template, Event, this>,
-  >(
+  protected _addListener<Event extends TemplateEventT<Template>, Context = TemplateListenerContextT<Template, Event, this>>(
     event: Event,
     fn: TemplateListenerT<Template, Event, Context>,
     context: Context = this as never,

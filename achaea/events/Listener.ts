@@ -1,9 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-export default class Listener<
-  Template extends EventTemplateT,
-  Event extends TemplateEventT<Template>,
-  Context,
-> {
+export default class Listener<Template extends EventTemplateT, Event extends TemplateEventT<Template>, Context> {
   constructor(
     public readonly fn: TemplateListenerT<Template, Event, Context>,
     public readonly context: Context,
@@ -28,9 +24,7 @@ export type ListenerArgsT<Listener> = [Listener] extends [(...args: infer Args) 
     : [Listener];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ListenerContextT<Listener, DefaultContext> = [Listener] extends [
-  (this: infer Context, ...args: any[]) => void,
-]
+export type ListenerContextT<Listener, DefaultContext> = [Listener] extends [(this: infer Context, ...args: any[]) => void]
   ? unknown extends Context
     ? DefaultContext
     : Context
@@ -42,11 +36,10 @@ export type TemplateT<Template extends EventTemplateT> = Template & {
 
 export type TemplateEventT<Template extends EventTemplateT> = keyof TemplateT<Template>;
 
-export type TemplateListenerT<
-  Template extends EventTemplateT,
-  Event extends TemplateEventT<Template>,
-  Context,
-> = (this: Context, ...args: TemplateListenerArgsT<Template, Event>) => void;
+export type TemplateListenerT<Template extends EventTemplateT, Event extends TemplateEventT<Template>, Context> = (
+  this: Context,
+  ...args: TemplateListenerArgsT<Template, Event>
+) => void;
 
 export type TemplateListenerContextT<
   Template extends EventTemplateT,
@@ -54,7 +47,6 @@ export type TemplateListenerContextT<
   DefaultContext,
 > = ListenerContextT<TemplateT<Template>[Event], DefaultContext>;
 
-export type TemplateListenerArgsT<
-  Template extends EventTemplateT,
-  Event extends TemplateEventT<Template>,
-> = ListenerArgsT<TemplateT<Template>[Event]>;
+export type TemplateListenerArgsT<Template extends EventTemplateT, Event extends TemplateEventT<Template>> = ListenerArgsT<
+  TemplateT<Template>[Event]
+>;

@@ -650,29 +650,17 @@ export function weaponType(text: string): string {
     text.endsWith(' Delosian sword')
   ) {
     return 'bastard sword';
-  } else if (
-    text.includes(' Hellforge ') ||
-    text.includes(' Worldforge ') ||
-    text.includes(` Stonesmith's `)
-  ) {
+  } else if (text.includes(' Hellforge ') || text.includes(' Worldforge ') || text.includes(` Stonesmith's `)) {
     return 'warhammer';
   } else if (text.endsWith(' spear')) {
     return 'spear';
   } else if (text.endsWith(' trident')) {
     return 'trident';
-  } else if (
-    text.includes(' Orcsplitter ') ||
-    text.includes('Logosian Battleaxe') ||
-    text.endsWith(' battleaxe')
-  ) {
+  } else if (text.includes(' Orcsplitter ') || text.includes('Logosian Battleaxe') || text.endsWith(' battleaxe')) {
     return 'battleaxe';
   } else if (text.includes('Scimitar of ')) {
     return 'scimitar';
-  } else if (
-    text.includes(`Assassin's Dirk`) ||
-    text.includes(`Buckawn's Spine`) ||
-    text.includes(`Thoth's Fang`)
-  ) {
+  } else if (text.includes(`Assassin's Dirk`) || text.includes(`Buckawn's Spine`) || text.includes(`Thoth's Fang`)) {
     return 'dirk';
   } else if (text.includes(' blackjack ')) {
     return 'blackjack';

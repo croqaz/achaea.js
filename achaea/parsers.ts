@@ -41,17 +41,90 @@ export function parseSurvey(text: string): Record<string, any> | null {
 
 export function validRoomInfo(text: string): Record<string, any> | null {
   /*
-   * Validate room title, description...
+   * Validate room title, description and features.
    */
   const parts = text.trim().split('\n');
   if (parts.length < 2 || parts.length > 4) return null;
   let title = parts.at(-2).replace(/\r$/, '');
+  if (title.includes('>You see exits leading<') && title.includes(' and ')) {
+    return null;
+  } else if (title.includes('>You see a single exit leading<')) {
+    return null;
+  }
   if (!(title.endsWith('.') || title.includes('.</span><span'))) return null;
   let description = parts.at(-1).trim();
   if (!(description.endsWith('.') || description.includes('.</span><span'))) return null;
-  title = title.replaceAll('</span>', '').replace(/<span class="[a-zA-Z -]+">/g, '');
   description = description.replaceAll('</span>', '').replace(/<span class="[a-zA-Z -]+">/g, '');
-  return { title, description };
+
+  const features = [];
+  if (description.includes('The area is ablaze!')) {
+    features.push('fire');
+  }
+  if (description.includes('A small wooden sign is here.') || description.includes('A sign here suggests you READ SIGN!')) {
+    features.push('sign');
+  }
+  if (description.includes('Lying flat on the ground is a key-shaped sigil.')) features.push('key-sigil');
+  if (
+    description.includes('A runic totem is planted in the ground.') ||
+    description.includes('A runic totem is planted solidly in the ground.')
+  ) {
+    features.push('totem');
+  }
+  if (description.includes('A sigil in the shape of a small, rectangular monolith is on the ground.')) {
+    features.push('monolith');
+  }
+  if (description.includes('A furry little humgii sits here, a hungry expression in his wide eyes.')) {
+    features.push('humgii');
+  }
+  if (description.includes('The entry to a mine looms here, its great arched doorway worked in grey stone.')) {
+    features.push('mine');
+  }
+  if (description.includes('Vines have overtaken this location.')) features.push('vines');
+  if (
+    description.includes('A large beehive hangs down from the trees above.') ||
+    description.includes('A mighty earth golem stands guard here.')
+  ) {
+    features.push('grove');
+  }
+
+  // Walls
+  if (description.includes('A scorching wall of fire stands here, blocking passage to ')) {
+    features.push('fireWall');
+  }
+  if (description.includes('An icewall is here, blocking passage to ')) {
+    features.push('iceWall');
+  }
+  if (description.includes('A large wall of stone stands here, blocking passage to ')) {
+    features.push('stoneWall');
+  }
+  if (description.includes('A large wall of thorns stands here, barring passage to ')) {
+    features.push('thornWall');
+  }
+
+  // City influences
+  if (description.includes('Crackling ozone heralds warp-touched mirage, their coming the advent of change.')) {
+    features.push('Ashtan');
+  } else if (description.includes('Bound in ice, draconic tracks scribe a glittering path across the earth.')) {
+    features.push('Cyrene');
+  } else if (
+    description.includes(`Nature's fecundity floods the surrounds with the clamour of life in a chittering refrain.`)
+  ) {
+    features.push('Eleusis');
+  } else if (description.includes('Lines of leaden shadow coil underfoot, turning earth to metal by alchemical writ.')) {
+    features.push('Hashan');
+  } else if (
+    description.includes('Radiant light joins with calescent heat, suffusing the area with a harsh, blinding mien.')
+  ) {
+    features.push('Targossas');
+  } else if (description.includes('A noxious, red-hued fog overwhelms the area with a thick, palpable vapour.')) {
+    features.push('Mhaldor');
+  }
+  if (features.length) {
+    title = title.replaceAll('</span>', '').replace(/<span class="[a-zA-Z -]+">/g, '');
+    title = title.replace(/ \(.+?\)/, '').replace(/\.$/, '');
+    return { title, description, features };
+  }
+  return null;
 }
 
 export function validWildMap(text: string): string[] | null {
@@ -112,9 +185,7 @@ export function parseWares(text: string): T.DBWares[] {
   }
   const parts = text.split('\n').filter((x) => !!x);
   const stateOwner = STATE.Room.owner;
-  const lineOwner = parts[0].includes('File continued via MORE')
-    ? parts[0].slice(12, -1).replace(/[ .]*$/, '')
-    : null;
+  const lineOwner = parts[0].includes('File continued via MORE') ? parts[0].slice(12, -1).replace(/[ .]*$/, '') : null;
   const owner = stateOwner || lineOwner;
   const result = [];
   // id - description - stock - price

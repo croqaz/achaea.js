@@ -200,12 +200,7 @@ export async function autoWalker(
  * This can be used to walk from point to point,
  * or to explore the area starting from a point.
  */
-export async function innerWalker(
-  fromID: string,
-  targetID: string,
-  type: string = '',
-  explore: boolean = false,
-) {
+export async function innerWalker(fromID: string, targetID: string, type: string = '', explore: boolean = false) {
   // Local area graph
   const room = m.MAP.rooms[fromID];
   if (!room) return null;

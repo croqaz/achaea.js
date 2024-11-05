@@ -9,8 +9,7 @@ import * as p from '../parsers.ts';
 const RE = {
   assess: /^You glance over ([A-Za-z]+) and see that his health is at (\d+)\/(\d+)\.$/m,
   shield: /^A nearly invisible magical shield forms around (.+)\.$/m,
-  barrier:
-    /^([A-Za-z]+) strums a few notes on a Lasallian lyre, and a prismatic barrier forms around (?:him|her|faen)\.$/m,
+  barrier: /^([A-Za-z]+) strums a few notes on a Lasallian lyre, and a prismatic barrier forms around (?:him|her|faen)\.$/m,
   rebound: /^You suddenly perceive the vague outline of an aura of rebounding around ([A-Za-z]+)\.$/m,
   auraClear: /^([A-Za-z]+)'s aura of weapons rebounding disappears\.$/m,
   barrClear: /^([A-Za-z]+)'s prismatic barrier dissolves into nothing\.$/m,
@@ -62,10 +61,7 @@ export default function processTriggers(text: string, normText: string) {
     ee.emit('user:text', 'CURING PRIORITY DEFENCE AIRPOCKET RESET');
   }
 
-  if (
-    normText.includes('has the following venoms or magical effects on it:') &&
-    normText.includes('Walk on water')
-  ) {
+  if (normText.includes('has the following venoms or magical effects on it:') && normText.includes('Walk on water')) {
     STATE.Me.waterWalk = true;
   }
 
@@ -93,10 +89,7 @@ export default function processTriggers(text: string, normText: string) {
   ) {
     // DEF: You are riding a ...
     STATE.Me.riding = true;
-  } else if (
-    normText.includes('You step down off of a ') ||
-    normText.includes('You are not currently riding anything.')
-  ) {
+  } else if (normText.includes('You step down off of a ') || normText.includes('You are not currently riding anything.')) {
     STATE.Me.riding = false;
   }
 

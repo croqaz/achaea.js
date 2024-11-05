@@ -69,10 +69,7 @@ export default function extraProcessDisplayText(html: string, _text: string): st
       const diff = (dt.getTime() - STATE.Stats.bal.getTime()) / 1000;
       // Ignore big time diffs; Normal times vary.
       if (diff < 10) {
-        html = html.replace(
-          'recovered balance on all limbs.',
-          `recovered balance on all limbs. (${diff.toFixed(2)}s)`,
-        );
+        html = html.replace('recovered balance on all limbs.', `recovered balance on all limbs. (${diff.toFixed(2)}s)`);
       }
     }
     STATE.Stats.bal = dt;
@@ -102,10 +99,7 @@ export default function extraProcessDisplayText(html: string, _text: string): st
       const diff = (dt.getTime() - STATE.Stats.drink.getTime()) / 1000;
       // Ignore big time diffs; Normal time should be 4-ish sec?
       if (diff < 15) {
-        html = html.replace(
-          'another health or mana elixir.',
-          `another health or mana elixir. (${diff.toFixed(2)}s)`,
-        );
+        html = html.replace('another health or mana elixir.', `another health or mana elixir. (${diff.toFixed(2)}s)`);
       }
     }
     STATE.Stats.drink = dt;
@@ -115,10 +109,7 @@ export default function extraProcessDisplayText(html: string, _text: string): st
       const diff = (dt.getTime() - STATE.Stats.apply.getTime()) / 1000;
       // Ignore big time diffs; Normal time should be 1-ish sec?
       if (diff < 10) {
-        html = html.replace(
-          'apply another salve to yourself.',
-          `apply another salve to yourself. (${diff.toFixed(2)}s)`,
-        );
+        html = html.replace('apply another salve to yourself.', `apply another salve to yourself. (${diff.toFixed(2)}s)`);
       }
     }
     STATE.Stats.apply = dt;

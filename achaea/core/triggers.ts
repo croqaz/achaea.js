@@ -17,10 +17,7 @@ export default function processTriggers(_text: string, normText: string) {
 
   // Make sure the user is really quitting
   //
-  if (
-    STATE.Misc.quitting &&
-    normText.includes('You grow still and begin to silently pray for preservation of your soul')
-  ) {
+  if (STATE.Misc.quitting && normText.includes('You grow still and begin to silently pray for preservation of your soul')) {
     // Session finish time
     STATE.Stats.endDt = new Date();
     // Emit quitting, for cleanup
