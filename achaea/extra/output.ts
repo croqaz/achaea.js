@@ -1,8 +1,6 @@
-import ee from '../events/index.ts';
-import * as p from '../parsers.ts';
 import { STATE } from '../core/state.ts';
 
-export default function extraProcessDisplayText(html: string, text: string): string {
+export default function extraProcessDisplayText(html: string, _text: string): string {
   /*
    * Game text processor.
    * Used to highlight or replace text, display meta-data...
@@ -10,17 +8,6 @@ export default function extraProcessDisplayText(html: string, text: string): str
    * The output is used for display and the logs,
    * it is not used for triggers.
    */
-
-  {
-    // Check for wilderness map first
-    const mapDescrip = p.validWildMap(html);
-    if (mapDescrip && mapDescrip.length == 2) {
-      const [map, desc] = mapDescrip;
-      // Send wilderness map
-      ee.emit('wild:map', map);
-      return desc;
-    }
-  }
 
   //
   // Visual things

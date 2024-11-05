@@ -1,3 +1,5 @@
+import ee from '../events/index.ts';
+import * as p from '../parsers.ts';
 import { STATE } from './state.ts';
 import { Config } from '../config.ts';
 import { customUserOutput } from './custom.ts';
@@ -96,6 +98,25 @@ export default function processDisplayText(html: string, text: string): string {
         html = html.replace(p[0] as string, `${p[0]} 🦾=${p[1]} LVL=${p[2]}`);
         break;
       }
+    }
+  }
+
+  {
+    // Check for room title & description
+    const roomInfo = p.validRoomInfo(text);
+    if (roomInfo) {
+      STATE.Room.update2(roomInfo);
+    }
+  }
+
+  {
+    // Check for wilderness map
+    const mapDescrip = p.validWildMap(html);
+    if (mapDescrip) {
+      const [map, desc] = mapDescrip;
+      // Send wilderness map
+      ee.emit('wild:map', map);
+      html = desc;
     }
   }
 

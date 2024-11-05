@@ -2,16 +2,10 @@ import ee from '../events/index.ts';
 import { STATE } from '../core/state.ts';
 import { gmcpHello, gmcpSupports } from './gmcp.ts';
 
-export default function processTriggers(_: string, normText: string) {
+export default function processTriggers(_text: string, normText: string) {
   /*
    * Process game text to enable triggers
    */
-
-  // History of last X game texts,
-  // can be used by advanced triggers
-  //
-  // STATE.Misc.texts.push(text);
-  // if (STATE.Misc.texts.length > 3) STATE.Misc.texts.shift();
 
   // First thing after correct login
   //

@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import * as R from 'remeda';
 
 export const CITIES = Object.freeze(['Ashtan', 'Cyrene', 'Eleusis', 'Hashan', 'Mhaldor', 'Targossas']);
@@ -452,7 +453,7 @@ Weed          (Smoked) Induces feelings of euphoria and hallucinations of giant,
     return [name.toLowerCase(), { long }];
   });
 
-export const HERBS = Object.freeze(
+export const HERBS: Record<string, any> = Object.freeze(
   R.mergeDeep(Object.fromEntries(_herbs_short), Object.fromEntries(_herbs_long)),
 );
 // Release memory
@@ -521,7 +522,7 @@ Stannum       When eaten, cures various afflictions relating to your sanity.
     return [name.toLowerCase(), { long }];
   });
 
-export const MINERALS = Object.freeze(
+export const MINERALS: Record<string, any> = Object.freeze(
   R.mergeDeep(Object.fromEntries(_minerals_short), Object.fromEntries(_minerals_long)),
 );
 // Release memory
@@ -548,7 +549,7 @@ Vegetable   Healthy food to help you grow big and strong.
     return [name.toLowerCase(), desc];
   });
 
-export const MATERIALS = Object.freeze(Object.fromEntries(_gather_materials));
+export const MATERIALS: Record<string, any> = Object.freeze(Object.fromEntries(_gather_materials));
 _gather_materials = null;
 
 // Mineral to Herb equivalence

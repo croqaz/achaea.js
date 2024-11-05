@@ -12,8 +12,6 @@ import { Config } from './config.ts';
 // import core stuff
 import './core/queue.ts';
 import './core/triggers.ts';
-// optionally, import extras
-if (Config.EXTRA) await import('./extra/index.ts');
 
 let telnet: TelnetSocket;
 

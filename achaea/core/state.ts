@@ -21,21 +21,7 @@ export const STATE: T.StateType = Object.seal({
   //
   Me: new C.Player({}),
   //
-  Room: Object.seal({
-    num: 0,
-    area: '', // this is the GMCP name, eg: Ashtan, Isle of Delos...
-    plane: '',
-    environment: '',
-    name: '',
-    desc: '',
-    owner: '', // wares proprietor
-    room: {}, // meta from map
-    details: [],
-    exits: {},
-    wild: false,
-    items: [],
-    players: [],
-  }),
+  Room: new C.Room({}),
   //
   Battle: Object.seal({
     rage: 0,
@@ -94,8 +80,6 @@ export const STATE: T.StateType = Object.seal({
   Queue: Object.seal({ bal: [], eq: [], eb: [] }),
   //
   Misc: {
-    // last X game texts
-    texts: [],
     // user's current input
     input: '',
     autoWalk: [], // auto-walk state
@@ -301,7 +285,7 @@ export function gmcpProcessChar(_: string, data: T.GmcpChar) {
   ee.emit('myself:update', STATE.Me);
 }
 
-export function gmcpProcessTarget(type: string, data) {
+export function gmcpProcessTarget(type: string, data: any) {
   if (type === 'IRE.Target.Set') {
     const tsData = data as string;
     // @ts-ignore: Types
@@ -314,7 +298,7 @@ export function gmcpProcessTarget(type: string, data) {
   }
 }
 
-export function gmcpProcessDefences(type: string, data) {
+export function gmcpProcessDefences(type: string, data: any) {
   if (type === 'Char.Defences.List') {
     STATE.Me.update({ defences: data });
   } else if (type === 'Char.Defences.Add') {
@@ -330,7 +314,7 @@ export function gmcpProcessDefences(type: string, data) {
   ee.emit('myself:update', STATE.Me);
 }
 
-export function gmcpProcessAfflictions(type: string, data) {
+export function gmcpProcessAfflictions(type: string, data: any) {
   if (type === 'Char.Afflictions.List') {
     STATE.Me.update({ afflictions: data });
   } else if (type === 'Char.Afflictions.Add') {
@@ -345,10 +329,7 @@ export function gmcpProcessAfflictions(type: string, data) {
     if (tsData.name === 'amnesia') {
       ee.emit('user:text', 'QUEUE PREPEND eb TOUCH AMNESIA');
     }
-    ee.emit(
-      'sys:text',
-      `<i class="c-red">Afflictions ++ ${tsData.name};${tsData.cure ? ' Cure: ' + tsData.cure : ''}</i>`,
-    );
+    ee.emit('sys:text', `<i class="c-red">Afflictions ++ ${tsData.name};${tsData.cure ? ' Cure: ' + tsData.cure : ''}</i>`);
     addToStateList('Me', 'afflictions', tsData);
   } else if (type === 'Char.Afflictions.Remove') {
     const tsData = data as string[];
@@ -365,6 +346,7 @@ export function gmcpProcessAfflictions(type: string, data) {
 }
 
 export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
+  //
   // Player & room items
   // Room item attribs:
   // 'w' = worn
@@ -406,14 +388,13 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
   } //
   else if (type === 'Char.Items.Update') {
     // item ID must be int
-    const itemID = parseInt(data.item.id as string);
-    data.item.id = itemID;
-    let itm = null as T.GmcpItem;
+    data.item.id = parseInt(data.item.id as string);
+    let itm: T.GmcpItem | void = undefined;
     if (data.location === 'inv') {
       STATE.Me.syncWieldWorn(data.item);
-      itm = STATE.Me.items.find((x) => x.id === itemID);
+      itm = STATE.Me.items.find((x) => x.id === data.item.id);
     } else if (data.location === 'room') {
-      itm = STATE.Room.items.find((x) => x.id === itemID);
+      itm = STATE.Room.items.find((x) => x.id === data.item.id);
     }
     // Only these props are updatable
     if (itm) {
@@ -505,41 +486,11 @@ export function gmcpProcessRoomInfo(_type: string, data: T.GmcpRoom) {
       coord: mapRoom.coord,
     };
   }
-  for (const k of Object.keys(data)) {
-    // Ignore inexistent fields so the Room object doesn't explode
-    if (STATE.Room[k] === undefined) {
-      continue;
-    }
-    STATE.Room[k] = data[k];
-  }
-  // Process room features/details
-  if (data.name) {
-    const m = data.name.match(/ \([a-z]+?\)/);
-    if (m && m[0]) {
-      const feat = m[0].slice(2, -1);
-      if (!STATE.Room.details?.includes(feat)) STATE.Room.details?.push(feat);
-    }
-    if (data.name.startsWith('Flying above ')) {
-      STATE.Room.details?.push('flying');
-    } else if (data.name.startsWith('You are surrounded by utter darkness, and can see nothing.')) {
-      STATE.Room.details?.push('burrow');
-    }
-  }
-  // wilderness, subdivision and ships
-  if (data.ohmap) {
-    if (!data.area && !STATE.Room.details?.includes('wilderness')) {
-      STATE.Room.details?.push('wilderness');
-    } else if (data.area && !STATE.Room.details?.includes('subdivision')) {
-      STATE.Room.details?.push('subdivision');
-    }
-    STATE.Room.wild = true;
-  } else {
-    STATE.Room.wild = false;
-  }
+  STATE.Room.update(data);
   ee.emit('room:update', STATE.Room);
 }
 
-export function gmcpProcessRoomPlayers(type: string, data) {
+export function gmcpProcessRoomPlayers(type: string, data: any) {
   // IT'S A BAD IDEA TO IMPORT HERE and I feel ashamed
   const { dbGet } = require('../extra/leveldb.ts');
 

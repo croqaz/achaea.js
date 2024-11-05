@@ -2,7 +2,7 @@
 
 export interface StateType {
   Me: any;
-  Room: StateRoom;
+  Room: any;
   Battle: StateBattle;
   Time: StateTime;
   Stats: StateStats;
@@ -10,22 +10,6 @@ export interface StateType {
   StatBar: Record<string, any>;
   Custom: Record<string, any>;
   Queue: Record<string, string[]>;
-}
-
-export interface StateRoom {
-  num: number;
-  area: string; // this is the GMCP name, eg: Ashtan, Isle of Delos...
-  plane: string;
-  environment: string;
-  name: string;
-  desc: string;
-  owner: string; // wares proprietor
-  room: any; // meta from map
-  details?: string[];
-  exits?: Record<string, number>;
-  wild?: boolean;
-  items: GmcpItem[];
-  players: GmcpPlayer[];
 }
 
 export interface StateBattle {

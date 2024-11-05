@@ -41,7 +41,7 @@ export default function extraProcessUserInput(args): string | void {
    * The text returned from this function is sent to Achaea.
    */
 
-  let { text, parts, firstWord, secondWord, otherWords } = args;
+  const { text, parts, firstWord, secondWord, otherWords } = args;
 
   // Stop command to stop attacking, stop auto-walking
   // ... and possibly other stops in the future

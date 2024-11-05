@@ -77,7 +77,7 @@ function unRegister(fn: any) {
   for (let [name, obj] of Object.entries(ee.events)) {
     if (!obj) continue;
     if (!Array.isArray(obj)) obj = [obj];
-    for (const ev of obj) {
+    for (const ev of obj as any[]) {
       if (fn === ev.fn) {
         // console.log('UN-registered event:', name, ev.fn);
         ee.off(name, ev.fn);

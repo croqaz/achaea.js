@@ -1,11 +1,12 @@
 // deno-lint-ignore-file no-explicit-any
-
 import * as T from './types.ts';
 import { Config } from './config.ts';
 import { STATE } from './core/state.ts';
 import { CITIES, HERBS, MATERIALS, MINERALS } from './core/common.ts';
 
-export function parseSurvey(text: string) {
+export function parseSurvey(text: string): Record<string, any> | null {
+  if (!text.includes('You discern that you are in ')) return null;
+  if (!text.includes('You are in the ')) return null;
   const parts = text.split('\n').filter((x) => !!x);
   let area = parts[0]
     .trim()
@@ -28,7 +29,29 @@ export function parseSurvey(text: string) {
     .slice(4)
     .join(' ')
     .replace(/[ .]*$/, '');
-  return { area, environment, plane };
+  const influence = parts
+    .at(-1)
+    .trim()
+    .split(' ')
+    .slice(9)
+    .join(' ')
+    .replace(/[ .]*$/, '');
+  return { area, environment, plane, influence };
+}
+
+export function validRoomInfo(text: string): Record<string, any> | null {
+  /*
+   * Validate room title, description...
+   */
+  const parts = text.trim().split('\n');
+  if (parts.length < 2 || parts.length > 4) return null;
+  let title = parts.at(-2).replace(/\r$/, '');
+  if (!(title.endsWith('.') || title.includes('.</span><span'))) return null;
+  let description = parts.at(-1).trim();
+  if (!(description.endsWith('.') || description.includes('.</span><span'))) return null;
+  title = title.replaceAll('</span>', '').replace(/<span class="[a-zA-Z -]+">/g, '');
+  description = description.replaceAll('</span>', '').replace(/<span class="[a-zA-Z -]+">/g, '');
+  return { title, description };
 }
 
 export function validWildMap(text: string): string[] | null {
@@ -38,7 +61,7 @@ export function validWildMap(text: string): string[] | null {
   const parts = text.trim().split('\n');
   if (parts.length < 8) return null;
   const title = parts[0].replace(/\r$/, '');
-  if (!(title.endsWith('.') || parts[0].includes('.</span><span'))) return null;
+  if (!(title.endsWith('.') || title.includes('.</span><span'))) return null;
   const re = /^[ #&%!?*';,.\/;@IMXYjnw\\|\+\-~^]+\r?$/;
   const map = [];
   const desc = [parts.shift()];

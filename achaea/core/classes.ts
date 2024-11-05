@@ -284,3 +284,119 @@ export class Player {
     return 0;
   }
 }
+
+/*
+ * Game room class!
+ */
+export class Room {
+  //
+  // GMCP values
+  //
+  num: number = 0;
+  name: string = '';
+  desc: string = '';
+  area: string = ''; // Area name, eg: Ashtan, Isle of Delos...
+  environment: string = ''; // eg: Urban, Forest, Swamp...
+  details: string[] = [];
+  exits: Record<string, number> = {};
+  //
+  // Char.Items.List, Char.Items.Update, Char.Items.Addm Char.Items.Remove
+  items: T.GmcpItem[] = [];
+  //
+  // Room.Players, Room.AddPlayer, Room.RemovePlayer
+  players: T.GmcpPlayer[] = [];
+
+  //
+  // Map room (area ID, map coords for drawing)
+  //
+  room: Record<string, number> = {};
+  //
+  // Survey results
+  //
+  survey: Record<string, number> = {};
+
+  wild?: boolean = false;
+  subDiv?: boolean = false;
+
+  //
+  // From triggers:
+  //
+  title: string = '';
+  // Possible room features: monolith, humgii, iceWall, etc.
+  features: string[] = [];
+  description: string = '';
+  //
+  // From Wares (only in shops)
+  //
+  owner?: string;
+
+  constructor(args: Record<string, any>) {
+    this.update(args);
+  }
+
+  /*
+   * Update room with GMCP data.
+   */
+  update(args: Record<string, any>): void {
+    this.survey = {};
+    this.wild = undefined;
+    this.subDiv = undefined;
+    this.owner = undefined;
+    this.details = [];
+
+    for (const k of Object.keys(args)) {
+      // Ignore inexistent fields
+      if (this[k] === undefined) {
+        continue;
+      }
+      this[k] = args[k];
+    }
+
+    // Process room features/details
+    if (args.name) {
+      const m = args.name.match(/ \([a-z]+?\)/);
+      if (m && m[0]) {
+        const feat = m[0].slice(2, -1);
+        if (!this.details.includes(feat)) this.details.push(feat);
+      }
+      if (args.name.startsWith('Flying above ')) {
+        this.details.push('flying');
+      } else if (args.name.startsWith('You are surrounded by utter darkness, and can see nothing.')) {
+        this.details.push('burrow');
+      }
+    }
+
+    // Wilderness, subdivision and ships
+    if (args.ohmap) {
+      if (!args.area && !this.details.includes('wilderness')) {
+        this.details.push('wilderness');
+      } else if (args.area && !this.details.includes('subdivision')) {
+        this.details.push('subdivision');
+      }
+      this.wild = true;
+    } else {
+      this.wild = false;
+    }
+
+    // Match trigger data with GMCP data
+    if (this.name === this.title) {
+      for (const feat of this.features) {
+        this.details.push(feat);
+      }
+    } else if (this.title) {
+      this.title = '';
+      this.features = [];
+      this.description = '';
+    }
+  }
+
+  /*
+   * Update room with trigger data,
+   * title and full description.
+   */
+  update2(args: Record<string, any>): void {
+    this.title = args.title;
+    this.features = args.features;
+    this.description = args.description;
+  }
+}
