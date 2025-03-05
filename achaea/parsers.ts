@@ -91,6 +91,8 @@ export function validRoomInfo(text: string): Record<string, any> | null {
     features.push('grove');
   }
 
+  // Everything about you is obscured by a heavy fog.
+
   // Walls
   if (description.includes('A scorching wall of fire stands here, blocking passage to ')) {
     features.push('fireWall');
@@ -140,7 +142,7 @@ export function validWildMap(text: string): string[] | null {
   if (parts.length < 8) return null;
   const title = parts[0].replace(/\r$/, '');
   if (!(title.endsWith('.') || title.includes('.</span><span'))) return null;
-  const re = /^[ #&%!?*';,.\/;@IMXYjnw\\|\+\-~^]+\r?$/;
+  const re = /^[ #&%!?*';,.\/;@IMXYjnw\\|\+\-~=^]+\r?$/;
   const map = [];
   const desc = [parts.shift()];
   if (
