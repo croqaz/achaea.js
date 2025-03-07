@@ -26,12 +26,12 @@ export const Config = {
   // Ignore some minerals from extract
   EXCLUDE_MINERALS: [],
   //
-  // Ignore some herbs from harvest
+  // Ignore some herbs from harvest (feel free to change this)
   // The kuzu vine of the jungles has thickening properties that make it a necessary ingredient in all salves.
   // The lady's slipper plant is used in various concoctions.
   EXCLUDE_HERBS: ['kuzu', 'slipper'],
   //
-  // Ignore some gathering materials
+  // Ignore some gathering materials (feel free to change this)
   EXCLUDE_MATERIAL: ['fruit', 'vegetable'],
 
   //
