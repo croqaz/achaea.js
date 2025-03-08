@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
-import * as g from '../achaea/core/gmcp.js';
-import * as s from '../achaea/core/state.js';
+import * as g from '../achaea/core/gmcp.ts';
+import * as s from '../achaea/core/state.ts';
 
 test('char status & vitals', () => {
   g.processGMCP(`Char.Status {
