@@ -1,67 +1,93 @@
 // deno-lint-ignore-file no-node-globals no-process-globals
+import * as fs from 'fs';
+import * as net from 'net';
+
 import ee from './events/index.ts';
+import { Command } from './telnet.ts';
 import { PROMPT } from './core/output.ts';
 import { ansi2Html, ansiStrip } from './ansi.ts';
 import processDisplayText from './core/output.ts';
-import { TelnetSocket, telOpts } from './telnet/index.ts';
+import { parse as parseTelnet, prepareResponse } from './telnet.ts';
 import { logDestroy, logSetup, logWrite } from './logs/index.ts';
 import { escapeHtml, isoDate, normText } from './core/util.ts';
 import { Config } from './config.ts';
-// import { teloptFmt } from './telnet/util.ts';
 
 // import core stuff
 import './core/queue.ts';
 import './core/triggers.ts';
 
-let telnet: TelnetSocket;
-
 export function connect(player: string) {
   //
   // Telnet socket to Achaea
-  telnet = new TelnetSocket({
-    host: Config.ACHAEA,
-    port: 23,
-    noDelay: true,
-    keepAlive: true,
-  });
+  const telnet = new net.Socket();
+  telnet.setTimeout(60_000);
+  telnet.setKeepAlive(true);
+  telnet.setNoDelay(true);
 
   logSetup();
 
-  setTimeout(function () {
-    // Auto-type the user name
-    ee.emit('user:text', player);
-    // Auto-type the password from ENVIRON
-    const e = `${player.toUpperCase()}_PASSWD`;
-    if (process.env[e]) {
-      ee.emit('user:text', process.env[e], false);
-    }
-  }, 500);
+  // const rawFile = fs.openSync('debug_raw.log', 'w');
+  // const debugFile = fs.openSync('debug_data.log', 'w');
 
-  // negociate connection options
-  telnet.on('will', (option) => {
-    if (option === telOpts.TELNET_GMCP) {
-      // console.log('IAC WILL do:', teloptFmt(option));
-      telnet.writeDo(option);
-    } else {
-      // tell remote we DONT do whatever they WILL offer
-      // console.log('IAC WILL dont:', teloptFmt(option));
-      telnet.writeDont(option);
-    }
-  });
-
-  telnet.on('do', (option) => {
-    // tell remote we WONT do anything we're asked to DO
-    // console.log('IAC DO:', teloptFmt(option));
-    telnet.writeWont(option);
-  });
-
-  // Necessary to have a stream consumer!
+  // On any Telnet command or text
   telnet.on('data', (buff: Buffer) => {
     if (!buff.length) return;
-    const txt = buff.toString();
-    if (!txt.trim()) return;
-    // process.stdout.write('\n');
-    process.stdout.write(txt);
+
+    // // debug
+    // fs.writeSync(rawFile, buff);
+    // fs.writeSync(rawFile, '\n\n\n');
+    // fs.writeSync(rawFile, '----');
+    // fs.writeSync(rawFile, '\n\n\n');
+
+    const [opts, _] = parseTelnet(buff, true);
+
+    // // debug
+    // fs.writeSync(debugFile, JSON.stringify(opts, null, 2));
+    // fs.writeSync(debugFile, '\n\n');
+    // fs.writeSync(debugFile, '----');
+    // fs.writeSync(debugFile, '\n\n');
+
+    // auto-respond to DO and WILL commands
+    const response = prepareResponse(opts);
+    if (response) telnet.write(response);
+
+    for (const opt of opts) {
+      if (opt.type === 'String') {
+        let { text } = opt;
+        if (!text.trim()) continue;
+        process.stdout.write(text);
+
+        // Start processing the game text
+        text = globalFixtures(text);
+        const plainText = ansiStrip(text);
+        // Plain text + normalized text for triggers
+        ee.emit('game:text', plainText, normText(plainText));
+        // Processed out text for GUI and logs
+        let viewText = ansi2Html(escapeHtml(text));
+        viewText = processDisplayText(viewText.trim(), plainText);
+        ee.emit('game:html', viewText);
+        // Log the processed text at the end
+        // ...because every milisecond counts
+        logWrite('\n' + logFixtures(viewText) + '\n');
+      }
+    }
+  });
+
+  telnet.on('connect', () => {
+    console.log(`Connected to ${Config.ACHAEA}`);
+    setTimeout(function () {
+      // Auto-type the user name
+      ee.emit('user:text', player);
+      // Auto-type the password from ENVIRON
+      const e = `${player.toUpperCase()}_PASSWD`;
+      if (process.env[e]) {
+        ee.emit('user:text', process.env[e], false);
+      }
+    }, 500);
+  });
+
+  telnet.on('error', (err) => {
+    console.error('Telnet error:', err);
   });
 
   // on socket closed, terminate the program
@@ -71,11 +97,32 @@ export function connect(player: string) {
     logDestroy();
     process.exit();
   });
+
+  // Setup global events
+  ee.on('user:gmcp', (cmd: Buffer) => {
+    if (cmd.length < 1) return;
+    const buff = [Buffer.from([Command.IAC, Command.SB, Command.GMCP]), cmd, Buffer.from([Command.IAC, Command.SE])];
+    telnet.write(Buffer.concat(buff));
+  });
+
+  ee.on('user:text', (text: string, log = true) => {
+    if (text === '\n') {
+      telnet.write('\r\n\xF9');
+      return;
+    }
+    text = text.trim();
+    if (!text) return;
+    telnet.write(text + '\r\n\xF9');
+    if (log) logWrite('\n$ ' + text + '\n');
+  });
+
+  //
+  // Connect now!
+  telnet.connect(23, Config.ACHAEA);
 }
 
-/*
- * Start listening to events
- */
+//
+// Text fixtures
 
 function globalFixtures(txt: string): string {
   // Global text replace; Affects all outputs, including triggers.
@@ -90,37 +137,3 @@ function logFixtures(txt: string): string {
   const dt = isoDate().replace('T', ' ');
   return txt.replace(PROMPT, `\n(${dt}) :: $1\n`);
 }
-
-// On any telnet text
-ee.on('tel:text', (rawText: string) => {
-  rawText = globalFixtures(rawText);
-  const plainText = ansiStrip(rawText);
-  // Plain text + normalized text for triggers
-  ee.emit('game:text', plainText, normText(plainText));
-  // Processed out text for GUI and logs
-  let viewText = ansi2Html(escapeHtml(rawText));
-  viewText = processDisplayText(viewText.trim(), plainText);
-  ee.emit('game:html', viewText);
-  logWrite('\n' + logFixtures(viewText) + '\n');
-});
-
-// On raw GMCP text
-ee.on('game:gmcp', (text: string) => {
-  if (text.startsWith('Comm.Channel.Start ')) return;
-  else if (text.startsWith('Comm.Channel.End ')) return;
-  else if (text.startsWith('IRE.Time.')) return;
-  logWrite('\n:GMCP: ' + text + '\n');
-});
-
-ee.on('user:gmcp', (buff: Buffer) => {
-  if (!telnet) return;
-  telnet.writeSub(telOpts.TELNET_GMCP, buff);
-});
-
-ee.on('user:text', (text: string, log = true) => {
-  // console.log('>', text);
-  if (!telnet || !text) return;
-  text = text.trim() + '\n';
-  telnet.write(text);
-  if (log) logWrite('\n$ ' + text);
-});
