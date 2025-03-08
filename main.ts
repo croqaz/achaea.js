@@ -44,6 +44,9 @@ const options = {
 
   if (!Config.EXTRA) {
     console.log('Extra aliases and triggers are disabled.');
+  } else {
+    // optionally, import extras
+    await import('./achaea/extra/index.ts');
   }
   if (!Config.LOGIN) {
     console.log('Auto-login is disabled.');

@@ -11,7 +11,6 @@
     "chokidar": "4.x",
     "classic-level": "1.x",
     "mri": "1.x",
-    "qheap": "1.x",
     "remeda": "2.x"
   },
   "devDependencies": {
@@ -19,13 +18,13 @@
     "@types/node": "22.x",
     "prettier": "3.x",
     "sass": "1.x",
-    "typescript": "5.6.x"
+    "typescript": "5.x"
   },
   "prettier": {
     "quoteProps": "preserve",
     "trailingComma": "all",
     "singleQuote": true,
-    "printWidth": 110,
+    "printWidth": 125,
     "tabWidth": 2
   },
   "scripts": {
