@@ -1,5 +1,4 @@
-import Heap from 'qheap';
-
+import Heap from './qheap.ts';
 import * as m from './maps.ts';
 import * as mi from './index.ts';
 import * as ex from './explore.ts';
