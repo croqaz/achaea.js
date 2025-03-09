@@ -207,7 +207,7 @@ export function transform(binary: Buffer, concat = false): [Option[], Buffer] {
         const subNeg = parseSubNegotiation(binary.subarray(pos));
         if (subNeg) {
           let option: Option;
-          let [name, data] = subNeg;
+          const [name, data] = subNeg;
           if (name === 'gmcp') {
             const gmcp = data.toString();
             // GMCP on the main event stream

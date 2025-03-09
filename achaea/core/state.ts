@@ -184,6 +184,7 @@ export function stateStopBattle() {
   STATE.Battle.rounds = 0;
   STATE.Battle.active = false;
   STATE.Battle.combat = false;
+  STATE.Battle.target = '';
   // auto=false deactivated elsewhere
   ee.emit('battle:stop');
 }

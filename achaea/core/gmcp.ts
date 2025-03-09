@@ -5,6 +5,7 @@ import * as T from '../types.ts';
 import * as S from './state.ts';
 import ee from '../events/index.ts';
 import { ansi2Html } from '../ansi.ts';
+import { logWrite } from '../logs/index.ts';
 
 export function gmcpHello() {
   // Core.Hello {"client":"Mudlet", "version":"4.12.0"}
@@ -135,4 +136,10 @@ export function processGMCP(text: string) {
   console.warn('[GMCP] Unhandled/ Unknown STATE ??', type, data);
 }
 
-ee.on('game:gmcp', processGMCP);
+// On raw GMCP text
+ee.on('game:gmcp', (text: string) => {
+  if (text.startsWith('Comm.Channel.Start ')) return;
+  else if (text.startsWith('Comm.Channel.End ')) return;
+  logWrite('\n:GMCP: ' + text + '\n');
+  processGMCP(text);
+});

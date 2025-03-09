@@ -1,5 +1,4 @@
-// deno-lint-ignore-file no-node-globals no-process-globals
-import * as fs from 'fs';
+// deno-lint-ignore-file no-node-globals no-process-global
 import * as net from 'net';
 
 import ee from './events/index.ts';
@@ -26,26 +25,11 @@ export function connect(player: string) {
 
   logSetup();
 
-  // const rawFile = fs.openSync('debug_raw.log', 'w');
-  // const debugFile = fs.openSync('debug_data.log', 'w');
-
   // On any Telnet command or text
   telnet.on('data', (buff: Buffer) => {
     if (!buff.length) return;
 
-    // // debug
-    // fs.writeSync(rawFile, buff);
-    // fs.writeSync(rawFile, '\n\n\n');
-    // fs.writeSync(rawFile, '----');
-    // fs.writeSync(rawFile, '\n\n\n');
-
     const [opts, _] = parseTelnet(buff, true);
-
-    // // debug
-    // fs.writeSync(debugFile, JSON.stringify(opts, null, 2));
-    // fs.writeSync(debugFile, '\n\n');
-    // fs.writeSync(debugFile, '----');
-    // fs.writeSync(debugFile, '\n\n');
 
     // auto-respond to DO and WILL commands
     const response = prepareResponse(opts);

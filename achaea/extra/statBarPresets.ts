@@ -99,7 +99,8 @@ export function pingIcon(): Record<string, string> {
   const avg = ping.reduce((a, b) => a + b) / ping.length;
   const dev = ping.at(-1) / avg;
   let bg = '#0c03';
-  if (dev > 5) bg = '#c003';
+  if (dev > 9) bg = '#c303';
+  else if (dev >= 5) bg = '#f803';
   else if (dev >= 2) bg = '#fc03';
   const label = `Response time: ${ping.at(-1)!.toFixed(2)}μs; Average: ${avg.toFixed(2)}μs`;
   return {

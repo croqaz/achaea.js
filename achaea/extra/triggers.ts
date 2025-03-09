@@ -90,6 +90,7 @@ export default function processTriggers(text: string, normText: string) {
     // DEF: You are riding a ...
     STATE.Me.riding = true;
   } else if (normText.includes('You step down off of a ') || normText.includes('You are not currently riding anything.')) {
+    // You lose purchase on (riding = false)
     STATE.Me.riding = false;
   }
 
