@@ -3,6 +3,15 @@ import { STATE } from '../core/state.ts';
 const { Battle, Me } = STATE;
 
 /*
+ * Druid hunting attack.
+ */
+export function attack(start = false): string | void {
+  // switch (Me.metamporh) {
+  // if Icewyrm and Wyvern
+  return 'MAUL';
+}
+
+/*
  * Break shield skill.
  */
 export function breakShield(name: string | number): string {

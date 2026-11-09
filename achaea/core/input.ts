@@ -5,12 +5,28 @@ import { STATE } from './state.ts';
 import { Config } from '../config.ts';
 import { queueCmd } from './queue.ts';
 import { customUserInput } from './custom.ts';
+import { error } from '../html.ts';
 
 // optionally, import extras
 let extraProcessUserInput: typeof module;
 if (Config.EXTRA) extraProcessUserInput = await import('../extra/input.ts');
 
 // let count = 1;
+
+/*
+ * One line typed by the user, from the GUI or from a replay (extra/replay.ts):
+ * the aliases are processed and the result is sent to the game.
+ * The original line is emitted as 'user:input', eg: for the recorder.
+ */
+export function userInput(line: string): void {
+  line = line.trim();
+  if (!line) return;
+  // Save user's original cmd for later
+  STATE.Misc.input = line;
+  ee.emit('user:input', line);
+  const text = processUserInput(line);
+  if (text) ee.emit('user:text', text);
+}
 
 export default function processUserInput(text: string): string | void {
   /*
@@ -90,6 +106,7 @@ export default function processUserInput(text: string): string | void {
   }
 
   // Optional: run extra input processing
+  // from extra/ folder
   if (extraProcessUserInput) {
     const extraText = extraProcessUserInput.default({
       text,
@@ -102,6 +119,7 @@ export default function processUserInput(text: string): string | void {
   }
 
   // Optional: run custom input processing
+  // from user's custom/ folder
   {
     const customFunc = customUserInput();
     if (customFunc) {
@@ -121,7 +139,7 @@ export default function processUserInput(text: string): string | void {
   }
 
   if (text.startsWith('//')) {
-    ee.emit('sys:text', `<i class="c-dim c-red"><b>[SYS]</b>: Invalid sys command!</i>`);
+    ee.emit('sys:text', error('SYS', 'Invalid sys command!'));
     return;
   }
 

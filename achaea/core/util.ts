@@ -12,9 +12,30 @@ export function normText(str: string): string {
   return str.trim().split(/\s+/).join(' ');
 }
 
+/** Strip the HTML tags (the colour spans of the game), and the carriage returns. */
+export function stripHtml(html: string): string {
+  return html.replace(/<[^>]+>/g, '').replace(/\r/g, '');
+}
+
 /** Simple escape HTML. */
 export function escapeHtml(text: string): string {
   return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function __rowFunc(key: string, row: Record<string, any>): string {
+  return `<td>${row[key] || '?'}</td>`;
+}
+
+export function htmlTable(data: Record<string, any>[], rowFunc = __rowFunc) {
+  const keys = Object.keys(data[0]);
+  const head = '<tr>' + keys.map((x) => `<th>${x}</th>`).join('') + '</tr>\n';
+  let body = '';
+  for (const row of data) {
+    body += '<tr>';
+    for (const k of keys) body += rowFunc(k, row);
+    body += '</tr>\n';
+  }
+  return '<table>' + head + body + '</table>';
 }
 
 /** ISO date, as string. */

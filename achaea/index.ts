@@ -8,6 +8,7 @@ import { ansi2Html, ansiStrip } from './ansi.ts';
 import processDisplayText from './core/output.ts';
 import { parse as parseTelnet, prepareResponse } from './telnet.ts';
 import { logDestroy, logSetup, logWrite } from './logs/index.ts';
+import { traceData, traceDestroy, traceNote, traceSetup } from './logs/trace.ts';
 import { escapeHtml, isoDate, normText } from './core/util.ts';
 import { Config } from './config.ts';
 
@@ -24,35 +25,53 @@ export function connect(player: string) {
   telnet.setNoDelay(true);
 
   logSetup();
+  // Capture every single byte of the live traffic? (--trace debug.log)
+  if (Config.TRACE) traceSetup(Config.TRACE);
+
+  // Send bytes to the game, tracing them first.
+  // (NOT a telnet.write wrapper: Bun replaces socket.write on connect)
+  // secret=true means the bytes are NEVER written in the trace (eg: the password)
+  // Strings are encoded as UTF-8 here (what socket.write does by default),
+  // so the trace has exactly the bytes that go on the wire.
+  const send = (data: Buffer | string, secret = false) => {
+    const buff = Buffer.isBuffer(data) ? data : Buffer.from(data, 'utf8');
+    if (Config.TRACE) {
+      if (secret) traceNote('>> (secret, not traced)');
+      else traceData('>>', buff);
+    }
+    telnet.write(buff);
+  };
 
   // On any Telnet command or text
   telnet.on('data', (buff: Buffer) => {
     if (!buff.length) return;
+    // Trace everything the game sends, BEFORE parsing it
+    traceData('<<', buff);
 
-    const [opts, _] = parseTelnet(buff, true);
+    let opts: any[] = [];
+    try {
+      [opts] = parseTelnet(buff, true);
+    } catch (err: any) {
+      // While tracing, don't die on unknown Telnet options;
+      // we want to capture the whole session, to dissect it later
+      if (!Config.TRACE) throw err;
+      traceNote(`PARSE ERROR: ${err.message}`);
+      console.error('Telnet parse error:', err.message);
+      return;
+    }
 
     // auto-respond to DO and WILL commands
     const response = prepareResponse(opts);
-    if (response) telnet.write(response);
+    if (response.length) send(response);
 
     for (const opt of opts) {
       if (opt.type === 'String') {
         let { text } = opt;
         if (!text.trim()) continue;
         process.stdout.write(text);
-
-        // Start processing the game text
-        text = globalFixtures(text);
-        const plainText = ansiStrip(text);
-        // Plain text + normalized text for triggers
-        ee.emit('game:text', plainText, normText(plainText));
-        // Processed out text for GUI and logs
-        let viewText = ansi2Html(escapeHtml(text));
-        viewText = processDisplayText(viewText.trim(), plainText);
-        ee.emit('game:html', viewText);
         // Log the processed text at the end
         // ...because every milisecond counts
-        logWrite('\n' + logFixtures(viewText) + '\n');
+        logWrite('\n' + processGameText(text) + '\n');
       }
     }
   });
@@ -79,6 +98,7 @@ export function connect(player: string) {
     console.log('Telnet closed. Bye!');
     telnet.destroy();
     logDestroy();
+    traceDestroy();
     process.exit();
   });
 
@@ -86,17 +106,18 @@ export function connect(player: string) {
   ee.on('user:gmcp', (cmd: Buffer) => {
     if (cmd.length < 1) return;
     const buff = [Buffer.from([Command.IAC, Command.SB, Command.GMCP]), cmd, Buffer.from([Command.IAC, Command.SE])];
-    telnet.write(Buffer.concat(buff));
+    send(Buffer.concat(buff));
   });
 
   ee.on('user:text', (text: string, log = true) => {
     if (text === '\n') {
-      telnet.write('\r\n\xF9');
+      send('\r\n\xF9');
       return;
     }
     text = text.trim();
     if (!text) return;
-    telnet.write(text + '\r\n\xF9');
+    // log=false means secret (eg: the password): keep it out of ALL logs & traces
+    send(text + '\r\n\xF9', !log);
     if (log) logWrite('\n$ ' + text + '\n');
   });
 
@@ -105,14 +126,35 @@ export function connect(player: string) {
   telnet.connect(23, Config.ACHAEA);
 }
 
+/*
+ * Process one block of text from the game, exactly like the live client does:
+ * the triggers get the plain text (game:text), the GUI gets the HTML (game:html)
+ * and the HTML for the log is returned.
+ * This is also used to replay a trace offline: scripts/debug2log.ts
+ */
+export function processGameText(text: string): string {
+  text = globalFixtures(text);
+  const plainText = ansiStrip(text);
+  // Plain text + normalized text for triggers
+  ee.emit('game:text', plainText, normText(plainText));
+  // Processed out text for GUI and logs
+  let viewText = ansi2Html(escapeHtml(text));
+  viewText = processDisplayText(viewText.trim(), plainText);
+  ee.emit('game:html', viewText);
+  return logFixtures(viewText);
+}
+
 //
 // Text fixtures
 
 function globalFixtures(txt: string): string {
   // Global text replace; Affects all outputs, including triggers.
   // Don't overuse!!
-  txt = txt.replace(/\s+You have recovered /, 'You have recovered ');
-  txt = txt.replace(/\s+You see a sign indicating there are WARES/, 'You see a sign indicating there are WARES');
+  txt = txt.replace(/\s*?(\r?\n)\s*You have recovered /, '$1You have recovered ');
+  txt = txt.replace(
+    /\s*?(\r?\n)\s*You see a sign indicating there are WARES/,
+    '$1You see a sign indicating there are WARES',
+  );
   return txt;
 }
 

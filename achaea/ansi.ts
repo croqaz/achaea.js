@@ -1,5 +1,5 @@
 /*
- * This is a modified version of Ansicolor,
+ * This is a heavily modified version of Ansicolor,
  * a JavaScript ANSI parsing.
  * https://github.com/xpl/ansicolor
  * By Vitalik Gordon (xpl) and contributors
@@ -23,17 +23,14 @@ const colorCodes = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan'
     '',
   ],
   styleCodes = ['', 'bright', 'dim', 'italic', 'underline', '', '', 'inverse'],
-  asBright = {
-    red: 'lightRed',
-    green: 'lightGreen',
-    yellow: 'lightYellow',
-    blue: 'lightBlue',
-    magenta: 'lightMagenta',
-    cyan: 'lightCyan',
-    black: 'darkGray',
-    lightGray: 'white',
+  types = {
+    0: 'style',
+    2: 'unstyle',
+    3: 'color',
+    9: 'colorLight',
+    4: 'bgColor',
+    10: 'bgColorLight',
   },
-  types = { 0: 'style', 2: 'unstyle', 3: 'color', 9: 'colorLight', 4: 'bgColor', 10: 'bgColorLight' },
   subtypes = {
     color: colorCodes,
     colorLight: colorCodesLight,
@@ -42,31 +39,6 @@ const colorCodes = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan'
     style: styleCodes,
     unstyle: styleCodes,
   };
-
-const RGB: Record<string, number[]> = {
-  black: [0, 0, 0],
-  darkGray: [100, 100, 100],
-  lightGray: [200, 200, 200],
-  white: [255, 255, 255],
-
-  red: [204, 0, 0],
-  lightRed: [255, 51, 0],
-
-  green: [0, 204, 0],
-  lightGreen: [51, 204, 51],
-
-  yellow: [204, 102, 0],
-  lightYellow: [255, 153, 51],
-
-  blue: [0, 0, 255],
-  lightBlue: [26, 140, 255],
-
-  magenta: [204, 0, 204],
-  lightMagenta: [255, 0, 255],
-
-  cyan: [0, 153, 255],
-  lightCyan: [0, 204, 255],
-};
 
 /* ------------------------------------------------------------------------- */
 
@@ -87,10 +59,6 @@ export class Color {
     this.brightness = brightness;
   }
 
-  get inverse() {
-    return new Color(!this.background, this.name || (this.background ? 'black' : 'white'), this.brightness);
-  }
-
   get clean(): ParsedColor | undefined {
     const name = this.name === 'default' ? '' : this.name;
     const bright = this.brightness === Code.bright;
@@ -109,22 +77,6 @@ export class Color {
 
   defaultBrightness(value: boolean) {
     return new Color(this.background, this.name, this.brightness || value);
-  }
-
-  css(inverted: boolean) {
-    const color: Color = inverted ? this.inverse : this;
-
-    const rgbName: string = (color.brightness === Code.bright && asBright[color.name]) || color.name;
-
-    const prop = color.background ? 'background:' : 'color:',
-      rgb = RGB[rgbName],
-      alpha = this.brightness === Code.dim ? 0.5 : 1;
-
-    return rgb
-      ? prop + 'rgba(' + [...rgb, alpha].join(',') + ');'
-      : !color.background && alpha < 1
-        ? 'color:rgba(0,0,0,0.5);'
-        : ''; // Chrome doesn't support 'opacity' property...
   }
 }
 
@@ -166,16 +118,20 @@ export class Code {
     if (x === undefined) return '';
     return '\u001b[' + Number(x) + 'm';
   }
+}
 
-  clone() {
-    const newCode = new Code(undefined);
-    newCode.value = this.value;
-    newCode.type = this.type;
-    newCode.subtype = this.subtype;
-    newCode.str = this.str;
-    newCode.isBrightness = this.isBrightness;
-    return newCode;
+// Every Code instance is immutable, so the ones in the ANSI range are created once.
+// (Code.value is derived from the number, so '031' and '31' are the same code)
+const CODE_CACHE: Code[] = [];
+const CODE_CACHE_SIZE = 256;
+const EMPTY_CODE = new Code(undefined);
+
+function codeFor(n: string): Code {
+  const value = Number(n);
+  if (value >= 0 && value < CODE_CACHE_SIZE) {
+    return CODE_CACHE[value] || (CODE_CACHE[value] = new Code(n));
   }
+  return new Code(n);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -216,7 +172,8 @@ class Span {
     this.code = code;
     this.text = text;
 
-    // Those are added in the actual parse, this is done for performance reasons to have the same hidden class
+    // Those are added in the actual parse, this is done for
+    // performance reasons to have the same hidden class
     this.color = undefined;
     this.bgColor = undefined;
     this.bold = undefined;
@@ -240,7 +197,8 @@ function* rawParse(getString) {
 
   // Instead of holding the reference to the string we split into chunks of 1MB
   // and after processing is finished we can remove the reference so it can be GCed
-  const chunks = splitStringToChunksOfSize(getString(), ONE_MB);
+  const str = getString();
+  const chunks = str.length <= ONE_MB ? [str] : splitStringToChunksOfSize(str, ONE_MB);
 
   for (let i = 0; i < chunks.length; i++) {
     const chunk = chunks[i];
@@ -252,7 +210,7 @@ function* rawParse(getString) {
   if (stateObject.state !== TEXT) stateObject.text += stateObject.buffer;
 
   if (stateObject.text) {
-    yield new Span(new Code(), stateObject.text);
+    yield new Span(EMPTY_CODE, stateObject.text);
   }
 }
 
@@ -266,24 +224,28 @@ function splitStringToChunksOfSize(str: string, chunkSize: number): string[] {
 }
 
 function* processChunk(chunk: string, stateObject: Record<string, any>) {
-  const chars = chunk;
   const charsLength = chunk.length;
+  let i = 0;
 
-  for (let i = 0; i < charsLength; i++) {
-    const c = chars[i];
+  while (i < charsLength) {
+    if (stateObject.state === TEXT) {
+      // Plain text: jump to the next escape char, all at once
+      const esc = chunk.indexOf('\u001b', i);
+      if (esc === -1) {
+        stateObject.text += i === 0 ? chunk : chunk.slice(i);
+        return;
+      }
+      stateObject.text += chunk.slice(i, esc);
+      stateObject.state = BRACKET;
+      stateObject.buffer = '\u001b';
+      i = esc + 1;
+      continue;
+    }
 
+    const c = chunk[i++];
     stateObject.buffer += c;
 
     switch (stateObject.state) {
-      case TEXT:
-        if (c === '\u001b') {
-          stateObject.state = BRACKET;
-          stateObject.buffer = c;
-        } else {
-          stateObject.text += c;
-        }
-        break;
-
       case BRACKET:
         if (c === '[') {
           stateObject.state = CODE;
@@ -299,7 +261,7 @@ function* processChunk(chunk: string, stateObject: Record<string, any>) {
         if (c >= '0' && c <= '9') {
           stateObject.code += c;
         } else if (c === ';') {
-          stateObject.codes.push(new Code(stateObject.code));
+          stateObject.codes.push(codeFor(stateObject.code));
           stateObject.code = '';
         } else if (c === 'm') {
           stateObject.code = stateObject.code || '0';
@@ -308,7 +270,7 @@ function* processChunk(chunk: string, stateObject: Record<string, any>) {
             stateObject.text = '';
           }
 
-          yield new Span(new Code(stateObject.code), stateObject.text);
+          yield new Span(codeFor(stateObject.code), stateObject.text);
           stateObject.text = '';
           stateObject.state = TEXT;
         } else {
@@ -325,16 +287,21 @@ function* processChunk(chunk: string, stateObject: Record<string, any>) {
  * @return {Generator<Span, void, *>}
  */
 function* parseAnsi(rawSpansIterator: Generator<Span>): Generator<Span> {
-  let color = new Color();
+  let color = new Color(false);
   let bgColor = new Color(true /* background */);
   let brightness = undefined;
   const styles = new Set();
+  // The parsed colors of the current state, computed once per state change
+  let dirty = true;
+  let fgClean: ParsedColor | undefined = undefined;
+  let bgClean: ParsedColor | undefined = undefined;
 
   function reset() {
-    color = new Color();
+    color = new Color(false);
     bgColor = new Color(true /* background */);
     brightness = undefined;
     styles.clear();
+    dirty = true;
   }
 
   reset();
@@ -343,21 +310,20 @@ function* parseAnsi(rawSpansIterator: Generator<Span>): Generator<Span> {
     const c = span.code;
 
     if (span.text !== '') {
-      const inverted = styles.has('inverse');
-      const underline = styles.has('underline') ? 'text-decoration: underline;' : '';
-      const italic = styles.has('italic') ? 'font-style: italic;' : '';
-      const bold = brightness === Code.bright ? 'font-weight: bold;' : '';
+      if (dirty) {
+        fgClean = color.defaultBrightness(brightness).clean;
+        bgClean = bgColor.clean;
+        dirty = false;
+      }
 
-      const foreColor = color.defaultBrightness(brightness);
+      const newSpan = new Span(span.code, span.text);
 
-      const newSpan = new Span(span.code ? span.code.clone() : undefined, span.text);
-
-      newSpan.bold = span.bold ? span.bold : !!bold;
-      newSpan.color = span.color ? span.color : foreColor.clean;
-      newSpan.bgColor = span.bgColor ? span.bgColor : bgColor.clean;
-      newSpan.inverse = inverted;
-      newSpan.italic = !!italic;
-      newSpan.underline = !!underline;
+      newSpan.bold = brightness === Code.bright;
+      newSpan.color = fgClean;
+      newSpan.bgColor = bgClean;
+      newSpan.inverse = styles.has('inverse');
+      newSpan.italic = styles.has('italic');
+      newSpan.underline = styles.has('underline');
       newSpan.bright = styles.has('bright');
       newSpan.dim = styles.has('dim');
 
@@ -366,6 +332,7 @@ function* parseAnsi(rawSpansIterator: Generator<Span>): Generator<Span> {
 
     if (c.isBrightness) {
       brightness = c.value;
+      dirty = true;
       continue;
     }
 
@@ -382,11 +349,13 @@ function* parseAnsi(rawSpansIterator: Generator<Span>): Generator<Span> {
       case 'color':
       case 'colorLight':
         color = new Color(false, c.subtype);
+        dirty = true;
         break;
 
       case 'bgColor':
       case 'bgColorLight':
         bgColor = new Color(true, c.subtype);
+        dirty = true;
         break;
 
       case 'style':
@@ -495,45 +464,52 @@ const ELEM = 'span';
  * Convert raw ANSI to HTML.
  */
 export function ansi2Html(text: string, elem = ELEM): string {
-  const parts = [];
+  // Fast path: nothing to convert
+  if (text.indexOf('\u001b') === -1) return text;
+
+  let html = '';
   const parsed = rawParse(() => text);
   for (const el of parseAnsi(parsed)) {
     if (!el.text) {
       continue;
     }
-    const cls = [];
+    if (!el.color && !el.bgColor) {
+      html += el.text;
+      continue;
+    }
+    let cls = '';
     if (el.color) {
       if (el.color.name) {
-        cls.push(`c-${el.color.name}`);
+        cls += ' c-' + el.color.name;
       }
       if (el.color.bright) {
-        cls.push('c-bright');
+        cls += ' c-bright';
       }
       if (el.color.dim) {
-        cls.push('c-dim');
+        cls += ' c-dim';
       }
       if (el.italic) {
-        cls.push('italic');
+        cls += ' italic';
       }
       if (el.underline) {
-        cls.push('underline');
+        cls += ' underline';
       }
       if (el.inverse) {
-        cls.push('inverse');
+        cls += ' inverse';
       }
     }
     if (el.bgColor) {
       if (el.bgColor.name) {
-        cls.push(`bg-${el.bgColor.name}`);
+        cls += ' bg-' + el.bgColor.name;
       }
       if (el.bgColor.bright) {
-        cls.push('bg-bright');
+        cls += ' bg-bright';
       }
       if (el.bgColor.dim) {
-        cls.push('bg-dim');
+        cls += ' bg-dim';
       }
     }
-    parts.push(el.color || el.bgColor ? `<${elem} class="${cls.join(' ')}">${el.text}</${elem}>` : el.text);
+    html += '<' + elem + ' class="' + cls.slice(1) + '">' + el.text + '</' + elem + '>';
   }
-  return parts.join('');
+  return html;
 }

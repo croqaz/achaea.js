@@ -1,8 +1,10 @@
 import ee from '../events/index.ts';
 import * as p from '../parsers.ts';
+import { POWER_LEVELS } from '../parsers.ts';
 import { STATE } from './state.ts';
 import { Config } from '../config.ts';
 import { customUserOutput } from './custom.ts';
+import { i } from '../html.ts';
 
 // optionally, import extras
 let extraProcessDisplayText: typeof module;
@@ -17,25 +19,6 @@ const CRITIC_LEVELS = [
   'You have scored a PLANE-RAZING CRITICAL hit', // 5x Stars
 ];
 
-const POWER_LEVELS = [
-  ['almost glows with nearly god-like power', 16, '??-☠️☠️☠️'],
-  ['does not even register your presence as a threat', 15, '??-☠️☠️'],
-  ['exudes an aura of overwhelming power', 14, '150++☠️'],
-  ['has an air of extreme strength', 13, '125++'],
-  ['looks to be crushingly strong', 12, '100-124'],
-  ['appears to be extraordinarily strong', 11, '75-99'],
-  ['is quite powerful', 10, '60-74'],
-  ['is not one to be trifled with', 9, '50-59'],
-  ['seems strong and confident', 8, '40-49'],
-  ['exudes a quiet confidence', 7, '30-39'],
-  ['seems to be unafraid', 6, '25-29'],
-  ['appears to lack strength', 5, '20-24'],
-  ['does not look particularly dangerous', 4, '15-19'],
-  ['is a humble-looking creature', 3, '10-14'],
-  ['looks relatively helpless', 2, '5-9'],
-  ['looks weak and feeble', 1, '1-4'],
-];
-
 const SPAN_CODE = '<span class="[a-zA-Z -]+">';
 const SPAN_STOP = '</span>\n?';
 // This can only handle CONFIG PROMPT STATS & ALL
@@ -45,6 +28,59 @@ export const PROMPT = new RegExp(
     `(?:${SPAN_CODE}[0-9]{1,6}R${SPAN_STOP})?${SPAN_CODE}[ ]?[a-z]*-\n?${SPAN_STOP})`,
   'm',
 );
+
+// [System]: Added GET GOLD to your eb queue. -- as HTML, 4 coloured spans; gagged from the output
+const QUEUE_NOTE =
+  /^<span[^>]*>\[<\/span><span[^>]*>System<\/span><span[^>]*>\]<\/span><span[^>]*>: Added .+? to your \S+ queue\.(?:<\/span>)?\n?/gm;
+
+const SPAN_OPEN = '<span class="';
+const SPAN_CLOSE = '</span>';
+
+function isSpace(c: number): boolean {
+  return c === 32 || c === 10 || c === 13 || c === 9;
+}
+
+/*
+ * Trim the block, including the whitespace inside the colour spans at the edges.
+ * The game colours its newlines too, so when GMCP arrives between the room
+ * description and the exits, the exits block starts with: <span class="c-cyan">\r\n</span>
+ * The GUI shows every block in its own paragraph, so that newline is a visible gap.
+ * Hot path: no regex, only the first & the last span are inspected (~50ns)
+ */
+export function trimHtml(html: string): string {
+  html = html.trim();
+  // head: <span class="x">\r\n</span>... or <span class="x">\r\n text...
+  while (html.startsWith(SPAN_OPEN)) {
+    const gt = html.indexOf('>', SPAN_OPEN.length);
+    if (gt < 0) break;
+    let i = gt + 1;
+    while (isSpace(html.charCodeAt(i))) i++;
+    if (html.startsWith(SPAN_CLOSE, i)) {
+      // an empty span
+      html = html.slice(i + SPAN_CLOSE.length).trimStart();
+      continue;
+    }
+    if (i > gt + 1) html = html.slice(0, gt + 1) + html.slice(i);
+    break;
+  }
+  // tail: ...text\r\n</span> or ...<span class="x">\r\n</span>
+  while (html.endsWith(SPAN_CLOSE)) {
+    const end = html.length - SPAN_CLOSE.length;
+    let i = end - 1;
+    while (i >= 0 && isSpace(html.charCodeAt(i))) i--;
+    if (html.charCodeAt(i) === 62 /* > */) {
+      // an empty span, if this is its opening tag
+      const k = html.lastIndexOf(SPAN_OPEN, i);
+      if (k >= 0 && html.indexOf('>', k) === i) {
+        html = html.slice(0, k).trimEnd();
+        continue;
+      }
+    }
+    if (i < end - 1) html = html.slice(0, i + 1) + SPAN_CLOSE;
+    break;
+  }
+  return html;
+}
 
 // let count = 1;
 
@@ -58,6 +94,8 @@ export default function processDisplayText(html: string, text: string): string {
    */
   // console.time(`core-output-${count}`);
 
+  html = trimHtml(html);
+
   // fix space before list on newline
   html = html.replace(/[\r\n ]+?\* </g, '\n* <');
 
@@ -66,13 +104,13 @@ export default function processDisplayText(html: string, text: string): string {
     if (p) {
       let extra = '';
       if (STATE.Battle.active && STATE.Battle.tgtHP) {
-        extra += ` <i class="c-yellow">tgt=${STATE.Battle.tgtHP}</i>`;
+        extra += ' ' + i.yellow(`tgt=${STATE.Battle.tgtHP}`);
       }
       if (STATE.Me.hp < STATE.Me.oldhp) {
-        extra += ` <i class="c-dim c-red">-${STATE.Me.oldhp - STATE.Me.hp}HP</i>`;
+        extra += ' ' + i.dim.red(`-${STATE.Me.oldhp - STATE.Me.hp}HP`);
       }
       if (STATE.Me.mp < STATE.Me.oldmp) {
-        extra += ` <i class="c-dim c-blue">-${STATE.Me.oldmp - STATE.Me.mp}MP</i>`;
+        extra += ' ' + i.dim.blue(`-${STATE.Me.oldmp - STATE.Me.mp}MP`);
       }
       if (!extra) {
         extra = ' <b>●</b>';
@@ -107,6 +145,20 @@ export default function processDisplayText(html: string, text: string): string {
     if (roomInfo) {
       STATE.Room.update2(roomInfo);
     }
+    // The full room text is saved in the DB
+    const roomText = p.parseRoomText(html);
+    if (roomText) {
+      ee.emit('room:text', roomText);
+    } else {
+      const exits = p.parseRoomExits(text);
+      if (exits) ee.emit('room:exits', exits);
+    }
+    // The text of LOOK <player> is saved in the DB
+    const playerText = p.parsePlayerText(text);
+    if (playerText) ee.emit('player:text', playerText);
+    // The text of LOOK <denizen> is saved in the DB
+    const denizenText = p.parseDenizenText(text);
+    if (denizenText) ee.emit('denizen:text', denizenText);
   }
 
   {
@@ -123,11 +175,8 @@ export default function processDisplayText(html: string, text: string): string {
   // GAG junk
   // Sad that I have to gag this, instead of disabling them from CONFIG
   //
-  // System: Added Whatever to your Blah queue.
-  html = html.replace(
-    /^<span .+?>\[<\/span><span .+?>System<\/span><span .+?>\]<\/span><span .+?>: Added (.+?) to your (.+?) queue\.$/m,
-    '',
-  );
+  // [System]: Added Whatever to your eb (b!p!wu!t...) queue.
+  html = html.replace(QUEUE_NOTE, '');
 
   // Optional: run extra output function
   if (extraProcessDisplayText) {

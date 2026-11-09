@@ -57,10 +57,19 @@ export function processGMCP(text: string) {
     type === 'Comm.Channel.List' ||
     type === 'Comm.Channel.Start' ||
     type === 'Comm.Channel.End' ||
-    type === 'Room.WrongDir' ||
     type === 'Core.Goodbye'
   ) {
     return;
+  }
+
+  // Room.WrongDir "sw" -- the map has an exit, but the game doesn't
+  // The walker logic needs to this event to re-plan.
+  if (type === 'Room.WrongDir') {
+    const dir = text
+      .slice(type.length + 1)
+      .trim()
+      .replace(/^"|"$/g, '');
+    return ee.emit('room:wrongDir', dir);
   }
 
   let data = {};
@@ -96,7 +105,7 @@ export function processGMCP(text: string) {
   }
 
   if (type.startsWith('IRE.Rift.')) {
-    // SKIP for now
+    // SKIP, we process it later
     // gmcpProcessRift(type, data);
     return;
   }
@@ -114,7 +123,8 @@ export function processGMCP(text: string) {
   }
 
   if (type === 'Comm.Channel.Text') {
-    // Communication msgs are not saved in STATE
+    // Communication msgs are not saved in STATE,
+    // we just send them to the web as they are
     const tsData = data as T.GmcpChannelText;
     tsData.text = ansi2Html(tsData.text);
     return ee.emit('channel:text', tsData);

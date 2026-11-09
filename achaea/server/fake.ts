@@ -2,6 +2,7 @@
 
 import ee from '../events/index.ts';
 import { ansi2Html, Colors } from '../ansi.ts';
+import { b, i, info } from '../html.ts';
 
 const { bgRed, bgGreen, bgBlue, bgBlack, bgCyan, bgWhite } = Colors;
 
@@ -16,7 +17,7 @@ export default async function fakeEvents() {
   ee.emit('game:html', 'Welcome to Achaea.');
 
   // this is in the order of ANSI codes
-  ee.emit('sys:text', `<b>[test]</b> testing colors ...</i>`);
+  ee.emit('sys:text', info('test', 'testing colors ...'));
   ee.emit('game:html', ansi2Html(Colors.red('This is color red.')));
   ee.emit('game:html', ansi2Html(Colors.green('This is color green.')));
   ee.emit('game:html', ansi2Html(Colors.yellow('This is color yellow.')));
@@ -54,18 +55,18 @@ export default async function fakeEvents() {
 
   // NOT SURE if these colors will ever show up in the game...
   //
-  ee.emit('sys:text', `<i class="c-bright c-black"><b>[test]</b> this is bright black.</i>`);
-  ee.emit('sys:text', `<i class="c-bright c-darkGray"><b>[test]</b> this is bright darkGray.</i>`);
-  ee.emit('sys:text', `<i class="c-bright c-lightGray"><b>[test]</b> this is bright lightGray.</i>`);
-  ee.emit('sys:text', `<i class="c-bright c-white"><b>[test]</b> this is bright white.</i>`);
+  ee.emit('sys:text', i.bright.black(b('[test]') + ' this is bright black.'));
+  ee.emit('sys:text', i.bright.darkGray(b('[test]') + ' this is bright darkGray.'));
+  ee.emit('sys:text', i.bright.lightGray(b('[test]') + ' this is bright lightGray.'));
+  ee.emit('sys:text', i.bright.white(b('[test]') + ' this is bright white.'));
 
-  ee.emit('sys:text', `<i class="bg-darkGray"><b>[test]</b> this is background darkGray.</i>`);
-  ee.emit('sys:text', `<i class="bg-lightGray"><b>[test]</b> this is background lightGray.</i>`);
-  ee.emit('sys:text', `<i class="bg-white"><b>[test]</b> this is background white #2.</i>`);
+  ee.emit('sys:text', i.bgDarkGray(b('[test]') + ' this is background darkGray.'));
+  ee.emit('sys:text', i.bgLightGray(b('[test]') + ' this is background lightGray.'));
+  ee.emit('sys:text', i.bgWhite(b('[test]') + ' this is background white #2.'));
 
   await sleep(0.2);
-  ee.emit('sys:text', `<i class="c-darkGray"><b>[DB]</b> 6789 entries saved in WARES.</i>`);
-  ee.emit('sys:text', `<i class="c-darkGray"><b>[DB]</b> 0123 entries saved in WHOIS.</i>`);
+  ee.emit('sys:text', info('DB', '6789 entries saved in WARES.'));
+  ee.emit('sys:text', info('DB', '0123 entries saved in WHOIS.'));
 
   await sleep(0.2);
   ee.emit('user:text', 'User text');
@@ -106,11 +107,13 @@ export default async function fakeEvents() {
 
   ee.emit(
     'game:html',
-    ansi2Html(`Things         [33m  6   0  [37m[36mA squirrel scampers about here.
+    ansi2Html(
+      `Things         [33m  6   0  [37m[36mA squirrel scampers about here.
 [37mPlants         [33m  5   0  [37m[35mA lobelia wildflower is growing here.
 [37mPlayers        [33m 14   0  [37m[1;36mMaya, the Great Mother, is here.
 [0;37mExits          [33m  3   0  [37m[33mYou see exits to the north and east.
-[37m[34m-------------------------------------------------------------------------------\n`),
+[37m[34m-------------------------------------------------------------------------------\n`,
+    ),
   );
 
   // Node.js ANSI

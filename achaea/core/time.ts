@@ -1,7 +1,8 @@
 /*
  * A bit magic &hacky, but it works.
  * This is NOT a linear function, I tried...
- * GMCP DayNight to Achaea hour.
+ * GMCP DayNight value to Achaea hour.
+ * input 0...200 -> output 0...60.
  */
 export function dayNightToHour(dn: number): number {
   if (dn < 99) return 12 + Math.round(dn / 3);
@@ -12,6 +13,7 @@ export function dayNightToHour(dn: number): number {
 
 /*
  * Achaea hour to real-life hour:minute.
+ * input 0...60 -> output 00:00...24:00.
  */
 export function achaeaHourToRLhour(h: number): string {
   const raw = h / 2.5;

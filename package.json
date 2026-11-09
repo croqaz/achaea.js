@@ -8,17 +8,18 @@
     "Cristi Constantin"
   ],
   "dependencies": {
-    "chokidar": "4.x",
-    "classic-level": "1.x",
+    "chokidar": "5.x",
+    "classic-level": "3.x",
     "mri": "1.x",
     "remeda": "2.x"
   },
   "devDependencies": {
+    "@happy-dom/global-registrator": "21.x",
     "@types/bun": "1.x",
-    "@types/node": "22.x",
+    "@types/node": "26.x",
     "prettier": "3.x",
     "sass": "1.x",
-    "typescript": "5.x"
+    "typescript": "6.x"
   },
   "prettier": {
     "quoteProps": "preserve",

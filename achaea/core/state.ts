@@ -7,15 +7,16 @@ import * as t from './time.ts';
 import * as C from './classes.ts';
 import { MAP } from '../maps/index.ts';
 import { debounce } from './util.ts';
+import { i } from '../html.ts';
 
 /*
  * The STATE tree represents everything we know about the game and is
- * like "Sarapis the Logos", a source of Truth.
+ * like "Sarapis the Logos", the absolute source source of Truth.
  * It is updated in a very strict order:
  * - the first source of truth is GMCP
  * - the second source of truth, less trustworthy is from game text via triggers
  * - the third source of truth, is from user input or logic, to store flags & such
- * Most of the STATE tree is frozen (read-only)!
+ * Most of the STATE tree is intentionally frozen (read-only)!
  */
 export const STATE: T.StateType = Object.seal({
   //
@@ -28,7 +29,6 @@ export const STATE: T.StateType = Object.seal({
     rounds: 0, // battle rounds
     active: false,
     combat: false, // PVP
-    auto: false,
     tgtID: 0,
     tgtHP: '',
     target: '', // attack target name
@@ -82,13 +82,14 @@ export const STATE: T.StateType = Object.seal({
   Misc: {
     // user's current input
     input: '',
-    autoWalk: [], // auto-walk state
     walkHist: [], // walk history
     gold: true, // pickup gold?
     rats: false, // watching for rats?
     greed: false, // auto-keep greedy
     filla: false, // catch elixlist trigger
     writhe: false,
+    knocker: false,
+    follow: null, // the leader being followed, FOLLOW <name>
     waresDB: false,
     whoisDB: false,
     getPlants: false, // gather/ harvest?
@@ -276,7 +277,6 @@ export function gmcpProcessChar(_: string, data: T.GmcpChar) {
     STATE.Me.afflictions = [];
     STATE.Me.flying = false;
     STATE.Me.riding = false;
-    STATE.Battle.auto = false;
     STATE.Battle.active = false;
     STATE.Battle.combat = false;
     STATE.Misc.greed = false;
@@ -293,8 +293,12 @@ export function gmcpProcessTarget(type: string, data: any) {
     STATE.Battle.tgtID = parseInt(tsData) || R.capitalize(tsData);
   } else if (type === 'IRE.Target.Info') {
     const tsData = data as Record<string, string>;
-    if (tsData.id && tsData.id !== '-1') STATE.Battle.tgtID = parseInt(tsData.id as string);
-    if (tsData.hpperc && tsData.hpperc !== '-1') STATE.Battle.tgtHP = tsData.hpperc;
+    if (tsData.id && tsData.id !== '-1') {
+      STATE.Battle.tgtID = parseInt(tsData.id as string);
+    }
+    if (tsData.hpperc && tsData.hpperc !== '-1') {
+      STATE.Battle.tgtHP = tsData.hpperc;
+    }
     if (STATE.Battle.active) ee.emit('battle:update', STATE.Battle);
   }
 }
@@ -304,10 +308,10 @@ export function gmcpProcessDefences(type: string, data: any) {
     STATE.Me.update({ defences: data });
   } else if (type === 'Char.Defences.Add') {
     const tsData = data as T.GmcpDefence;
-    ee.emit('sys:text', `<i class="c-magenta">Defences ++ ${tsData.name}</i>`);
+    ee.emit('sys:text', i.magenta(`Defences ++ ${tsData.name}`));
     addToStateList('Me', 'defences', tsData);
   } else if (type === 'Char.Defences.Remove') {
-    ee.emit('sys:text', `<i class="c-red">Defences -- ${data}</i>`);
+    ee.emit('sys:text', i.red(`Defences -- ${data}`));
     for (const item of data as string[]) {
       remFromStateList('Me', 'defences', item);
     }
@@ -330,11 +334,11 @@ export function gmcpProcessAfflictions(type: string, data: any) {
     if (tsData.name === 'amnesia') {
       ee.emit('user:text', 'QUEUE PREPEND eb TOUCH AMNESIA');
     }
-    ee.emit('sys:text', `<i class="c-red">Afflictions ++ ${tsData.name};${tsData.cure ? ' Cure: ' + tsData.cure : ''}</i>`);
+    ee.emit('sys:text', i.red(`Afflictions ++ ${tsData.name};${tsData.cure ? ' Cure: ' + tsData.cure : ''}`));
     addToStateList('Me', 'afflictions', tsData);
   } else if (type === 'Char.Afflictions.Remove') {
     const tsData = data as string[];
-    ee.emit('sys:text', `<i class="c-magenta">Afflictions -- ${data}</i>`);
+    ee.emit('sys:text', i.magenta(`Afflictions -- ${data}`));
     for (const name of tsData) {
       remFromStateList('Me', 'afflictions', name);
       // Hook after removing some aff
@@ -366,6 +370,10 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
     // @ts-ignore: Types
     const tsData = data as T.GmcpItemList;
     if (tsData.location === 'inv') {
+      // The list is the whole inventory, with wielded & worn attribs
+      // the hands & the slots are rebuilt with syncWieldWorn
+      STATE.Me.wielded = {};
+      STATE.Me.worn = {};
       for (const item of tsData.items) {
         // item ID must be int
         item.id = parseInt(item.id as string);
@@ -373,6 +381,7 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
       }
       STATE.Me.update({ items: tsData.items });
     } else if (tsData.location === 'room') {
+      roomListed = true;
       STATE.Room.items = [];
       STATE.Battle.tgts = {};
       for (const item of tsData.items) {
@@ -405,6 +414,8 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
   } //
   else if (type === 'Char.Items.Add') {
     if (data.location === 'inv') {
+      // item ID must be int
+      data.item.id = parseInt(data.item.id as string);
       addToStateList('Me', 'items', data.item);
     } else if (data.location === 'room') {
       // item ID must be int
@@ -418,7 +429,10 @@ export function gmcpProcessItems(type: string, data: T.GmcpItemUpd) {
   } //
   else if (type === 'Char.Items.Remove') {
     if (data.location === 'inv') {
+      // item ID must be int
+      data.item.id = parseInt(data.item.id as string);
       remFromStateList('Me', 'items', data.item);
+      STATE.Me.dropWieldWorn(data.item.id);
     } else if (data.location === 'room') {
       const itemID = parseInt(data.item.id as string);
       STATE.Room.items = STATE.Room.items.filter((x) => x.id !== itemID);
@@ -461,22 +475,42 @@ export function gmcpProcessSkills(type: string, data: any) {
   if (type === 'Char.Skills.Groups') {
     const tsData = data as T.GmcpSkill[];
     for (const skill of tsData) {
-      STATE.Me.skills[skill.name] = { rank: skill.rank, list: [] };
+      // The abilities are kept, the game sends the groups again after AB <skill>
+      const list = STATE.Me.skills[skill.name]?.list || [];
+      STATE.Me.skills[skill.name] = { rank: skill.rank, list };
     }
   } else if (type === 'Char.Skills.List') {
+    // The list is every ability of the group, not the ones the player has
     const tsData = data as T.GmcpSkillList;
-    if (!STATE.Me.skills[tsData.group]) {
-      STATE.Me.skills[tsData.group] = { rank: '', list: [] };
+    if (!tsData.group) return;
+    // The game returns the group name in lowercase (survival), the groups are capitalized (Survival)
+    const group = Object.keys(STATE.Me.skills).find((x) => x.toLowerCase() === tsData.group.toLowerCase()) || tsData.group;
+    if (!STATE.Me.skills[group]) {
+      STATE.Me.skills[group] = { rank: '', list: [] };
     }
-    STATE.Me.skills[tsData.group].list = tsData.list;
+    STATE.Me.skills[group].list = tsData.list || [];
   }
 }
+
+/*
+ * The game sends the room list (Char.Items.List room) before Room.Info on every arrival;
+ * not in a blizzard: outdoors, Room.Info comes alone, and the denizens hit from the storm. The old
+ * list would stand for the new room, so it is dropped, and "room:blizzard" asks for the items another way
+ * (INFO HERE). Room.Info again for the same room (a look) changes nothing.
+ */
+let roomListed = false;
 
 export function gmcpProcessRoomInfo(_type: string, data: T.GmcpRoom) {
   //
   // TODO :: navigation history
   // STATE.Misc.walkHist.push({ id: data.num, name: data.name });
   //
+  const blizzard = !roomListed && Number(data.num) !== Number(STATE.Room.num);
+  roomListed = false;
+  if (blizzard) {
+    STATE.Room.items = [];
+    STATE.Battle.tgts = {};
+  }
   const mapRoom = MAP.rooms[data.num];
   // Enhance GMCP room info with data from the map JSON
   if (mapRoom && mapRoom.title) {
@@ -489,18 +523,23 @@ export function gmcpProcessRoomInfo(_type: string, data: T.GmcpRoom) {
   }
   STATE.Room.update(data);
   ee.emit('room:update', STATE.Room);
+  if (blizzard) {
+    ee.emit('items:update', STATE.Room.items);
+    ee.emit('room:blizzard', STATE.Room);
+  }
 }
 
 export function gmcpProcessRoomPlayers(type: string, data: any) {
   // IT'S A BAD IDEA TO IMPORT HERE and I feel ashamed
   const { dbGet } = require('../extra/leveldb.ts');
 
-  const getPlayer = async (name: string, fullname?: string) => {
+  const getPlayer = async (name: string, fullname?: string): Promise<T.DBPlayer | null> => {
     try {
       const p = await dbGet('whois', name.toLowerCase());
       p.name = name;
       if (fullname) p.fullname = fullname;
       const city = p.city ? p.city.toLowerCase() : 'rogue';
+      // Player colors per city: the CSS class (for the browser)
       if (city === 'rogue') p.cls = 'c-yellow';
       else if (city === 'ashtan') p.cls = 'c-magenta';
       else if (city === 'cyrene') p.cls = 'c-cyan c-bright';
@@ -510,11 +549,14 @@ export function gmcpProcessRoomPlayers(type: string, data: any) {
       else if (city === 'targossas') p.cls = 'c-yellow c-bright';
       return p;
     } catch {
-      return;
+      return null;
     }
   };
-  const playerSpan = (obj: Record<string, any>) => {
+  const playerSpan = (obj: T.DBPlayer | T.GmcpChar) => {
     if (!obj) return;
+    if (!obj.cls) {
+      obj.cls = 'c-white';
+    }
     //
     // TODO :: move this from the server side ...
     //

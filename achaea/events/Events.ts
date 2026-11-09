@@ -43,7 +43,9 @@ export class EventEmitter<Template extends EventTemplateT = EventTemplateT> {
     const length = listeners.length;
     if (length === 0) return [];
     const result = new Array(length);
-    for (let index = 0; index < length; index++) result[index] = listeners[index].fn;
+    for (let index = 0; index < length; index++) {
+      result[index] = listeners[index].fn;
+    }
     return result;
   }
 
@@ -83,19 +85,18 @@ export class EventEmitter<Template extends EventTemplateT = EventTemplateT> {
       return true;
     }
 
-    let length = listeners.length;
-
-    for (let index = 0; index < length; index++) {
-      const { fn, context, once } = listeners[index];
-      if (once) {
-        listeners.splice(index--, 1);
-        length--;
-      }
-      fn.apply(context, args);
+    // Iterate a snapshot: a listener may add or remove listeners (even itself) while emitting
+    for (const listener of listeners.slice()) {
+      if (listener.once) this.removeListenerObject(event, listener);
+      listener.fn.apply(listener.context, args);
     }
 
-    if (length === 0) events[event] = undefined;
-    else if (length === 1) events[event] = listeners[0];
+    // The listeners may have been changed by now
+    const current = events[event];
+    if (current !== undefined && !isSingleListener(current)) {
+      if (current.length === 0) events[event] = undefined;
+      else if (current.length === 1) events[event] = current[0];
+    }
     return true;
   }
 
@@ -207,6 +208,21 @@ export class EventEmitter<Template extends EventTemplateT = EventTemplateT> {
     if (listeners.length === 0) this.events[event] = undefined;
     else if (listeners.length === 1) this.events[event] = listeners[0];
     return this;
+  }
+
+  // Remove one exact listener object, the list may have been collapsed to a single listener by now
+  private removeListenerObject<Event extends TemplateEventT<Template>>(
+    event: Event,
+    listener: Listener<Template, Event, any>,
+  ) {
+    const current = this.events[event];
+    if (current === undefined) return;
+    if (isSingleListener(current)) {
+      if (current === listener) this.events[event] = undefined;
+      return;
+    }
+    const index = current.indexOf(listener);
+    if (index !== -1) current.splice(index, 1);
   }
 
   protected _addListener<Event extends TemplateEventT<Template>, Context = TemplateListenerContextT<Template, Event, this>>(

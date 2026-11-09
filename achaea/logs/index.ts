@@ -4,19 +4,32 @@ import { appendFile } from 'node:fs';
 import { isoDate } from '../core/util.ts';
 
 let log: number = 0;
+let syncWrites = false;
 
-export function logSetup() {
-  if (!fs.existsSync('./logs/')) {
-    fs.mkdirSync('./logs/');
+/*
+ * Open the log file; by default ./logs/<date>.htm, written asynchronously.
+ * A replay (scripts/debug2log.ts) gives its own file name and sync=true,
+ * so the lines land in the file in the exact order they are written.
+ */
+export function logSetup(fname = '', sync = false): string {
+  if (!fname) {
+    if (!fs.existsSync('./logs/')) {
+      fs.mkdirSync('./logs/');
+    }
+    const logName = isoDate().replace(/:/g, '-') + '.htm';
+    fname = path.join('./logs/', logName);
   }
-  const logName = isoDate().replace(/:/g, '-') + '.htm';
-  log = fs.openSync(path.join('./logs/', logName), 'w');
+  syncWrites = sync;
+  log = fs.openSync(fname, 'w');
   fs.appendFileSync(log, '<body><pre>');
+  return fname;
 }
 
 export function logDestroy() {
+  if (!log) return;
   fs.appendFileSync(log, '\n\n</pre></body>\n');
   fs.closeSync(log);
+  log = 0;
 }
 
 /*
@@ -27,6 +40,10 @@ export function logDestroy() {
  */
 export function logWrite(line: string) {
   if (!log) return;
+  if (syncWrites) {
+    fs.appendFileSync(log, line);
+    return;
+  }
   appendFile(log, line, (err: any) => {
     if (err) console.error('Cannot write to log!');
   });

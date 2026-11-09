@@ -3,6 +3,15 @@ import { STATE } from '../core/state.ts';
 const { Battle, Me } = STATE;
 
 /*
+ * Sentinel hunting attack.
+ */
+export function attack(start = false): string | void {
+  // switch (Me.metamporh) {
+  // if Icewyrm and Jaguar
+  return 'MAUL';
+}
+
+/*
  * Break shield skill
  * Skirmishing rive: Shatter an opponent's shield
  * Rivestrike: rive through protective defences & deliver a followup blow

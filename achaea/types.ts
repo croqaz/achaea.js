@@ -1,8 +1,8 @@
 // deno-lint-ignore-file no-explicit-any
 
 export interface StateType {
-  Me: any;
-  Room: any;
+  Me: any; // C.Player
+  Room: any; // C.Room
   Battle: StateBattle;
   Time: StateTime;
   Stats: StateStats;
@@ -17,8 +17,6 @@ export interface StateBattle {
   rounds: number;
   active: boolean;
   combat: boolean;
-  // continue hunting?
-  auto: boolean;
   tgtID?: number;
   tgtHP?: string;
   // local target name
@@ -28,6 +26,7 @@ export interface StateBattle {
   bals: Record<string, boolean>;
 }
 
+// Temp game stats
 export interface StateStats {
   round: number;
   begDt: Date; // game start time
@@ -50,7 +49,7 @@ export interface BattleTarget {
   name: string;
   hp?: number;
   maxhp?: number;
-  hpperc?: string;
+  hpperc?: string; // HP percent
   attrib?: string;
   player?: boolean;
   affs?: Set<string>;
@@ -164,6 +163,10 @@ export interface StateTime extends GmcpTime {
   rlhm: string;
 }
 
+//
+// DB types
+//
+
 export interface DBPlayer {
   id: string;
   // shouldn't have name; the ID is used instead
@@ -178,6 +181,31 @@ export interface DBPlayer {
   dt?: string;
 }
 
+// The text of LOOK <player>
+export interface DBPlayerText {
+  id: string;
+  desc: string;
+  dt: string;
+}
+
+export interface DBRoom {
+  id: string;
+  name: string;
+  desc: string;
+  area: string;
+  env: string;
+  features?: string; // GMCP details
+  dt?: string;
+}
+
+// The full room description, as seen by the player
+export interface DBRoomText {
+  id: number;
+  desc: string; // the whole paragraph: description, items, NPCs (the players are not saved)
+  exits: { dir: string; door?: string }[];
+  dt: string;
+}
+
 export interface DBWares {
   id: string;
   name: string;
@@ -190,12 +218,37 @@ export interface DBWares {
   dt?: string;
 }
 
-export interface DBRoom {
+// A named denizen seen in a room
+// the ID is the lowercase name: the GMCP numeric ID changes when it respawns
+export interface DBDenizen {
   id: string;
   name: string;
-  desc: string;
+  icon?: string;
+  attrib: string;
+  roomID: number;
+  room: string;
   area: string;
-  env: string;
-  features?: string; // GMCP details
-  dt?: string;
+  dt: string;
+}
+
+// The text of LOOK <denizen>, named denizens only
+// the ID is the lowercase name, same as the denizen
+export interface DBDenizenText {
+  id: string;
+  desc: string;
+  dt: string;
+}
+
+// The monsters (nameless creatures) seen in a room,
+// one record per kind and room (eg: a rat@12345)
+export interface DBMonster {
+  id: string;
+  name: string;
+  icon?: string;
+  attrib: string;
+  count: number; // how many were in the room, last time
+  roomID: number;
+  room: string;
+  area: string;
+  dt: string;
 }

@@ -1,0 +1,5 @@
+[fmt]
+printWidth = 120
+sortImports = true
+sortPackageJson = true
+jsdoc = true

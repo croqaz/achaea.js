@@ -2,12 +2,30 @@
 import * as T from '../types.ts';
 import { weaponType } from './common.ts';
 
+// How long before the charstats are read again
+export const CACHE_MS = 60_000;
+
 /*
  * Player class! Myself, yourself.
  *
  * Compared to Nexus variables:
  * https://nexus.ironrealms.com/Predefined_variables
  */
+// The afflictions that stop you from acting, until they are cured.
+// Prone is last: it comes with the others (asleep, knocked down), the real cause is reported first.
+// The logs: "You must be standing first." for prone; stunned is not an affliction but a text (Player.stunned);
+// "bound" never comes as a GMCP affliction, and aeon slows the actions.
+export const INCAPACITATING: readonly string[] = Object.freeze([
+  'sleeping',
+  'paralysis',
+  'transfixation',
+  'webbed',
+  'entangled',
+  'impaled',
+  'frozen',
+  'prone',
+]);
+
 export class Player {
   name: string = '';
   class: string = '';
@@ -31,7 +49,7 @@ export class Player {
   mp: number = 0; // @my_mp = Your current mana points
   oldmp: number = 0;
   maxmp: number = 0; // @my_maxmp = Your maximum mana points
-  ep: number = 0; // @my_ep 	Your current endurance points
+  ep: number = 0; // @my_ep = Your current endurance points
   maxep: number = 0; // @my_maxep = Your maximum endurance points
   wp: number = 0; // @my_wp = Your current willpower points
   maxwp: number = 0; // @my_maxwp = Your maximum willpower points
@@ -50,6 +68,8 @@ export class Player {
   defences: T.GmcpDefence[] = [];
   skills: T.GmcpSkillList = {} as T.GmcpSkillList;
 
+  // Stunned ?
+  stunned: boolean = false;
   // Don't change manually
   // these are set in triggers
   // @my_flying = Whether you are currently flying
@@ -113,6 +133,30 @@ export class Player {
   }
 
   /*
+   * Internal function, don't use !
+   * An item gone from the inventory (Char.Items.Remove) is not wielded, nor worn, any more.
+   * The game removes it without an unwield update first: a planted quarterstaff, a used-up butterfly net.
+   */
+  dropWieldWorn(id: number) {
+    for (const hand of ['left', 'right']) {
+      if (this.wielded[hand]?.id === id) delete this.wielded[hand];
+    }
+    for (const [slot, worn] of Object.entries(this.worn)) {
+      if (worn.id === id) delete this.worn[slot];
+    }
+  }
+
+  /*
+   * The affliction that stops you from acting, or '' when you can: the first of INCAPACITATING.
+   * The game refuses then: "You are asleep and can do nothing.", "You are paralysed and cannot do that.",
+   * "You are transfixed and cannot do that. You must writhe to escape."
+   */
+  get incapacitated(): string {
+    const names = new Set(this.afflictions.map((x) => x.name));
+    return INCAPACITATING.find((name) => names.has(name)) || '';
+  }
+
+  /*
    * True, if you are blind.
    * @my_blind in Nexus
    */
@@ -142,6 +186,43 @@ export class Player {
    */
   get prone(): boolean {
     return this.afflictions.some((x) => x.name === 'prone');
+  }
+
+  #spec = '';
+  #specAt = 0;
+  /*
+   * The class specialization.
+   * Read from the charstats once a minute at most, it hardly ever changes.
+   */
+  get specialization(): string {
+    const now = Date.now();
+    if (now - this.#specAt < CACHE_MS) return this.#spec;
+    this.#spec = '';
+    for (const cs of this.charstats) {
+      if (cs.startsWith('Spec:')) {
+        let [, x] = cs.split(': ');
+        this.#spec = x.toLowerCase();
+        break;
+      }
+    }
+    this.#specAt = now;
+    return this.#spec;
+  }
+
+  /*
+   * The current Animal spirit.
+   * Metamorph classes only.
+   */
+  get morph(): string | null {
+    for (const cs of this.charstats) {
+      if (cs.startsWith('Morph:')) {
+        const [, morph] = cs.split(': ');
+        if (morph && morph !== 'None') {
+          return morph;
+        }
+      }
+    }
+    return null;
   }
 
   /*
@@ -199,22 +280,6 @@ export class Player {
       if (cs.startsWith('Essence:')) {
         const [, x] = cs.split(': ');
         return x;
-      }
-    }
-    return null;
-  }
-
-  /*
-   * The current Animal spirit.
-   * Metamorph classes only.
-   */
-  get morph(): string | null {
-    for (const cs of this.charstats) {
-      if (cs.startsWith('Morph:')) {
-        const [, morph] = cs.split(': ');
-        if (morph && morph !== 'None') {
-          return morph;
-        }
       }
     }
     return null;
@@ -300,10 +365,10 @@ export class Room {
   details: string[] = [];
   exits: Record<string, number> = {};
   //
-  // Char.Items.List, Char.Items.Update, Char.Items.Addm Char.Items.Remove
+  // From: Char.Items.List, Char.Items.Update, Char.Items.Addm Char.Items.Remove
   items: T.GmcpItem[] = [];
   //
-  // Room.Players, Room.AddPlayer, Room.RemovePlayer
+  // From: Room.Players, Room.AddPlayer, Room.RemovePlayer
   players: T.GmcpPlayer[] = [];
 
   //

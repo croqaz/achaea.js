@@ -1,15 +1,33 @@
 import ee from '../events/index.ts';
 import { STATE } from '../core/state.ts';
+import { i } from '../html.ts';
 const { Battle, Me } = STATE;
 
 /*
+ * Runwarden hunting attack.
+ */
+export function attack(start = false): string | void {
+  switch (Me.specialization) {
+    case 'dual cutting':
+      return 'DSL';
+    case 'dual blunt':
+      return 'DOUBLEWHIRL';
+    default:
+      ee.emit('sys:text', i.red(`PVE: unknown spec: ${Me.specialization}!`));
+  }
+}
+
+/*
  * Break shield skill
- * Requires bastard or hammer
+ * Requires a weapon.
  */
 export function breakShield(name: string | number): string | void {
   const wpnType = STATE.Me.wielded.left?.type;
   if (!wpnType) return;
-  if (wpnType === 'bastard sword') {
+  if (wpnType === 'battleaxe') {
+    // Required: Battle-axe
+    return `RAZESLASH ${name}`;
+  } else if (wpnType === 'bastard sword') {
     // Required: Bastard Sword
     return `CARVE ${name}`;
   } else if (wpnType === 'warhammer') {
